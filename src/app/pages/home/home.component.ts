@@ -15,7 +15,7 @@ import { PRODUCT_DATA } from '../../data/product.data';
 import { COLLECTION_DATA } from '../../data/collection.data';
 
 @Component({
-  selector: 'app-home-page',
+  selector: 'app-home',
   standalone: true,
   imports: [
     CommonModule,
@@ -23,10 +23,10 @@ import { COLLECTION_DATA } from '../../data/collection.data';
     ProductsComponent,
     CollectionComponent,
   ],
-  templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.css'],
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css'],
 })
-export class HomePageComponent {
+export class HomeComponent {
   category: CategoryItem[] = CATEGORY_DATA;
   products: ProductItem[] = PRODUCT_DATA;
   collections: CollectionItem[] = COLLECTION_DATA;
