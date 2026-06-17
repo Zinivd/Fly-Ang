@@ -1,0 +1,166 @@
+<!-- Disclaimer -->
+<div class="disclaimer">
+    <div class="disclaimer-div">
+        <i class="fas fa-circle-exclamation"></i>
+        <div class="disclaimer-content">
+            <h5 class="mb-3">Flybirds Leggings</h5>
+            <h6 class="mb-0">
+                At Flybirds, we pride ourselves on delivering unparalleled quality at a price that suits your budget.
+                Our commitment to excellence has made us the biggest seller in Tirupur, earning the trust and loyalty
+                of our customers.
+            </h6>
+        </div>
+    </div>
+</div>
+
+<!-- Shop All -->
+<div class="shop-all">
+    <div class="shop-all-div">
+        <h3 class="mb-3">Shop All</h3>
+        <ul class="nav ps-0 flex-row column-gap-1">
+            <ng-container *ngFor="let item of shopAllItems; let last = last">
+                <li class="nav-item mb-1">
+                    <a [routerLink]="item.link || null" class="nav-link">{{ item.label }}</a>
+                </li>
+                <li *ngIf="!last" class="nav-item mb-1">
+                    <span class="nav-link">|</span>
+                </li>
+            </ng-container>
+        </ul>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-main">
+
+        <!-- Footer Top -->
+        <div class="footer-top">
+            <div class="footer-item mb-2">
+                <div class="d-flex justify-content-start align-items-start flex-column">
+                    <div class="footer-logo">
+                        <img src="assets/images/Logo-White.png" class="d-flex mx-auto" height="80px" alt="Flybirds Logo" />
+                    </div>
+                </div>
+            </div>
+            <div class="footer-item mb-2">
+                <h5>Get a Special Discount on your inbox</h5>
+                <div class="input-group">
+                    <input type="text" name="subscribe" id="subscribe" class="form-control"
+                        placeholder="Email Address" />
+                    <button type="button" class="subscribe-btn">Subscribe</button>
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <!-- Footer Middle -->
+        <div class="footer-middle">
+
+            <!-- Social Media -->
+            <div class="footer-item mb-2">
+                <li class="nav-item mb-2 text-white">Follow Us on Social Media</li>
+                <ul class="nav flex-row column-gap-2" id="brands">
+                    <li *ngFor="let social of socialLinks" class="nav-item mb-3">
+                        <a [href]="social.href" [id]="social.id" target="_blank" data-bs-toggle="tooltip"
+                            data-bs-placement="right" [attr.data-bs-title]="social.title">
+                            <div class="brand-icons">
+                                <i [class]="social.icon"></i>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="footer-item mb-2">
+                <h5>Quick Links</h5>
+                <ul class="nav flex-column">
+                    <li *ngFor="let item of quickLinks" class="nav-item mb-2">
+                        <a class="p-0" [routerLink]="item.link || null">{{ item.label }}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Help -->
+            <div class="footer-item mb-2">
+                <h5>Help</h5>
+                <ul class="nav flex-column">
+                    <li *ngFor="let item of helpLinks" class="nav-item mb-2">
+                        <a class="p-0" [routerLink]="item.link || null">{{ item.label }}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Shop -->
+            <div class="footer-item mb-2">
+                <h5>Shop</h5>
+                <ul class="nav flex-column">
+                    <li *ngFor="let item of shopLinks" class="nav-item mb-2">
+                        <a class="p-0" [routerLink]="item.link || null">{{ item.label }}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Policies -->
+            <div class="footer-item mb-2">
+                <h5>Policies</h5>
+                <ul class="nav flex-column">
+                    <li *ngFor="let item of policyLinks" class="nav-item mb-2">
+                        <a class="p-0" [routerLink]="item.link || null">{{ item.label }}</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <hr class="mt-3 mb-4" />
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="footer-item mb-2">
+                <div class="footer-bottom-icon">
+                    <i class="bx bx-mail-open text-white"></i>
+                </div>
+                <div class="footer-bottom-content w-100">
+                    <h6 class="mb-1">Email ID</h6>
+                    <a href="mailto:info@flybirdsleggings.com">
+                        <h5 class="mb-0">info&#64;flybirdsleggings.com</h5>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-item mb-2">
+                <div class="footer-bottom-icon">
+                    <i class="bx bx-phone-forwarding text-white"></i>
+                </div>
+                <div class="footer-bottom-content w-100">
+                    <h6 class="mb-1">Phone No</h6>
+                    <a href="tel:+918825522322">
+                        <h5 class="mb-0">+91 88255 22322</h5>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-item mb-2">
+                <div class="footer-bottom-icon">
+                    <i class="bx bx-location text-white"></i>
+                </div>
+                <div class="footer-bottom-content">
+                    <h6 class="mb-1">Address</h6>
+                    <a href="">
+                        <h5 class="mb-0">
+                            423 B, 4th St, Raja Nagar, Poyampalayam, Tirupur, Tamil Nadu 641603
+                        </h5>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-copyrights mt-3">
+        <h6 class="text-center mb-0">© 2025 FLYBIRDS LEGGINGS All Rights Reserved.</h6>
+    </div>
+</footer>

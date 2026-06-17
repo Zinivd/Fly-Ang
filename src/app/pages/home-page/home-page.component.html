@@ -1,1 +1,61 @@
-<p>home-page works!</p>
+<div class="home-page my-2">
+    <!-- Category -->
+    <div class="category-main">
+        <div class="category-div">
+            <div class="body-head mb-4">
+                <h4 class="text-center">Shop By Category</h4>
+                <h6 class="text-center">
+                    Find your perfect fit form our diverse collection
+                </h6>
+            </div>
+            <!-- Category Grid -->
+            <div class="category-grid">
+                <app-category *ngFor="let item of category" [category]="item"></app-category>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-main">
+        <div class="product-div">
+            <div class="body-head mb-4">
+                <h4 class="text-center">Best Sellers</h4>
+            </div>
+
+            <ul class="product-tabs nav nav-tabs my-4 border-0" id="productTab" role="tablist">
+                <li class="nav-item mb-2" role="presentation">
+                    <button class="tab-btn active" data-bs-toggle="tab" type="button" data-bs-target="#all">All</button>
+                </li>
+                <li class="nav-item mb-2" role="presentation">
+                    <button class="tab-btn" data-bs-toggle="tab" type="button" data-bs-target="#denimjeggings">Denim
+                        Jeggings</button>
+                </li>
+                <li class="nav-item mb-2" role="presentation">
+                    <button class="tab-btn" data-bs-toggle="tab" type="button" data-bs-target="#kurtipant">Kurti
+                        Pant</button>
+                </li>
+                <li class="nav-item mb-2" role="presentation">
+                    <button class="tab-btn" data-bs-toggle="tab" type="button" data-bs-target="#yogashorts">Yoga
+                        Shorts</button>
+                </li>
+            </ul>
+
+            <div class="product-grid">
+                <app-products *ngFor="let item of products" [product]="item"></app-products>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collections Grid -->
+    <div class="collection-main">
+        <div class="collection-div">
+            <div class="body-head mb-4">
+                <h4 class="text-center">Best Collections</h4>
+            </div>
+
+            <div class="collection-grid">
+                <app-collection *ngFor="let item of collections" [collection]="item"></app-collection>
+            </div>
+        </div>
+    </div>
+</div>

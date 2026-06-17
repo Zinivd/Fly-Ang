@@ -1,0 +1,108 @@
+<div class="free-shipping">
+    <h6 class="mb-0">Free Shipping on all orders above Rs. 599</h6>
+</div>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+
+        <!-- Responsive Navbar -->
+        <div class="responsive-div">
+            <div class="responsive-button">
+                <div class="logo-div d-flex align-items-center column-gap-2">
+                    <a routerLink="/">
+                        <img src="assets/images/Logo-Dark.png" height="50px" title="" alt="Logo" />
+                    </a>
+                </div>
+                <div class="icons-div d-lg-none align-items-center">
+                    <a routerLink="">
+                        <i class="bx bx-search"></i>
+                    </a>
+                    <a routerLink="/wishlist" routerLinkActive="active">
+                        <i class="bx bx-heart"></i>
+                    </a>
+                    <a routerLink="/orders" routerLinkActive="active">
+                        <i class="bx bx-shopping-bag"></i>
+                    </a>
+                    <a routerLink="/profile" routerLinkActive="active">
+                        <i class="bx bx-user"></i>
+                    </a>
+                </div>
+            </div>
+
+            <ul class="navbar-nav flex-row align-items-center justify-content-between mt-3 response-nav-content">
+                <li class="nav-item" id="home">
+                    <a class="nav-link" routerLink="/" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: true }">
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/womens" routerLinkActive="active">Womens</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/kids" routerLinkActive="active">Kids</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/new-arrivals" routerLinkActive="active">New Arrivals</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Web Navbar -->
+        <div class="navbar-collapse d-lg-flex justify-content-evenly align-items-center collapse" id="navbarcontent">
+            <!-- Logo -->
+            <div class="navbar-brand col-lg-1 me-0">
+                <a routerLink="/">
+                    <img src="assets/images/Logo-Dark.png" height="55px" title="" alt="Logo" />
+                </a>
+            </div>
+
+            <!-- Nav Links -->
+            <ul class="navbar-nav col-lg-5 align-items-lg-center justify-content-lg-evenly navbarNav">
+                <li class="nav-item" id="home">
+                    <a class="nav-link" routerLink="/" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: true }">
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/womens" routerLinkActive="active">Womens</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/kids" routerLinkActive="active">Kids</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/new-arrivals" routerLinkActive="active">New Arrivals</a>
+                </li>
+            </ul>
+
+            <!-- Search -->
+            <ul class="navbar-nav col-lg-3 mb-0">
+                <li class="search-bar">
+                    <i class="bx bx-search text-center"></i>
+                    <input type="text" class="form-control border-0" name="search" id="search" placeholder="Search" />
+                </li>
+            </ul>
+
+            <!-- Icons -->
+            <ul class="navbar-nav col-lg-3 d-flex align-items-center flex-row icon-end">
+                <li class="nav-item">
+                    <a class="nav-link nav-icon-btn" routerLink="/wishlist" routerLinkActive="active">
+                        <i class="bx bx-heart"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-icon-btn" routerLink="/orders" routerLinkActive="active">
+                        <i class="bx bx-shopping-bag"></i>
+                    </a>
+                </li>
+                <li class="nav-item" id="cart">
+                    <a class="nav-link" routerLink="/login">
+                        <button type="button" class="nav-btn">Sign In</button>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</nav>

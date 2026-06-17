@@ -1,0 +1,236 @@
+.login-btn {
+    background: var(--text-primary);
+    color: var(--secondary);
+    padding: 8px;
+    border: 2px solid var(--text-primary);
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: var(--fw-md);
+    transition: all var(--transition);
+}
+
+.nav-btn {
+    background: var(--main);
+    color: var(--secondary);
+    border: 2px solid var(--main);
+    padding: 6px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: var(--fw-md);
+    transition: all var(--transition);
+}
+
+.nav-icon-btn {
+    background: var(--secondary);
+    color: var(--text-primary);
+    height: 45px;
+    width: 45px;
+    font-size: 20px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    padding: 0px;
+    transition: all var(--transition);
+}
+
+.subscribe-btn {
+    background: var(--sub);
+    color: var(--secondary);
+    border: 2px solid var(--sub);
+    padding: 6px 20px;
+    border-radius: 5px;
+    font-weight: var(--fw-md);
+    transition: all var(--transition);
+}
+
+.tab-btn {
+    background: var(--secondary);
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+    padding: 6px 25px;
+    border-radius: 20px;
+    font-weight: var(--fw-md);
+    transition: all var(--transition);
+}
+
+.add-cart-btn {
+    background: var(--main);
+    color: var(--secondary);
+    border: 2px solid var(--main);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-weight: var(--fw-md);
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.add-cart-btn-2 {
+    background: var(--main);
+    color: var(--secondary);
+    border: 2px solid var(--main);
+    padding: 6px 20px;
+    border-radius: 5px;
+    font-weight: var(--fw-md);
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.buy-btn {
+    background: var(--secondary);
+    color: var(--text-primary);
+    border: 2px solid var(--main);
+    padding: 7px 20px;
+    border-radius: 5px;
+    font-weight: var(--fw-md);
+    transition: all var(--transition);
+}
+
+.cart-btn {
+    background: var(--main);
+    color: var(--secondary);
+    border: 2px solid var(--main);
+    padding: 7px 20px;
+    border-radius: 5px;
+    font-weight: var(--fw-md);
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.form-btn {
+    background: var(--main);
+    color: var(--secondary);
+    border: 2px solid var(--main);
+    padding: 6px 20px;
+    border-radius: 5px;
+    font-weight: var(--fw-md);
+    transition: all var(--transition);
+}
+
+.filter-btn {
+    background-color: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    padding: 0px;
+    border: 2px solid transparent;
+    width: 100%;
+    font-weight: var(--fw-md);
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: 85% 15%;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.size-btn {
+    background-color: var(--secondary);
+    color: var(--text-primary);
+    font-weight: var(--fw-md);
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.size-btn:hover,
+.size-btn.selected {
+    background-color: var(--main);
+    color: var(--secondary);
+    border: 2px solid var(--main);
+}
+
+/* Hover Effects */
+.login-btn:hover {
+    background: var(--main);
+    border: 2px solid var(--main);
+}
+
+.nav-btn:hover {
+    background: var(--secondary);
+    color: var(--text-primary);
+}
+
+.nav-icon-btn:hover {
+    border: 2px solid var(--main);
+}
+
+.subscribe-btn:hover {
+    background: var(--secondary);
+    color: var(--text-primary);
+    border: 2px solid var(--sub);
+}
+
+.tab-btn:hover,
+.tab-btn.active,
+.buy-btn:hover {
+    background: var(--main);
+    color: var(--secondary);
+    border: 2px solid var(--main);
+}
+
+.form-btn:hover,
+.add-cart-btn:hover,
+.add-cart-btn-2:hover,
+.cart-btn:hover {
+    background: var(--secondary);
+    color: var(--text-primary);
+}
+
+@media screen and (min-width: 767px) {
+
+    .buy-btn,
+    .cart-btn {
+        font-size: 16px;
+    }
+
+    .login-btn,
+    .nav-btn,
+    .subscribe-btn,
+    .tab-btn,
+    .add-cart-btn,
+    .add-cart-btn-2,
+    .form-btn {
+        font-size: 14px;
+    }
+
+    .size-btn {
+        height: 50px;
+        width: 50px;
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+
+    .login-btn,
+    .buy-btn,
+    .cart-btn {
+        font-size: 12px;
+    }
+
+    .nav-btn,
+    .subscribe-btn,
+    .tab-btn,
+    .add-cart-btn,
+    .add-cart-btn-2,
+    .form-btn {
+        font-size: 12px;
+    }
+
+    .size-btn {
+        height: 35px;
+        width: 35px;
+        font-size: 12px;
+    }
+}
