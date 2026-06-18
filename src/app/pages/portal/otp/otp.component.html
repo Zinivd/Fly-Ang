@@ -1,1 +1,52 @@
-<p>otp works!</p>
+<div class="portal-main">
+    <div class="portal-div">
+
+        <!-- Left Panel -->
+        <div class="portal-left">
+            <img src="assets/images/Portal/1.png" alt="Portal" />
+            <h1>"Your vibe, your style Login &amp; fly now"</h1>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="portal-right">
+            <img src="assets/images/Logo-Dark.png" alt="Logo" />
+            <div>
+                <h4 class="mb-3">Enter the 6 - digit OTP</h4>
+                <h6 class="mb-0">We have sent you a 6 - digit OTP on your mobile number</h6>
+            </div>
+
+            <div class="w-100">
+                <form action="">
+
+                    <!-- Full Name -->
+                    <div class="mb-4 otp-container">
+                        <input type="number" min="0" class="form-control" name="name" id="name" autofocus />
+                        <input type="number" min="0" class="form-control" name="name" id="name" />
+                        <input type="number" min="0" class="form-control" name="name" id="name" />
+                        <input type="number" min="0" class="form-control" name="name" id="name" />
+                        <input type="number" min="0" class="form-control" name="name" id="name" />
+                        <input type="number" min="0" class="form-control" name="name" id="name" />
+                    </div>
+
+                    <!-- Submit -->
+                    <div *ngIf="!showResendButton">
+                        <button type="button" class="login-btn w-100" (click)="verifyOtp()">
+                            Verify & Continue
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div *ngIf="!showResendButton">
+                <h6 class="mb-0">
+                    Didn’t receive it? Resend in {{ formattedTime }}
+                </h6>
+            </div>
+
+            <!-- Resend Button -->
+            <button *ngIf="showResendButton" type="button" class="login-resend-btn w-100" (click)="resendOtp()">
+                Resend OTP
+            </button>
+        </div>
+
+    </div>
+</div>

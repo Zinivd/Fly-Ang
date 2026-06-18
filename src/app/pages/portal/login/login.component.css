@@ -66,6 +66,17 @@
     margin-bottom: 5px;
 }
 
+.otp-container {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.otp-container input {
+    text-align: center;
+}
+
 @media screen and (min-width: 1439px) {
 
     .portal-div {
@@ -110,6 +121,15 @@
 
     .portal-right form input {
         padding: 8px 15px;
+    }
+
+    .otp-container {
+        grid-template-columns: repeat(6, 60px);
+    }
+
+    .otp-container input {
+        height: 60px;
+        font-size: 25px;
     }
 }
 
@@ -158,6 +178,15 @@
     .portal-right form input {
         padding: 6px 15px;
     }
+
+    .otp-container {
+        grid-template-columns: repeat(6, 50px);
+    }
+
+    .otp-container input {
+        height: 50px;
+        font-size: 20px;
+    }
 }
 
 @media screen and (min-width: 767px) and (max-width: 1098px) {
@@ -204,6 +233,15 @@
 
     .portal-right form input {
         padding: 4px 15px;
+    }
+
+    .otp-container {
+        grid-template-columns: repeat(6, 50px);
+    }
+
+    .otp-container input {
+        height: 50px;
+        font-size: 20px;
     }
 }
 
@@ -258,5 +296,13 @@
 
     .portal-right form input {
         padding: 4px 15px;
+    }
+
+    .otp-container {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .otp-container input {
+        font-size: 20px;
     }
 }

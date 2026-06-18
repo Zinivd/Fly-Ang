@@ -1,10 +1,19 @@
 import { Routes } from '@angular/router';
-import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
-import { HomeComponent } from './pages/home/home.component';
+
+// Portal
 import { LoginComponent } from './pages/portal/login/login.component';
+import { OtpComponent } from './pages/portal/otp/otp.component';
+import { SuccessComponent } from './pages/portal/success/success.component';
+
+// Layout
+import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+
+// Pages
+import { HomeComponent } from './pages/home/home.component';
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
 
 export const routes: Routes = [
+  // Pages
   {
     path: '',
     component: MainLayoutComponent,
@@ -13,5 +22,8 @@ export const routes: Routes = [
       { path: 'product-details/:id', component: ProductDetailsComponent },
     ],
   },
+  // Portal
   { path: 'login', component: LoginComponent },
+  { path: 'otp', component: OtpComponent },
+  { path: 'success', component: SuccessComponent },
 ];
