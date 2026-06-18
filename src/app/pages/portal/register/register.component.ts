@@ -5,13 +5,13 @@ import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [FormsModule, CommonModule, RouterLink],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.css',
 })
-export class LoginComponent {
+export class RegisterComponent {
   constructor(
     private toastr: ToastrService,
     private router: Router,
@@ -19,6 +19,7 @@ export class LoginComponent {
 
   mobile: string = '';
   fullName: string = '';
+  email: string = '';
 
   onMobileInput(event: Event): void {
     const input = event.target as HTMLInputElement;

@@ -4,18 +4,18 @@
         <!-- Left Panel -->
         <div class="portal-left">
             <img src="assets/images/Portal/1.png" alt="Portal" />
-            <h1>"Your vibe, your style Login &amp; fly now"</h1>
+            <h1>"Your vibe, your style Register &amp; fly now"</h1>
         </div>
 
         <!-- Right Panel -->
         <div class="portal-right">
             <img src="assets/images/Logo-Dark.png" alt="Logo" />
-            <h4>Login to unlock faster checkout and special deals!</h4>
+            <h4>Register to unlock faster checkout and special deals!</h4>
 
             <div class="w-100">
                 <form action="">
                     <!-- Mobile Number -->
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label for="mobile">Mobile Number <span>*</span></label>
                         <div class="input-double-flex">
                             <label class="mb-0 text-center">+91</label>
@@ -26,14 +26,21 @@
                     </div>
 
                     <!-- Full Name -->
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label for="name">Full Name <span>*</span></label>
                         <input type="text" class="form-control" name="name" id="name" placeholder="Enter your Full Name"
                             [(ngModel)]="fullName" />
                     </div>
 
+                    <!-- Email ID -->
+                    <div class="mb-3">
+                        <label for="email">Email ID <span>*</span></label>
+                        <input type="email" class="form-control" name="email" id="email"
+                            placeholder="Enter your Email ID" [(ngModel)]="email" />
+                    </div>
+
                     <!-- Submit -->
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <button type="button" class="login-btn w-100" (click)="sendOtp()">
                             <i class="fa-brands fa-whatsapp me-2"></i>
                             Send OTP via WhatsApp
@@ -42,7 +49,7 @@
 
                     <!-- Register -->
                     <div>
-                        <h6 class="mb-0">Didn't have an account? <a routerLink="/register">Register</a></h6>
+                        <h6 class="mb-0">Alread have an account? <a routerLink="/login">Login</a></h6>
                     </div>
                 </form>
             </div>

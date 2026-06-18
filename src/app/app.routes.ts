@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 // Portal
+import { RegisterComponent } from './pages/portal/register/register.component';
 import { LoginComponent } from './pages/portal/login/login.component';
 import { OtpComponent } from './pages/portal/otp/otp.component';
 import { SuccessComponent } from './pages/portal/success/success.component';
@@ -25,6 +26,7 @@ export const routes: Routes = [
     ],
   },
   // Portal
+  { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'otp', component: OtpComponent },
   { path: 'success', component: SuccessComponent },

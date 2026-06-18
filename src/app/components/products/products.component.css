@@ -103,11 +103,21 @@
 .product-box-content h3 {
     color: var(--text-primary);
     font-weight: var(--fw-lg);
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .product-box-content h6 {
     color: var(--text-secondary);
     font-weight: var(--fw-sm);
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .product-box-content h5 {
@@ -192,7 +202,7 @@
         height: 350px;
     }
 
-    .product-grid .product-box {
+    .product-grid app-products {
         flex: 0 0 280px;
         width: 280px;
     }
@@ -220,7 +230,7 @@
         height: 300px;
     }
 
-    .product-grid .product-box {
+    .product-grid app-products {
         flex: 0 0 200px;
         width: 200px;
     }
@@ -248,7 +258,7 @@
         height: 250px;
     }
 
-    .product-grid .product-box {
+    .product-grid app-products {
         flex: 0 0 200px;
         width: 200px;
     }
