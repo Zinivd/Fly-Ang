@@ -11,6 +11,7 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout.component
 // Pages
 import { HomeComponent } from './pages/home/home.component';
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
+import { AllProductsComponent } from './pages/all-products/all-products.component';
 
 export const routes: Routes = [
   // Pages
@@ -20,6 +21,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'product-details/:id', component: ProductDetailsComponent },
+      { path: 'all-products', component: AllProductsComponent },
     ],
   },
   // Portal

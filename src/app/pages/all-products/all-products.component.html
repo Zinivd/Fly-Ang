@@ -1,1 +1,201 @@
-<p>product-listing works!</p>
+<ng-template #sidebarTpl let-suffix="suffix">
+    <!-- Header -->
+    <li class="mb-0">
+        <div class="body-head text-center">
+            <h6 class="mb-0 text-dark text-uppercase">Filter By</h6>
+        </div>
+    </li>
+    <hr class="border-0" />
+
+    <!-- Types -->
+    <div class="filter-header mb-2">
+        <li class="mb-0 collapsed" (click)="toggleSection('productType')"
+            [attr.aria-expanded]="openSections['productType']">
+            <div class="body-head d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-dark">Types</h6>
+                <h6 class="mb-0">
+                    <i class="fas" [class.fa-angle-up]="openSections['productType']"
+                        [class.fa-angle-right]="!openSections['productType']"></i>
+                </h6>
+            </div>
+        </li>
+        <hr />
+        <div class="collapse" [class.show]="openSections['productType']" [id]="'productType-' + suffix">
+            <li class="mb-2" *ngFor="let item of productTypes">
+                <button class="filter-btn mx-auto">
+                    <div class="btnname">
+                        <span>{{ item }}</span>
+                    </div>
+                    <div class="d-flex ms-auto">
+                        <i class="fas fa-angle-right"></i>
+                    </div>
+                </button>
+            </li>
+            <hr />
+        </div>
+    </div>
+
+    <!-- Price -->
+    <div class="filter-header mb-2">
+        <li class="mb-0 collapsed" (click)="toggleSection('price')" [attr.aria-expanded]="openSections['price']">
+            <div class="body-head d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-dark">Price</h6>
+                <h6 class="mb-0">
+                    <i class="fas" [class.fa-angle-up]="openSections['price']"
+                        [class.fa-angle-right]="!openSections['price']"></i>
+                </h6>
+            </div>
+        </li>
+        <hr />
+        <div class="collapse" [class.show]="openSections['price']" [id]="'price-' + suffix">
+            <div class="px-3">
+                <!-- Replaces react-range: two overlapping native range inputs, track gradient
+             driven by trackBackground (same min/max % math as the original renderTrack) -->
+                <div class="dual-range" [style.background]="trackBackground">
+                    <input type="range" class="range-thumb" [min]="MIN" [max]="MAX" [step]="STEP" [value]="values[0]"
+                        (input)="onMinInput($any($event.target).value)" />
+                    <input type="range" class="range-thumb" [min]="MIN" [max]="MAX" [step]="STEP" [value]="values[1]"
+                        (input)="onMaxInput($any($event.target).value)" />
+                </div>
+
+                <div class="d-flex align-items-center column-gap-3">
+                    <input type="number" class="form-control" [value]="values[0]" readonly />
+                    <input type="number" class="form-control" [value]="values[1]" readonly />
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    <!-- Colors -->
+    <div class="filter-header mb-2">
+        <li class="mb-0 collapsed" (click)="toggleSection('color')" [attr.aria-expanded]="openSections['color']">
+            <div class="body-head d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-dark">Colors</h6>
+                <h6 class="mb-0">
+                    <i class="fas" [class.fa-angle-up]="openSections['color']"
+                        [class.fa-angle-right]="!openSections['color']"></i>
+                </h6>
+            </div>
+        </li>
+        <hr />
+        <div class="collapse" [class.show]="openSections['color']" [id]="'color-' + suffix">
+            <div class="colors">
+                <div class="mb-3 text-center" *ngFor="let item of colors">
+                    <li class="color-box mx-auto" [style.backgroundColor]="item.code"
+                        [style.border]="item.border ? '1px solid var(--border)' : 'none'"></li>
+                    <span class="color-label">{{ item.name }}</span>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    <!-- Sizes -->
+    <div class="filter-header mb-2">
+        <li class="mb-0 collapsed" (click)="toggleSection('size')" [attr.aria-expanded]="openSections['size']">
+            <div class="body-head d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-dark">Size</h6>
+                <h6 class="mb-0">
+                    <i class="fas" [class.fa-angle-up]="openSections['size']"
+                        [class.fa-angle-right]="!openSections['size']"></i>
+                </h6>
+            </div>
+        </li>
+        <hr />
+        <div class="collapse" [class.show]="openSections['size']" [id]="'size-' + suffix">
+            <div class="sizes">
+                <li class="mb-2" *ngFor="let item of sizes">
+                    <button class="size-btn mx-auto">
+                        <span>{{ item }}</span>
+                    </button>
+                </li>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    <!-- Dress Styles -->
+    <div class="filter-header mb-2">
+        <li class="mb-0 collapsed" (click)="toggleSection('dressStyle')"
+            [attr.aria-expanded]="openSections['dressStyle']">
+            <div class="body-head d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-dark">Dress Styles</h6>
+                <h6 class="mb-0">
+                    <i class="fas" [class.fa-angle-up]="openSections['dressStyle']"
+                        [class.fa-angle-right]="!openSections['dressStyle']"></i>
+                </h6>
+            </div>
+        </li>
+        <hr />
+        <div class="collapse" [class.show]="openSections['dressStyle']" [id]="'dressStyle-' + suffix">
+            <li class="mb-2" *ngFor="let item of dressStyles">
+                <button class="filter-btn mx-auto">
+                    <div class="btnname">
+                        <span>{{ item }}</span>
+                    </div>
+                    <div class="d-flex ms-auto">
+                        <i class="fas fa-angle-right"></i>
+                    </div>
+                </button>
+            </li>
+            <hr />
+        </div>
+    </div>
+</ng-template>
+
+<!-- Page layout (was AllProducts.jsx) -->
+<div class="filter-products-main">
+    <div class="body-head d-flex justify-content-between align-items-center flex-wrap mb-2">
+        <h6 class="d-flex align-items-center column-gap-2 mb-3">
+            <a routerLink="/">Home <i class="fas fa-chevron-right ps-1"></i></a>
+            <a>Womens <i class="fas fa-chevron-right ps-1"></i></a>
+            <a class="active">Jeggings</a>
+        </h6>
+        <h4 class="mb-3">Jeggings</h4>
+        <div class="form select-div mb-3">
+            <label for="sort" class="w-100">Sort By : </label>
+            <select name="sort" id="sort" class="form-select" [(ngModel)]="sortBy">
+                <option *ngFor="let opt of sortOptions" [value]="opt.value">{{ opt.label }}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="filter-product-flex">
+        <div class="filter-product-left">
+            <!-- was Filter.jsx -->
+            <div class="filter-aside">
+                <div class="flex-sidebar">
+                    <div class="flex-shrink-0 filter-sidebar">
+                        <ul class="main-ul list-unstyled ps-0 pt-2">
+                            <ng-container *ngTemplateOutlet="sidebarTpl; context: { suffix: 'desktop' }"></ng-container>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="offcanvas offcanvas-bottom h-75 offcanvas-filter" tabindex="-1" id="filter-offcanvas"
+                    aria-labelledby="offcanvasExampleLabel">
+                    <div class="offcanvas-header">
+                        <img src="assets/images/Logo-Dark.png" height="40px" alt="" />
+                        <button type="button" class="btn-close bg-white" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body p-0">
+                        <div class="flex-shrink-0 filter-sidebar">
+                            <ul class="list-unstyled mt-2 ps-0">
+                                <ng-container
+                                    *ngTemplateOutlet="sidebarTpl; context: { suffix: 'mobile' }"></ng-container>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-product-right">
+            <div class="filter-product-grid">
+                <app-products *ngFor="let item of products" [product]="item"></app-products>
+            </div>
+        </div>
+    </div>
+</div>
