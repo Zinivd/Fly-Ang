@@ -24,7 +24,12 @@ import { COLLECTION_DATA } from '../../data/collection.data';
     CollectionComponent,
   ],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
+  styleUrls: [
+    './home.component.css',
+    '../../components/category/category.component.css',
+    '../../components/products/products.component.css',
+    '../../components/collection/collection.component.css',
+  ],
 })
 export class HomeComponent {
   category: CategoryItem[] = CATEGORY_DATA;

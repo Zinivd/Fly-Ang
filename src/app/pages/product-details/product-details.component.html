@@ -1,0 +1,252 @@
+<div class="product-details my-4">
+
+    <!-- Breadcrumb -->
+    <div class="body-head mb-4">
+        <h6 class="d-flex align-items-center column-gap-2 mb-0">
+            <a routerLink="/">
+                Home <i class="fas fa-chevron-right ps-1"></i>
+            </a>
+            <a routerLink="/womens">
+                Womens <i class="fas fa-chevron-right ps-1"></i>
+            </a>
+            <a class="active">Jeggings</a>
+        </h6>
+    </div>
+
+    <!-- Product Content (converted from React ProductContent.jsx, inlined here) -->
+    <div class="product-details-main">
+        <div class="product-content">
+
+            <!-- Product Content Left -->
+            <div class="product-content-left">
+                <div class="product-content-img" *ngFor="let img of productImages">
+                    <img [src]="img" alt="" />
+                </div>
+            </div>
+
+            <!-- Product Content Right -->
+            <div class="product-content-right">
+                <h4 class="mb-2 text-main">{{ category }}</h4>
+                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                    <h2 class="mb-2">{{ productName }}</h2>
+                    <div class="d-flex align-items-center column-gap-2 flex-wrap">
+                        <button class="nav-icon-btn mb-2">
+                            <i class="bx bx-arrow-out-up-square-half"></i>
+                        </button>
+                        <button class="nav-icon-btn mb-2">
+                            <i class="bx bx-heart"></i>
+                        </button>
+                    </div>
+                </div>
+                <h4 class="mb-3">{{ subtitle }}</h4>
+                <h6 class="mb-3">
+                    <i class="fas fa-star text-warning"></i> {{ rating }} ({{ reviewCount }} Reviews)
+                </h6>
+                <div class="d-flex align-items-center column-gap-2 flex-wrap">
+                    <h3 class="mb-3">
+                        ₹ {{ price }}
+                        <span class="ms-2 text-decoration-line-through">₹ {{ originalPrice }}</span>
+                    </h3>
+                    <h5 class="mb-3 text-success">({{ discountPercent }}% OFF | You'll save Rs {{ savedAmount }})</h5>
+                </div>
+                <h6 class="mb-2">(Inclusive of all taxes)</h6>
+                <hr />
+
+                <!-- Family Colors -->
+                <h5 class="mb-3">Select Family Color</h5>
+                <div class="colors-div mb-4">
+                    <div class="color-box" *ngFor="let item of colors"
+                        [ngStyle]="{ 'background-color': item.code, 'border': item.border ? '1px solid var(--border)' : 'none' }">
+                    </div>
+                </div>
+
+                <!-- Shade Colors -->
+                <h5 class="mb-3">Select Shade</h5>
+                <div class="colors-div mb-4">
+                    <div class="color-box" *ngFor="let item of shadeColors"
+                        [ngStyle]="{ 'background-color': item.code, 'border': item.border ? '1px solid var(--border)' : 'none' }">
+                    </div>
+                </div>
+                <hr />
+
+                <!-- Sizes -->
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <h5 class="mb-3">Select Size</h5>
+                    <a routerLink="">
+                        <h6 class="mb-3 text-main">
+                            Size Guide <i class="fas fa-chevron-right"></i>
+                        </h6>
+                    </a>
+                </div>
+                <div class="sizes-div mb-4">
+                    <button class="size-btn" *ngFor="let size of sizes">{{ size }}</button>
+                </div>
+                <hr />
+
+                <!-- Check Delivery -->
+                <h5 class="mb-3">Check Delivery</h5>
+                <div class="d-flex align-items-center justify-content-between gap-2 mb-4">
+                    <input type="text" name="delivery" id="delivery" class="form-control w-75"
+                        placeholder="Enter Pincode" />
+                    <button type="button" class="form-btn w-25">Check</button>
+                </div>
+                <h6 class="mb-4">
+                    <i class="fas fa-truck-fast me-2"></i> Estimated delivery in {{ estimatedDelivery }}
+                </h6>
+
+                <!-- Buttons -->
+                <div class="d-flex align-items-center column-gap-2">
+                    <button class="buy-btn w-50">Buy Now</button>
+                    <button class="cart-btn w-50">
+                        <i class="bx bx-shopping-bag"></i> Add to Bag
+                    </button>
+                </div>
+                <hr />
+
+                <!-- Highlights -->
+                <div class="d-flex align-items-center column-gap-3 mb-3" *ngFor="let item of highlights">
+                    <div class="nav-icon-btn rounded-2">
+                        <i [class]="item.icon"></i>
+                    </div>
+                    <h5 class="mb-0 text-secondary">{{ item.text }}</h5>
+                </div>
+
+                <h6 class="mt-4">
+                    (*Please note The item must be unused, unwashed, and in its original
+                    condition with all tags and packaging Fly Birds.)
+                </h6>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <!-- PRODUCT DESCRIPTION -->
+    <div class="product-description-main">
+
+        <!-- Left: Detail Spotlight -->
+        <div class="product-description-left">
+            <div class="body-head mb-4">
+                <h4 class="mb-0 text-white">Detail Spotlight</h4>
+            </div>
+            <div class="description-img-column">
+                <img [src]="detailsMainImg" alt="Product Detail" class="description-main-img" />
+                <div class="d-block ms-auto">
+                    <div *ngFor="let item of variants; let i = index" class="description-img-div mb-4">
+                        <div class="description-img">
+                            <img [src]="item.img" [alt]="item.text" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Description, Specs, Fabric & Care -->
+        <div class="product-description-right form">
+
+            <!-- Description -->
+            <h5 class="mb-3 text-main">Product Description</h5>
+            <h6 class="mb-0">
+                Complete any look, be it traditional or western with these Solid Cherry Leggings.
+                Made from cotton &amp; elastane, it has an elasticised waistband &amp; has a slim fit.
+            </h6>
+
+            <hr />
+
+            <!-- Specifications -->
+            <h5 class="mb-3 text-main">Specifications</h5>
+            <div class="row">
+                <div *ngFor="let spec of specifications" class="col-md-6 col-lg-4 mb-3">
+                    <label>{{ spec.label }}</label>
+                    <h6 class="mb-0">{{ spec.value }}</h6>
+                </div>
+            </div>
+
+            <hr />
+
+            <!-- Fabric & Care -->
+            <h5 class="mb-3 text-main">Fabric &amp; Care</h5>
+            <div class="fabric-grid">
+                <div *ngFor="let item of fabrics" class="fabric-div mb-3">
+                    <div class="fabric-img">
+                        <img [src]="item.img" [alt]="item.text" />
+                    </div>
+                    <h6 class="mb-0 text-center">{{ item.text }}</h6>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div class="product-review-main">
+        <div class="product-review-div">
+            <div class="body-head mb-4">
+                <h4 class="text-center">Customer Reviews</h4>
+            </div>
+
+            <div class="review-main">
+
+                <!-- Review Header -->
+                <div class="review-header">
+                    <div class="review-header-left">
+                        <div class="review-i-tag">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h6>Be the first to write a review</h6>
+                    </div>
+                    <div class="review-header-border"></div>
+                    <div class="review-header-right">
+                        <button class="form-btn">Write a Review</button>
+                    </div>
+                </div>
+
+                <!-- Review Slider -->
+                <div class="review-slider">
+                    <button class="slider-arrow left" (click)="prevSlide()" [disabled]="currentSlide === 0">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+
+                    <div class="review-slider-track">
+                        <div *ngFor="let item of visibleReviews" class="review-swiper-item">
+                            <h4 class="mb-2">{{ item.heading }}</h4>
+                            <h5 class="mb-3">{{ item.content }}</h5>
+                            <div class="d-flex align-items-center justify-content-center column-gap-3 mb-3">
+                                <i class="far fa-user"></i>
+                                <h5 class="mb-0">{{ item.name }}</h5>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <i *ngFor="let star of getStars(item.review)" class="fas fa-star"
+                                    style="color: #F8B700;"></i>
+                            </div>
+                            <h6>{{ item.date }}</h6>
+                        </div>
+                    </div>
+
+                    <button class="slider-arrow right" (click)="nextSlide()"
+                        [disabled]="currentSlide + slidesPerPage >= reviews.length">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ── SIMILAR PRODUCTS (reuses existing app-products card) ── -->
+    <div class="product-main mt-5">
+        <div class="product-div w-100">
+            <div class="body-head mb-4">
+                <h4 class="text-center">Similar Products</h4>
+            </div>
+            <div class="product-grid">
+                <app-products *ngFor="let item of products" [product]="item"></app-products>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -21,6 +21,12 @@
     text-align: center;
 }
 
+.category-grid {
+    display: grid;
+    align-items: start;
+    justify-content: space-between;
+}
+
 @media screen and (min-width: 1098px) {
     .category-box img {
         height: 300px;

@@ -1,0 +1,46 @@
+<div class="portal-main">
+    <div class="portal-div">
+
+        <!-- Left Panel -->
+        <div class="portal-left">
+            <img src="assets/images/Portal/1.png" alt="Portal" />
+            <h1>"Your vibe, your style Login &amp; fly now"</h1>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="portal-right">
+            <img src="assets/images/Logo-Dark.png" alt="Logo" />
+            <h4>Sign In to unlock faster checkout and special deals!</h4>
+
+            <div class="w-100">
+                <form action="">
+                    <!-- Mobile Number -->
+                    <div class="mb-4">
+                        <label for="mobile">Mobile Number <span>*</span></label>
+                        <div class="input-double-flex">
+                            <label class="mb-0 text-center">+91</label>
+                            <input type="text" class="form-control border-0" name="mobile" id="mobile"
+                                placeholder="Enter 10-digit Mobile Number" [(ngModel)]="mobile" maxlength="10" />
+                        </div>
+                    </div>
+
+                    <!-- Full Name -->
+                    <div class="mb-4">
+                        <label for="name">Full Name <span>*</span></label>
+                        <input type="text" class="form-control" name="name" id="name" placeholder="Enter your Full Name"
+                            [(ngModel)]="fullName" />
+                    </div>
+
+                    <!-- Submit -->
+                    <div>
+                        <button type="button" class="login-btn w-100" (click)="sendOtp()">
+                            <i class="fa-brands fa-whatsapp me-2"></i>
+                            Send OTP via WhatsApp
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>

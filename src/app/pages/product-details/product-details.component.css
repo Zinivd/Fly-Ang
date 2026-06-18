@@ -1,0 +1,53 @@
+.product-details {
+    width: 90%;
+    margin: auto;
+}
+
+.product-description-main {
+    margin: 30px 0px;
+}
+
+.product-review-main {
+    background: url('/assets/images/Review/1.png'), url('/assets/images/Review/2.png'), #FAE6F6;
+    background-position: top left, right top;
+    background-repeat: no-repeat, no-repeat;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.product-review-div {
+    margin: auto;
+}
+
+@media screen and (min-width: 1098px) {
+    .product-review-main {
+        padding: 30px 0px;
+        background-size: 200px, 200px;
+    }
+
+    .product-review-div {
+        width: 85%;
+    }
+}
+
+@media screen and (min-width: 767px) and (max-width: 1098px) {
+    .product-review-main {
+        padding: 30px 0px;
+        background-size: 200px, 200px;
+    }
+
+    .product-review-div {
+        width: 90%;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .product-review-main {
+        padding: 20px 0px;
+        background-size: 100px, 100px;
+    }
+
+    .product-review-div {
+        width: 95%;
+    }
+}

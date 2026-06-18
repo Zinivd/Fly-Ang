@@ -26,6 +26,8 @@
     transition: all var(--transition);
 }
 
+.form-control:hover,
+.form-select:hover,
 .form-control:focus,
 .form-select:focus {
     border: 2px solid var(--main);

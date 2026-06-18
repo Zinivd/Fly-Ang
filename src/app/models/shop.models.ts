@@ -19,3 +19,12 @@ export interface CollectionItem {
   name: string;
   img: string;
 }
+
+export interface ReviewItem {
+  id: string | number;
+  name: string;
+  heading: string;
+  review: number;
+  date: string;
+  content: string;
+}
