@@ -25,11 +25,23 @@
 }
 
 .body-head h6 a:hover {
-    color: var(--main);
+    color: var(--main) !important;
 }
 
 .body-head h6 a.active {
     color: var(--text-primary);
+}
+
+.normal-small {
+    font-size: 12px;
+    font-weight: var(--fw-md);
+    color: var(--text-secondary);
+}
+
+.error-small {
+    font-size: 12px;
+    font-weight: var(--fw-md);
+    color: var(--red);
 }
 
 @media screen and (min-width: 1098px) {

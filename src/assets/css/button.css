@@ -4,7 +4,6 @@
     padding: 8px;
     border: 2px solid var(--text-primary);
     border-radius: 5px;
-    font-size: 14px;
     font-weight: var(--fw-md);
     transition: all var(--transition);
 }
@@ -15,7 +14,6 @@
     padding: 8px;
     border: 2px solid var(--text-secondary);
     border-radius: 5px;
-    font-size: 14px;
     font-weight: var(--fw-md);
     transition: all var(--transition);
 }
@@ -26,7 +24,6 @@
     border: 2px solid var(--main);
     padding: 6px 20px;
     border-radius: 5px;
-    font-size: 14px;
     font-weight: var(--fw-md);
     transition: all var(--transition);
 }
@@ -203,7 +200,7 @@
     color: var(--text-primary);
 }
 
-@media screen and (min-width: 767px) {
+@media screen and (min-width: 1098px) {
 
     .buy-btn,
     .cart-btn {
@@ -225,6 +222,31 @@
         height: 50px;
         width: 50px;
         font-size: 14px;
+    }
+}
+
+@media screen and (min-width: 767px) and (max-width: 1098px) {
+
+    .buy-btn,
+    .cart-btn {
+        font-size: 14px;
+    }
+
+    .login-btn,
+    .login-resend-btn,
+    .nav-btn,
+    .subscribe-btn,
+    .tab-btn,
+    .add-cart-btn,
+    .add-cart-btn-2,
+    .form-btn {
+        font-size: 12px;
+    }
+
+    .size-btn {
+        height: 50px;
+        width: 50px;
+        font-size: 12px;
     }
 }
 

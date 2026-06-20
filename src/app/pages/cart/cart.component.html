@@ -1,0 +1,337 @@
+<link rel="stylesheet" href="../../../assets/css/list.css">
+
+<div class="cart my-4">
+
+    <!-- Breadcrumb -->
+    <div class="body-head mb-4">
+        <h6 class="d-flex align-items-center column-gap-2 mb-0">
+            <a routerLink="/">
+                Home <i class="fas fa-chevron-right ps-1"></i>
+            </a>
+            <a class="active">Cart</a>
+        </h6>
+    </div>
+
+    <div class="cart-div web-div">
+
+        <div class="cart-left">
+            <div class="body-head mb-3">
+                <h5 class="mb-0 text-main">
+                    Shopping Cart ({{ totalItems }} {{ totalItems === 1 ? 'item' : 'items' }})
+                </h5>
+            </div>
+
+            <!-- Cart Table -->
+            <div class="table-div">
+                <!-- Empty Cart State -->
+                <div class="empty-component h-auto" *ngIf="cartItems.length === 0">
+                    <div class="empty-div">
+                        <div class="empty-icon">🛒</div>
+                        <h2 class="mb-0">Your cart is empty!</h2>
+                        <h6 class="mb-0">Add items to get started</h6>
+                        <button class="form-btn" routerLink="/all-products">Browse Products</button>
+                    </div>
+                </div>
+                <!-- Cart Table -->
+                <table class="table table-responsive mb-3" *ngIf="cartItems.length > 0">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Size</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of cartItems">
+                            <!-- Product Info -->
+                            <td>
+                                <div class="product-cell">
+                                    <img [src]="item.image" [alt]="item.name">
+                                    <div>
+                                        <h5 class="mb-2">{{ item.name }}</h5>
+                                        <h6 class="mb-2">{{ item.description }}</h6>
+                                        <h5 class="mb-1">₹{{ item.price }}</h5>
+                                        <a class="remove-link" (click)="removeItem(item.id)">
+                                            <i class="fa-solid fa-trash text-danger pe-1"></i> Remove
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <select class="form-select" [(ngModel)]="item.size">
+                                    <option *ngFor="let size of item.availableSizes" [value]="size">
+                                        {{ size }}
+                                    </option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="qty-div">
+                                    <button class="qty-btn" (click)="decreaseQty(item)" [disabled]="item.quantity <= 1">
+                                        −
+                                    </button>
+                                    <input type="number" min="1" max="10" [value]="item.quantity"
+                                        (change)="onQtyInput(item, $event)" />
+                                    <button class="qty-btn" (click)="increaseQty(item)"
+                                        [disabled]="item.quantity >= 10">
+                                        +
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="fw-semibold">₹{{ itemTotal(item) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="body-head mt-4" *ngIf="cartItems.length > 0">
+                <h6 class="mb-0">
+                    <a (click)="goBack()" style="cursor:pointer;">
+                        ← Continue Shopping
+                    </a>
+                </h6>
+            </div>
+        </div>
+
+        <div class="cart-right">
+            <div class="body-head mb-3">
+                <h5 class="mb-0">Order Summary</h5>
+            </div>
+
+            <div class="summary-list mb-3">
+                <div class="summary-item">
+                    <h6 class="mb-0">Subtotal</h6>
+                    <h5 class="mb-0">₹{{ subtotal }}</h5>
+                </div>
+
+                <div class="summary-item">
+                    <h6 class="mb-0">
+                        Discount
+                        <span *ngIf="appliedCoupon" class="badge-coupon ms-1">{{ appliedCoupon }} ({{ discountPercent
+                            }}%)</span>
+                    </h6>
+                    <h5 class="mb-0 text-success">
+                        <span *ngIf="discountAmount > 0">− </span>₹{{ discountAmount }}
+                    </h5>
+                </div>
+
+                <div class="summary-item">
+                    <h6 class="mb-0">Shipping</h6>
+                    <h5 class="mb-0">
+                        <span *ngIf="shippingCharge === 0" class="text-success">Free</span>
+                        <span *ngIf="shippingCharge > 0">₹{{ shippingCharge }}</span>
+                    </h5>
+                </div>
+
+                <div class="summary-item">
+                    <h6 class="mb-0">Tax (GST 18%)</h6>
+                    <h5 class="mb-0">₹{{ taxAmount }}</h5>
+                </div>
+
+                <hr class="my-3" />
+
+                <div class="summary-item">
+                    <h6 class="mb-0 text-danger">Total</h6>
+                    <h5 class="mb-0 fw-bold">₹{{ total }}</h5>
+                </div>
+            </div>
+
+            <div *ngIf="!appliedCoupon" class="input-group mb-2">
+                <input type="text" class="form-control" placeholder="Enter Coupon Code" [(ngModel)]="couponCode"
+                    (keyup.enter)="applyCoupon()" />
+                <button class="form-btn" (click)="applyCoupon()">Apply</button>
+            </div>
+            <div *ngIf="couponError" class="text-danger small mb-2">
+                <i class="fa-solid fa-circle-exclamation me-1"></i>{{ couponError }}
+            </div>
+
+            <div *ngIf="appliedCoupon" class="applied-coupon mb-3">
+                <h6 class="mb-0">
+                    <i class="fa-solid fa-tag me-1 text-success"></i>
+                    <b>{{ appliedCoupon }}</b> applied — {{ discountPercent }}% off!
+                </h6>
+                <a class="remove-coupon ms-2 float-end" (click)="removeCoupon()">✕</a>
+            </div>
+
+            <button class="login-btn w-100 mb-3" routerLink="/checkout" [disabled]="cartItems.length === 0">
+                Proceed to Checkout
+            </button>
+
+            <div class="free-shipping-nudge mb-3" *ngIf="amountForFreeShipping > 0 && cartItems.length > 0">
+                <i class="fa-solid fa-truck-fast me-1"></i>
+                Add <strong>₹{{ amountForFreeShipping }}</strong> more for free shipping!
+            </div>
+            <div class="free-shipping-nudge free-shipping-achieved mb-3"
+                *ngIf="amountForFreeShipping === 0 && cartItems.length > 0">
+                <i class="fa-solid fa-circle-check me-1"></i>
+                You've unlocked free shipping!
+            </div>
+
+            <hr class="my-3" />
+
+            <div class="summary-item d-flex align-items-center justify-content-center flex-wrap gap-4">
+                <h6 class="mb-0">
+                    <i class="fa-solid fa-lock me-1"></i> Secure Checkout
+                </h6>
+                <h6 class="mb-0">
+                    <i class="fa-solid fa-shield me-1"></i> Payment Protected
+                </h6>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="cart-div mobile-div">
+
+        <div class="cart-left">
+            <div class="body-head mb-3">
+                <h6 class="mb-0 text-main">
+                    Shopping Cart ({{ totalItems }} {{ totalItems === 1 ? 'item' : 'items' }})
+                </h6>
+            </div>
+
+            <!-- Empty Cart State -->
+            <div *ngIf="cartItems.length === 0" class="empty-cart text-center py-5">
+                <i class="fa-solid fa-cart-shopping fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Your cart is empty</h5>
+                <p class="text-muted mb-3">Add items to get started</p>
+                <a routerLink="/shop" class="login-btn">Browse Products</a>
+            </div>
+
+            <!-- Cart Table -->
+            <div class="table-div">
+                <div *ngFor="let item of cartItems" class="mb-3">
+                    <div class="product-cell mb-2">
+                        <img [src]="item.image" [alt]="item.name">
+                        <div>
+                            <h5 class="mb-2">{{ item.name }} - Blue</h5>
+                            <h6 class="mb-2">{{ item.description }}</h6>
+                            <h5 class="mb-1">₹{{ item.price }}</h5>
+                            <a class="remove-link" (click)="removeItem(item.id)">
+                                <i class="fa-solid fa-trash text-danger pe-1"></i> Remove
+                            </a>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gap-2">
+                        <select class="form-select" [(ngModel)]="item.size">
+                            <option *ngFor="let size of item.availableSizes" [value]="size">
+                                {{ size }}
+                            </option>
+                        </select>
+                        <div class="qty-div">
+                            <button class="qty-btn" (click)="decreaseQty(item)" [disabled]="item.quantity <= 1">
+                                −
+                            </button>
+                            <input type="number" min="1" max="10" [value]="item.quantity"
+                                (change)="onQtyInput(item, $event)" />
+                            <button class="qty-btn" (click)="increaseQty(item)" [disabled]="item.quantity >= 10">
+                                +
+                            </button>
+                        </div>
+                    </div>
+                    <!-- <td class="fw-semibold">₹{{ itemTotal(item) }}</td> -->
+                </div>
+            </div>
+        </div>
+
+        <div class="cart-right">
+            <div class="body-head mb-3">
+                <h5 class="mb-0">Order Summary</h5>
+            </div>
+
+            <div class="summary-list mb-3">
+                <div class="summary-item">
+                    <h6 class="mb-0">Subtotal</h6>
+                    <h5 class="mb-0">₹{{ subtotal }}</h5>
+                </div>
+
+                <div class="summary-item">
+                    <h6 class="mb-0">
+                        Discount
+                        <span *ngIf="appliedCoupon" class="badge-coupon ms-1">{{ appliedCoupon }} ({{ discountPercent
+                            }}%)</span>
+                    </h6>
+                    <h5 class="mb-0 text-success">
+                        <span *ngIf="discountAmount > 0">− </span>₹{{ discountAmount }}
+                    </h5>
+                </div>
+
+                <div class="summary-item">
+                    <h6 class="mb-0">Shipping</h6>
+                    <h5 class="mb-0">
+                        <span *ngIf="shippingCharge === 0" class="text-success">Free</span>
+                        <span *ngIf="shippingCharge > 0">₹{{ shippingCharge }}</span>
+                    </h5>
+                </div>
+
+                <div class="summary-item">
+                    <h6 class="mb-0">Tax (GST 18%)</h6>
+                    <h5 class="mb-0">₹{{ taxAmount }}</h5>
+                </div>
+
+                <hr class="my-3" />
+
+                <div class="summary-item">
+                    <h6 class="mb-0 text-danger">Total</h6>
+                    <h5 class="mb-0 fw-bold">₹{{ total }}</h5>
+                </div>
+            </div>
+
+            <div *ngIf="!appliedCoupon" class="input-group mb-2">
+                <input type="text" class="form-control" placeholder="Enter Coupon Code" [(ngModel)]="couponCode"
+                    (keyup.enter)="applyCoupon()" />
+                <button class="form-btn" (click)="applyCoupon()">Apply</button>
+            </div>
+            <div *ngIf="couponError" class="text-danger small mb-2">
+                <i class="fa-solid fa-circle-exclamation me-1"></i>{{ couponError }}
+            </div>
+
+            <div *ngIf="appliedCoupon" class="applied-coupon mb-3">
+                <h6 class="mb-0">
+                    <i class="fa-solid fa-tag me-1 text-success"></i>
+                    <b>{{ appliedCoupon }}</b> applied — {{ discountPercent }}% off!
+                </h6>
+                <a class="remove-coupon ms-2 float-end" (click)="removeCoupon()">✕</a>
+            </div>
+
+            <button class="login-btn w-100 mb-3" [disabled]="cartItems.length === 0">
+                Proceed to Checkout
+            </button>
+
+            <div class="free-shipping-nudge mb-3" *ngIf="amountForFreeShipping > 0 && cartItems.length > 0">
+                <i class="fa-solid fa-truck-fast me-1"></i>
+                Add <strong>₹{{ amountForFreeShipping }}</strong> more for free shipping!
+            </div>
+            <div class="free-shipping-nudge free-shipping-achieved mb-3"
+                *ngIf="amountForFreeShipping === 0 && cartItems.length > 0">
+                <i class="fa-solid fa-circle-check me-1"></i>
+                You've unlocked free shipping!
+            </div>
+
+            <hr class="my-3" />
+
+            <div class="summary-item d-flex align-items-center justify-content-center flex-wrap gap-4">
+                <h6 class="mb-0">
+                    <i class="fa-solid fa-lock me-1"></i> Secure Checkout
+                </h6>
+                <h6 class="mb-0">
+                    <i class="fa-solid fa-shield me-1"></i> Payment Protected
+                </h6>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Recently Viewed -->
+    <div class="product-main my-4">
+        <div class="product-div">
+            <div class="body-head mb-4">
+                <h4 class="text-center">Recently Viewed Products</h4>
+            </div>
+            <div class="product-grid">
+                <app-products *ngFor="let item of products" [product]="item"></app-products>
+            </div>
+        </div>
+    </div>
+
+</div>

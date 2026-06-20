@@ -13,6 +13,8 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout.component
 import { HomeComponent } from './pages/home/home.component';
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
 import { AllProductsComponent } from './pages/all-products/all-products.component';
+import { CartComponent } from './pages/cart/cart.component';
+import { AddressComponent } from './pages/checkout/address/address.component';
 
 export const routes: Routes = [
   // Pages
@@ -23,6 +25,8 @@ export const routes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'product-details/:id', component: ProductDetailsComponent },
       { path: 'all-products', component: AllProductsComponent },
+      { path: 'cart', component: CartComponent },
+      { path: 'checkout', component: AddressComponent },
     ],
   },
   // Portal

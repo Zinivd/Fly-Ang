@@ -1,0 +1,250 @@
+<link rel="stylesheet" href="../stepper.css">
+
+<div class="checkout my-4">
+    <div class="stepper mb-4">
+        <div class="step active">
+            <div class="step-circle">1</div>
+            <span class="step-label">Address</span>
+        </div>
+        <div class="connector"></div>
+        <div class="step">
+            <div class="step-circle">2</div>
+            <span class="step-label">Payment</span>
+        </div>
+        <div class="connector"></div>
+        <div class="step">
+            <div class="step-circle">3</div>
+            <span class="step-label">Review</span>
+        </div>
+    </div>
+
+    <div class="checkout-div">
+        <div class="checkout-left">
+            <div class="address-list mb-4" *ngIf="addresses.length > 0">
+                <div class="body-head mb-3">
+                    <h5 class="mb-0">Select Delivery Address</h5>
+                </div>
+
+                <div class="address-item" *ngFor="let address of addresses"
+                    [class.selected]="selectedAddressId === address.id" (click)="selectAddress(address.id)">
+                    <input type="radio" [id]="'address-' + address.id" name="address"
+                        [checked]="selectedAddressId === address.id" (change)="selectAddress(address.id)" />
+                    <label [for]="'address-' + address.id" class="w-100">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <h4 class="mb-0">{{ address.label }}</h4>
+                            <span class="badge badge-secondary" *ngIf="address.isDefault">Default</span>
+                        </div>
+                        <h5 class="mb-2">{{ address.name }}</h5>
+                        <h6 class="mb-2">Mobile: {{ address.mobile }}</h6>
+                        <h6 class="mb-2">
+                            {{ address.addressLine1 }}, {{ address.addressLine2 ? address.addressLine2 + ', ' : '' }}
+                            {{ address.city }}, {{ address.state }} - {{ address.pincode }}.
+                        </h6>
+                        <div class="d-flex align-items-center gap-3" (click)="$event.stopPropagation()">
+                            <a class="d-flex align-items-center column-gap-2" style="cursor:pointer;"
+                                (click)="editAddress(address)">
+                                <i class="fa-solid fa-pencil text-main me-1"></i> Edit
+                            </a>
+                            |
+                            <a class="d-flex align-items-center column-gap-2 text-danger" style="cursor:pointer;"
+                                (click)="deleteAddress(address.id)">
+                                <i class="fa-solid fa-trash text-danger me-1"></i> Delete
+                            </a>
+                            <ng-container *ngIf="!address.isDefault">
+                                |
+                                <a class="d-flex align-items-center column-gap-2" style="cursor:pointer;"
+                                    (click)="setDefault(address.id)">
+                                    <i class="fa-solid fa-star me-1 text-warning"></i> Set as Default
+                                </a>
+                            </ng-container>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="divider mb-4">
+                <div class="divider-line"></div>
+                <h6 class="mb-0">{{ showAddressForm ? 'Cancel' : 'OR' }}</h6>
+                <div class="divider-line"></div>
+            </div>
+
+            <div class="mb-3" *ngIf="!showAddressForm">
+                <button class="login-btn w-100" (click)="toggleForm()">
+                    <i class="fa-solid fa-plus me-2"></i> Add New Address
+                </button>
+            </div>
+
+            <!-- Address Form -->
+            <div class="address-form" *ngIf="showAddressForm">
+                <div class="body-head mb-3">
+                    <h5 class="mb-0">{{ editingAddressId !== null ? 'Edit Address' : 'Add New Address' }}</h5>
+                </div>
+
+                <form [formGroup]="addressForm" class="row row-gap-3">
+
+                    <div class="col-md-6">
+                        <label for="address-name">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="address-name" placeholder="Enter Name"
+                            formControlName="name" [class.is-invalid]="isInvalid('name')" />
+                        <div class="invalid-feedback">{{ getError('name') }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="address-phone">Phone <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="address-phone" placeholder="Enter Phone"
+                            formControlName="mobile" [class.is-invalid]="isInvalid('mobile')" />
+                        <div class="invalid-feedback">{{ getError('mobile') }}</div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="address-line1">Address Line 1 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="address-line1"
+                            placeholder="House no., Building, Street" formControlName="addressLine1"
+                            [class.is-invalid]="isInvalid('addressLine1')" />
+                        <div class="invalid-feedback">{{ getError('addressLine1') }}</div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="address-line2">Address Line 2</label>
+                        <input type="text" class="form-control" id="address-line2"
+                            placeholder="Locality, Area (optional)" formControlName="addressLine2" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="address-city">City <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="address-city" placeholder="Enter City"
+                            formControlName="city" [class.is-invalid]="isInvalid('city')" />
+                        <div class="invalid-feedback">{{ getError('city') }}</div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="address-state">State <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="address-state" placeholder="Enter State"
+                            formControlName="state" [class.is-invalid]="isInvalid('state')" />
+                        <div class="invalid-feedback">{{ getError('state') }}</div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="address-pincode">Pincode <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="address-pincode" placeholder="6-digit Pincode"
+                            formControlName="pincode" maxlength="6" [class.is-invalid]="isInvalid('pincode')" />
+                        <div class="invalid-feedback">{{ getError('pincode') }}</div>
+                        <small class="text-muted" *ngIf="pincodeChecking">
+                            <i class="fa-solid fa-spinner fa-spin me-1"></i> Checking delivery...
+                        </small>
+                        <small class="text-success" *ngIf="pincodeStatus === 'available' && !pincodeChecking">
+                            <i class="fa-solid fa-circle-check me-1"></i> Delivery available for this pincode
+                        </small>
+                        <small class="text-danger" *ngIf="pincodeStatus === 'unavailable' && !pincodeChecking">
+                            <i class="fa-solid fa-circle-xmark me-1"></i> Delivery not available for this pincode
+                        </small>
+                    </div>
+
+                    <div class="col-md-12 d-flex align-items-center justify-content-start column-gap-4">
+                        <div class="form-check" *ngFor="let type of ['Home', 'Work', 'Other']">
+                            <input class="form-check-input" type="radio" [id]="'type-' + type" [value]="type"
+                                formControlName="type" />
+                            <label class="form-check-label" [for]="'type-' + type">{{ type }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="set-default"
+                                formControlName="isDefault" />
+                            <label class="form-check-label" for="set-default">Set as default address</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 d-flex gap-3">
+                        <button type="button" class="login-btn flex-grow-1" (click)="saveAddress()">
+                            {{ editingAddressId !== null ? 'Update Address' : 'Save Address' }}
+                        </button>
+                        <!-- <button type="button" class="buy-btn" (click)="cancelForm()">
+                            Cancel
+                        </button> -->
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="mt-4 d-md-none">
+                <button class="login-btn w-100" [disabled]="selectedAddressId === -1 || addresses.length === 0"
+                    (click)="proceedToPayment()">
+                    Proceed to Payment <i class="fa-solid fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+
+        </div>
+
+        <div class="checkout-right h-auto">
+            <div class="body-head mb-4">
+                <h5 class="mb-0">Order Summary</h5>
+                <small class="text-muted">{{ totalItems }} {{ totalItems === 1 ? 'item' : 'items' }}</small>
+            </div>
+
+            <div class="summary-list">
+                <div class="summary-item" *ngFor="let item of orderSummary.items">
+                    <div class="product-cell">
+                        <img [src]="item.image" [alt]="item.name" />
+                        <div>
+                            <h5 class="mb-1">{{ item.name }}</h5>
+                            <h6 class="mb-0">x {{ item.qty }}</h6>
+                        </div>
+                    </div>
+                    <h5>₹{{ item.price * item.qty }}</h5>
+                </div>
+                <hr class="my-3" />
+                <div class="summary-item">
+                    <h6 class="mb-0">Subtotal</h6>
+                    <h5 class="mb-0">₹{{ subtotal }}</h5>
+                </div>
+                <div class="summary-item">
+                    <h6 class="mb-0">Discount</h6>
+                    <h5 class="mb-0 text-success">{{ discountAmount > 0 ? '−' : '' }}₹{{ discountAmount }}</h5>
+                </div>
+                <div class="summary-item">
+                    <h6 class="mb-0">Shipping</h6>
+                    <h5 class="mb-0">
+                        <span *ngIf="shippingCharge === 0" class="text-success">Free</span>
+                        <span *ngIf="shippingCharge > 0">₹{{ shippingCharge }}</span>
+                    </h5>
+                </div>
+                <div class="summary-item">
+                    <h6 class="mb-0">Tax (GST 18%)</h6>
+                    <h5 class="mb-0">₹{{ taxAmount }}</h5>
+                </div>
+                <hr class="my-3" />
+                <div class="summary-item">
+                    <h6 class="mb-0 text-danger fw-bold">Total</h6>
+                    <h5 class="mb-0 fw-bold">₹{{ total }}</h5>
+                </div>
+                <!-- <div class="delivering-to mt-3 mb-3" *ngIf="selectedAddressId !== -1">
+                    <h6 class="mb-1 text-muted"><i class="fa-solid fa-location-dot me-1 text-main"></i> Delivering to:
+                    </h6>
+                    <ng-container *ngFor="let a of addresses">
+                        <div *ngIf="a.id === selectedAddressId">
+                            <strong>{{ a.name }}</strong> — {{ a.addressLine1 }}, {{ a.city }}, {{ a.state }} {{
+                            a.pincode }}
+                        </div>
+                    </ng-container>
+                </div> -->
+                <button class="login-btn w-100 d-none d-md-block"
+                    [disabled]="selectedAddressId === -1 || addresses.length === 0" (click)="proceedToPayment()">
+                    Proceed to Payment <i class="fa-solid fa-arrow-right ms-2"></i>
+                </button>
+                <hr class="my-3" />
+                <div class="summary-item d-flex align-items-center justify-content-center flex-wrap gap-4">
+                    <h6 class="mb-0">
+                        <i class="fa-solid fa-lock me-1"></i> Secure Checkout
+                    </h6>
+                    <h6 class="mb-0">
+                        <i class="fa-solid fa-shield me-1"></i> Payment Protected
+                    </h6>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
