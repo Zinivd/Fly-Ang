@@ -1,1 +1,202 @@
-<p>orders works!</p>
+<link rel="stylesheet" href="../stepper.css">
+
+<div *ngIf="!showDetails">
+    <div class="body-head mb-4">
+        <h5 class="mb-2 text-main">My Orders</h5>
+        <h6 class="mb-0">Check your orders and payments</h6>
+    </div>
+
+    <ul class="nav nav-tabs order-tabs justify-content-between mb-4">
+        <li class="nav-item">
+            <button class="nav-link" [class.active]="activeTab === 0" (click)="setActiveTab(0)">
+                Active
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" [class.active]="activeTab === 1" (click)="setActiveTab(1)">
+                Cancelled
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" [class.active]="activeTab === 2" (click)="setActiveTab(2)">
+                Completed
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content form">
+        <div class="tab-pane" [class.active]="activeTab === 0">
+            <div class="order-card">
+                <div class="body-head mb-3">
+                    <h5 class="mb-0 text-main">Order #123456</h5>
+                </div>
+                <div class="row row-gap-3">
+                    <div class="col-md-4">
+                        <label>Order ID</label>
+                        <h6 class="mb-0">#ORD-123456</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Order Date</label>
+                        <h6 class="mb-0">28 May, 2026</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Estimated Delivery</label>
+                        <h6 class="mb-0">31 May, 2026</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Order Status</label>
+                        <h6 class="mb-0">Processing</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Payment Method</label>
+                        <h6 class="mb-0">Cash On Delivery</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="login-btn" (click)="viewDetails()">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" [class.active]="activeTab === 1"></div>
+        <div class="tab-pane" [class.active]="activeTab === 2"></div>
+    </div>
+</div>
+
+<div class="order-details" *ngIf="showDetails">
+    <div class="body-head mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h5 class="mb-0 text-main">Order Details</h5>
+        <h6 class="mb-0">
+            <a (click)="backToOrders()">Back</a>
+        </h6>
+    </div>
+    <div class="order-card mb-3">
+        <div class="body-head d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h5 class="mb-2">Order #123456</h5>
+                <h6 class="mb-0">Placed on 18 may 2026 04:59 PM</h6>
+            </div>
+            <h4 class="mb-0">₹3,088</h4>
+        </div>
+    </div>
+
+    <div class="stepper mb-4">
+        <div class="step active">
+            <div class="step-circle">1</div>
+            <span class="step-label">Order Placed</span>
+        </div>
+        <div class="connector"></div>
+        <div class="step">
+            <div class="step-circle">2</div>
+            <span class="step-label">In Progress</span>
+        </div>
+        <div class="connector"></div>
+        <div class="step">
+            <div class="step-circle">3</div>
+            <span class="step-label">Shipped</span>
+        </div>
+        <div class="connector"></div>
+        <div class="step">
+            <div class="step-circle">4</div>
+            <span class="step-label">Completed</span>
+        </div>
+    </div>
+
+    <div class="review-div">
+        <div class="form mb-3">
+            <div class="row row-gap-3">
+                <div class="col-md-4">
+                    <label>Order ID</label>
+                    <h5 class="mb-0">#ORD-123456</h5>
+                </div>
+                <div class="col-md-4">
+                    <label>Order Date</label>
+                    <h5 class="mb-0">May 18, 2026</h5>
+                </div>
+                <div class="col-md-4">
+                    <label>Estimated Delivery</label>
+                    <h5 class="mb-0">May 23, 2026</h5>
+                </div>
+            </div>
+
+            <div class="divider-line my-4"></div>
+
+            <div class="body-head mb-4">
+                <h5 class="mb-0">Order Summary</h5>
+            </div>
+
+            <div class="summary-list">
+                <div class="summary-item">
+                    <div class="product-cell">
+                        <img src="assets/images/Products/1.png" alt="Bottle Green Ankle Leggings" />
+                        <div>
+                            <h5 class="mb-2">Bottle Green Ankle Leggings</h5>
+                            <h6 class="mb-0">x 1</h6>
+                        </div>
+                    </div>
+                    <h5 class="mb-0 fw-bold">₹499</h5>
+                </div>
+                <div class="summary-item">
+                    <div class="product-cell">
+                        <img src="assets/images/Products/2.png" alt="Bottle Green Ankle Leggings" />
+                        <div>
+                            <h5 class="mb-2">Bottle Green Ankle Leggings</h5>
+                            <h6 class="mb-0">x 1</h6>
+                        </div>
+                    </div>
+                    <h5 class="mb-0 fw-bold">₹499</h5>
+                </div>
+            </div>
+
+            <div class="divider-line my-4"></div>
+
+            <div class="summary-list">
+                <div class="summary-item">
+                    <h6 class="mb-0">Subtotal</h6>
+                    <h5 class="mb-0">₹999</h5>
+                </div>
+                <div class="summary-item">
+                    <h6 class="mb-0">Discount</h6>
+                    <h5 class="mb-0 text-success">−₹100</h5>
+                </div>
+                <div class="summary-item">
+                    <h6 class="mb-0">Shipping</h6>
+                    <h5 class="mb-0">₹49</h5>
+                </div>
+                <div class="summary-item">
+                    <h6 class="mb-0">Tax (GST 18%)</h6>
+                    <h5 class="mb-0">₹51</h5>
+                </div>
+                <div class="summary-item">
+                    <h6 class="mb-0 text-danger fw-bold">Total</h6>
+                    <h5 class="mb-0 fw-bold">₹599</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider-line my-4"></div>
+
+        <div class="form mb-4">
+            <div class="body-head mb-3">
+                <h5 class="mb-0">Shipping Information</h5>
+            </div>
+
+            <div class="row row-gap-3">
+                <div class="col-md-6">
+                    <label>Delivery Address</label>
+                    <h6 class="mb-1">Poovarasan Ravi</h6>
+                    <h6 class="mb-1">+91 6381729596</h6>
+                    <h6 class="mb-0">
+                        6/408, Kel Easalpatti (Vi), Mel Easalpatti (P.o), Maniyathahalli,Dharmapuri, Tamilnadu - 636807.
+                    </h6>
+                </div>
+                <div class="col-md-6">
+                    <label>Delivery Address</label>
+                    <h6 class="mb-0">
+                        Standard Delivery (3-5 business days)
+                    </h6>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

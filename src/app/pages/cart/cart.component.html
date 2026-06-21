@@ -294,7 +294,7 @@
                 <a class="remove-coupon ms-2 float-end" (click)="removeCoupon()">✕</a>
             </div>
 
-            <button class="login-btn w-100 mb-3" [disabled]="cartItems.length === 0">
+            <button class="login-btn w-100 mb-3" routerLink="/checkout" [disabled]="cartItems.length === 0">
                 Proceed to Checkout
             </button>
 

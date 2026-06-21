@@ -17,13 +17,13 @@
                     <a routerLink="">
                         <i class="bx bx-search"></i>
                     </a>
-                    <a routerLink="/wishlist" routerLinkActive="active">
+                    <a routerLink="/profile" [queryParams]="{ tab: 3 }" class="nav-link" routerLinkActive="active">
                         <i class="bx bx-heart"></i>
                     </a>
-                    <a routerLink="/cart" routerLinkActive="active">
+                    <a routerLink="/cart" class="nav-link" routerLinkActive="active">
                         <i class="bx bx-shopping-bag"></i>
                     </a>
-                    <a routerLink="/profile" routerLinkActive="active">
+                    <a routerLink="/profile" class="nav-link" routerLinkActive="active">
                         <i class="bx bx-user"></i>
                     </a>
                 </div>

@@ -44,7 +44,7 @@
 .input-triple-flex {
     background: var(--secondary);
     border: 2px solid var(--border);
-    border-radius: 6px;
+    border-radius: 5px;
     display: grid;
     align-items: center;
 }
@@ -63,7 +63,7 @@
 }
 
 .input-double-flex input {
-    border-radius: 0px 6px 6px 0px !important;
+    border-radius: 0px 5px 5px 0px !important;
 }
 
 .input-repeat-double-flex {
@@ -71,7 +71,7 @@
 }
 
 .input-repeat-double-flex input {
-    border-radius: 0px 6px 6px 0px !important;
+    border-radius: 0px 5px 5px 0px !important;
 }
 
 .input-triple-flex {

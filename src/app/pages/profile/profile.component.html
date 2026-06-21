@@ -1,1 +1,98 @@
-<p>profile works!</p>
+<div class="profile my-4">
+
+    <!-- Breadcrumb -->
+    <div class="body-head mb-4">
+        <h6 class="d-flex align-items-center column-gap-2 mb-0">
+            <a routerLink="/">
+                Home <i class="fas fa-chevron-right ps-1"></i>
+            </a>
+            <a class="active">Profile</a>
+        </h6>
+    </div>
+
+    <div class="profile-div">
+        <div class="profile-left">
+            <div class="body-head mb-4">
+                <h4 class="mb-0">My Account</h4>
+            </div>
+
+            <ul class="nav nav-tabs row-gap-3 border-0 p-0 m-0 profile-tabs">
+                <li class="nav-item">
+                    <button class="nav-link profile-btn" [class.active]="activeTab === 0" (click)="setActiveTab(0)">
+                        <i class="fas fa-user me-1"></i> Personal Information
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link profile-btn" [class.active]="activeTab === 1" (click)="setActiveTab(1)">
+                        <i class="fas fa-lock me-1"></i> Change Password
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link profile-btn" [class.active]="activeTab === 2" (click)="setActiveTab(2)">
+                        <i class="fas fa-clock-rotate-left me-1"></i> Order History
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link profile-btn" [class.active]="activeTab === 3" (click)="setActiveTab(3)">
+                        <i class="fas fa-heart me-1"></i> Wishlist
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link profile-btn" [class.active]="activeTab === 4" (click)="setActiveTab(4)">
+                        <i class="fas fa-location-dot me-1"></i> Saved Addresses
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link profile-btn" [class.active]="activeTab === 5" (click)="setActiveTab(5)">
+                        <i class="fas fa-right-from-bracket me-1"></i> Sign Out
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="profile-right">
+            <div class="tab-content">
+
+                <!-- Personal Information -->
+                <div class="tab-pane" [class.active]="activeTab === 0">
+                    <app-info></app-info>
+                </div>
+
+                <!-- Change Password -->
+                <div class="tab-pane" [class.active]="activeTab === 1">
+                    <app-password></app-password>
+                </div>
+
+                <!-- My Orders -->
+                <div class="tab-pane" [class.active]="activeTab === 2">
+                    <app-orders></app-orders>
+                </div>
+
+                <!-- My Wishlist -->
+                <div class="tab-pane" [class.active]="activeTab === 3">
+                    <app-wishlist></app-wishlist>
+                </div>
+
+                <!-- My Addresses -->
+                <div class="tab-pane" [class.active]="activeTab === 4">
+                    <app-address></app-address>
+                </div>
+
+                <!-- Sign Out -->
+                <div class="tab-pane" [class.active]="activeTab === 5">
+                    <div class="body-head mb-4">
+                        <h5 class="mb-0 text-main">Sign Out</h5>
+                    </div>
+                    <div class="form">
+                        <label>Are you sure you want to sign out of your account?</label>
+                    </div>
+                    <div class="d-flex gap-3 mt-4">
+                        <button class="login-btn" (click)="signOut()">Yes, Sign Out</button>
+                        <button class="reset-btn" (click)="setActiveTab(0)">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

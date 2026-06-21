@@ -1,4 +1,5 @@
 .navbar-nav .nav-link.active,
+.icons-div .nav-link.active i,
 .navbar-nav .show>.nav-link,
 .navbar ul .nav-link:hover {
     color: var(--main) !important;

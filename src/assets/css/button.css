@@ -155,17 +155,20 @@
     background: var(--secondary);
     color: var(--text-primary);
     border: 2px solid var(--sub);
-    padding: 8px;
+    padding: 6px 20px;
     border-radius: 5px;
     font-weight: var(--fw-md);
     transition: all var(--transition);
 }
 
-.size-btn:hover,
-.size-btn.selected {
-    background-color: var(--main);
-    color: var(--secondary);
-    border: 2px solid var(--main);
+.profile-btn {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none !important;
+    padding: 7px 20px;
+    border-radius: 5px;
+    font-weight: var(--fw-md);
+    transition: all var(--transition);
 }
 
 /* Hover Effects */
@@ -194,6 +197,13 @@
     border: 2px solid var(--sub);
 }
 
+.size-btn:hover,
+.size-btn.selected {
+    background-color: var(--main);
+    color: var(--secondary);
+    border: 2px solid var(--main);
+}
+
 .tab-btn:hover,
 .tab-btn.active,
 .buy-btn:hover {
@@ -215,6 +225,12 @@
     color: var(--secondary);
 }
 
+.profile-btn:hover,
+.profile-btn.active {
+    background: var(--main) !important;
+    color: var(--secondary) !important;
+}
+
 @media screen and (min-width: 1098px) {
 
     .buy-btn,
@@ -230,6 +246,7 @@
     .tab-btn,
     .add-cart-btn,
     .add-cart-btn-2,
+    .profile-btn,
     .form-btn {
         font-size: 14px;
     }
@@ -256,6 +273,7 @@
     .tab-btn,
     .add-cart-btn,
     .add-cart-btn-2,
+    .profile-btn,
     .form-btn {
         font-size: 12px;
     }
@@ -282,6 +300,7 @@
     .tab-btn,
     .add-cart-btn,
     .add-cart-btn-2,
+    .profile-btn,
     .form-btn {
         font-size: 12px;
     }

@@ -17,6 +17,7 @@ import { CartComponent } from './pages/cart/cart.component';
 import { AddressComponent } from './pages/checkout/address/address.component';
 import { PaymentComponent } from './pages/checkout/payment/payment.component';
 import { ReviewComponent } from './pages/checkout/review/review.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
   // Pages
@@ -31,6 +32,7 @@ export const routes: Routes = [
       { path: 'checkout', component: AddressComponent },
       { path: 'payment', component: PaymentComponent },
       { path: 'review', component: ReviewComponent },
+      { path: 'profile', component: ProfileComponent },
     ],
   },
   // Portal

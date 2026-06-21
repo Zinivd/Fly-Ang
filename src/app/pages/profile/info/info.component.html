@@ -1,1 +1,51 @@
-<p>info works!</p>
+<div class="body-head mb-3">
+    <h5 class="mb-2 text-main">Personal Information</h5>
+    <h6 class="mb-0">Your Contact Info Helps us personalize your shopping experience.</h6>
+</div>
+
+<form [formGroup]="infoForm" class="form row row-gap-3">
+
+    <div class="col-md-6">
+        <label for="full-name">Full Name <span>*</span></label>
+        <input type="text" class="form-control" id="full-name" placeholder="Enter Full Name" formControlName="fullName"
+            [class.is-invalid]="isInvalid('fullName')" />
+        <small class="error-small" *ngIf="isInvalid('fullName')">{{ getError('fullName') }}</small>
+    </div>
+
+    <div class="col-md-6">
+        <label for="email">Email ID <span>*</span></label>
+        <input type="email" class="form-control" id="email" placeholder="Enter Email ID" formControlName="email"
+            [class.is-invalid]="isInvalid('email')" />
+        <small class="error-small" *ngIf="isInvalid('email')">{{ getError('email') }}</small>
+    </div>
+
+    <div class="col-md-6">
+        <label for="phone">Mobile Number <span>*</span></label>
+        <input type="text" class="form-control" id="phone" placeholder="Enter Mobile Number" formControlName="phone"
+            [class.is-invalid]="isInvalid('phone')" />
+        <small class="error-small" *ngIf="isInvalid('phone')">{{ getError('phone') }}</small>
+    </div>
+
+    <div class="col-md-6">
+        <label for="dob">Date of Birth <span>*</span></label>
+        <input type="date" class="form-control" id="dob" formControlName="dob" [class.is-invalid]="isInvalid('dob')" />
+        <small class="error-small" *ngIf="isInvalid('dob')">{{ getError('dob') }}</small>
+    </div>
+
+    <div class="col-md-6">
+        <label for="gender">Gender <span>*</span></label>
+        <select class="form-select" id="gender" formControlName="gender" [class.is-invalid]="isInvalid('gender')">
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+        <small class="error-small" *ngIf="isInvalid('gender')">{{ getError('gender') }}</small>
+    </div>
+
+    <div class="col-md-12 d-flex justify-content-end gap-3">
+        <button class="form-btn" type="button" (click)="saveInfo()">Save Changes</button>
+        <button class="reset-btn" type="button" (click)="resetInfo()">Reset</button>
+    </div>
+
+</form>
