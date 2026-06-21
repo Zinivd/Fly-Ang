@@ -1,1 +1,179 @@
-<p>payment works!</p>
+<link rel="stylesheet" href="../stepper.css">
+
+<div class="checkout my-4">
+    <div class="stepper mb-4">
+        <div class="step done">
+            <div class="step-circle">1</div>
+            <span class="step-label">Address</span>
+        </div>
+        <div class="connector"></div>
+        <div class="step active">
+            <div class="step-circle">2</div>
+            <span class="step-label">Payment</span>
+        </div>
+        <div class="connector"></div>
+        <div class="step">
+            <div class="step-circle">3</div>
+            <span class="step-label">Review</span>
+        </div>
+    </div>
+
+    <div class="checkout-div">
+        <div class="checkout-left">
+
+            <!-- Payment Method Selection -->
+            <div class="address-list mb-4">
+                <div class="body-head mb-3">
+                    <h5 class="mb-0">Select Payment Method</h5>
+                </div>
+
+                <div class="address-item" *ngFor="let method of paymentMethods"
+                    [class.selected]="selectedPaymentId === method.id" (click)="selectPayment(method.id)">
+                    <input type="radio" [id]="'payment-' + method.id" name="paymentMethod"
+                        [checked]="selectedPaymentId === method.id" (change)="selectPayment(method.id)" />
+                    <label [for]="'payment-' + method.id" class="w-100">
+                        <h4 class="mb-2">{{ method.label }}</h4>
+                        <h6 class="mb-0">{{ method.name }}</h6>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Card Details Form — shown only when Debit/Credit Card is selected -->
+            <div class="card-form mb-4" *ngIf="showCardForm">
+                <div class="body-head mb-3">
+                    <h5 class="mb-0 text-main">Card Details</h5>
+                </div>
+
+                <form [formGroup]="cardForm" class="form row row-gap-3">
+
+                    <div class="col-md-12">
+                        <label for="card-number">Card Number <span>*</span></label>
+                        <input type="text" class="form-control" id="card-number" placeholder="1234 5678 9012 3456"
+                            formControlName="cardNumber" maxlength="19" [class.is-invalid]="isInvalid('cardNumber')" />
+                        <small class="error-small" *ngIf="isInvalid('cardNumber')">
+                            {{ getError('cardNumber') }}
+                        </small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="expiry-date">Expiry Date <span>*</span></label>
+                        <input type="text" class="form-control" id="expiry-date" placeholder="MM/YY"
+                            formControlName="expiry" maxlength="5" [class.is-invalid]="isInvalid('expiry')" />
+                        <small class="error-small" *ngIf="isInvalid('expiry')">
+                            {{ getError('expiry') }}
+                        </small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="cvv">CVV <span>*</span></label>
+                        <input type="password" class="form-control" id="cvv" placeholder="123" formControlName="cvv"
+                            maxlength="4" [class.is-invalid]="isInvalid('cvv')" />
+                        <small class="error-small" *ngIf="isInvalid('cvv')">
+                            {{ getError('cvv') }}
+                        </small>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Saved Card -->
+            <div class="address-list">
+                <div class="body-head mb-3">
+                    <h5 class="mb-0">Saved Payment Method</h5>
+                </div>
+                <div class="address-item">
+                    <input type="radio" name="paymentMethod" id="saved-card" />
+                    <label for="saved-card" class="w-100">
+                        <h4 class="mb-2">**** **** **** 4567</h4>
+                        <h6 class="mb-0">Expires 12/26</h6>
+                    </label>
+                </div>
+            </div>
+
+            <div class="divider-line my-4"></div>
+
+            <!-- Trust Badges -->
+            <div class="summary-item d-flex align-items-center justify-content-center flex-wrap gap-4">
+                <h6 class="mb-0">
+                    <i class="fa-solid fa-shield me-1"></i> SSL Protected
+                </h6>
+                <img src="assets/images/BrandLogo/Razorpay.png" class="brand-logo" alt="Razorpay" />
+                <img src="assets/images/BrandLogo/Delhivery.png" class="brand-logo" alt="Delhivery" />
+                <h6 class="mb-0">
+                    <i class="fa-solid fa-shield-halved me-1"></i> 100% Refund Guarantee
+                </h6>
+            </div>
+
+        </div>
+
+        <!-- Order Summary -->
+        <div class="checkout-right h-auto">
+            <div class="body-head mb-4">
+                <h5 class="mb-0">Order Summary</h5>
+                <small class="text-muted">{{ totalItems }} {{ totalItems === 1 ? 'item' : 'items' }}</small>
+            </div>
+
+            <div class="summary-list">
+                <div class="summary-item" *ngFor="let item of orderSummary.items">
+                    <div class="product-cell">
+                        <img [src]="item.image" [alt]="item.name" />
+                        <div>
+                            <h5 class="mb-1">{{ item.name }}</h5>
+                            <h6 class="mb-0">x {{ item.qty }}</h6>
+                        </div>
+                    </div>
+                    <h5>₹{{ item.price * item.qty }}</h5>
+                </div>
+
+                <hr class="my-3" />
+
+                <div class="summary-item">
+                    <h6 class="mb-0">Subtotal</h6>
+                    <h5 class="mb-0">₹{{ subtotal }}</h5>
+                </div>
+                <div class="summary-item">
+                    <h6 class="mb-0">Discount</h6>
+                    <h5 class="mb-0 text-success">{{ discountAmount > 0 ? '−' : '' }}₹{{ discountAmount }}</h5>
+                </div>
+                <div class="summary-item">
+                    <h6 class="mb-0">Shipping</h6>
+                    <h5 class="mb-0">
+                        <span *ngIf="shippingCharge === 0" class="text-success">Free</span>
+                        <span *ngIf="shippingCharge > 0">₹{{ shippingCharge }}</span>
+                    </h5>
+                </div>
+                <div class="summary-item">
+                    <h6 class="mb-0">Tax (GST 18%)</h6>
+                    <h5 class="mb-0">₹{{ taxAmount }}</h5>
+                </div>
+
+                <hr class="my-3" />
+
+                <div class="summary-item">
+                    <h6 class="mb-0 text-danger fw-bold">Total</h6>
+                    <h5 class="mb-0 fw-bold">₹{{ total }}</h5>
+                </div>
+
+                <button class="login-btn w-100 mb-3"
+                    [disabled]="selectedPaymentId === -1 || paymentMethods.length === 0" (click)="proceedToReview()">
+                    Pay Now
+                </button>
+                <button class="reset-btn w-100" routerLink="/cart">
+                    Back to Cart
+                </button>
+
+                <hr class="my-3" />
+
+                <div class="summary-item d-flex align-items-center justify-content-center flex-wrap gap-4">
+                    <h6 class="mb-0">
+                        <i class="fa-solid fa-lock me-1"></i> Secure Checkout
+                    </h6>
+                    <h6 class="mb-0">
+                        <i class="fa-solid fa-shield me-1"></i> Payment Protected
+                    </h6>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

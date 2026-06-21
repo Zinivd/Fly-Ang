@@ -151,6 +151,16 @@
     transition: all var(--transition);
 }
 
+.reset-btn {
+    background: var(--secondary);
+    color: var(--text-primary);
+    border: 2px solid var(--sub);
+    padding: 8px;
+    border-radius: 5px;
+    font-weight: var(--fw-md);
+    transition: all var(--transition);
+}
+
 .size-btn:hover,
 .size-btn.selected {
     background-color: var(--main);
@@ -200,6 +210,11 @@
     color: var(--text-primary);
 }
 
+.reset-btn:hover {
+    background: var(--sub);
+    color: var(--secondary);
+}
+
 @media screen and (min-width: 1098px) {
 
     .buy-btn,
@@ -208,6 +223,7 @@
     }
 
     .login-btn,
+    .reset-btn,
     .login-resend-btn,
     .nav-btn,
     .subscribe-btn,
@@ -233,6 +249,7 @@
     }
 
     .login-btn,
+    .reset-btn,
     .login-resend-btn,
     .nav-btn,
     .subscribe-btn,
@@ -253,6 +270,7 @@
 @media screen and (max-width: 767px) {
 
     .login-btn,
+    .reset-btn,
     .login-resend-btn,
     .buy-btn,
     .cart-btn {

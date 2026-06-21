@@ -80,28 +80,28 @@
                     <h5 class="mb-0">{{ editingAddressId !== null ? 'Edit Address' : 'Add New Address' }}</h5>
                 </div>
 
-                <form [formGroup]="addressForm" class="row row-gap-3">
+                <form [formGroup]="addressForm" class="form row row-gap-3">
 
                     <div class="col-md-6">
-                        <label for="address-name">Name <span class="text-danger">*</span></label>
+                        <label for="address-name">Name <span>*</span></label>
                         <input type="text" class="form-control" id="address-name" placeholder="Enter Name"
                             formControlName="name" [class.is-invalid]="isInvalid('name')" />
-                        <div class="invalid-feedback">{{ getError('name') }}</div>
+                        <small class="error-small">{{ getError('name') }}</small>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="address-phone">Phone <span class="text-danger">*</span></label>
+                        <label for="address-phone">Phone <span>*</span></label>
                         <input type="text" class="form-control" id="address-phone" placeholder="Enter Phone"
                             formControlName="mobile" [class.is-invalid]="isInvalid('mobile')" />
-                        <div class="invalid-feedback">{{ getError('mobile') }}</div>
+                        <small class="error-small">{{ getError('mobile') }}</small>
                     </div>
 
                     <div class="col-md-12">
-                        <label for="address-line1">Address Line 1 <span class="text-danger">*</span></label>
+                        <label for="address-line1">Address Line 1 <span>*</span></label>
                         <input type="text" class="form-control" id="address-line1"
                             placeholder="House no., Building, Street" formControlName="addressLine1"
                             [class.is-invalid]="isInvalid('addressLine1')" />
-                        <div class="invalid-feedback">{{ getError('addressLine1') }}</div>
+                        <small class="error-small">{{ getError('addressLine1') }}</small>
                     </div>
 
                     <div class="col-md-12">
@@ -111,31 +111,32 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="address-city">City <span class="text-danger">*</span></label>
+                        <label for="address-city">City <span>*</span></label>
                         <input type="text" class="form-control" id="address-city" placeholder="Enter City"
                             formControlName="city" [class.is-invalid]="isInvalid('city')" />
-                        <div class="invalid-feedback">{{ getError('city') }}</div>
+                        <small class="error-small">{{ getError('city') }}</small>
                     </div>
 
                     <div class="col-md-4">
-                        <label for="address-state">State <span class="text-danger">*</span></label>
+                        <label for="address-state">State <span>*</span></label>
                         <input type="text" class="form-control" id="address-state" placeholder="Enter State"
                             formControlName="state" [class.is-invalid]="isInvalid('state')" />
-                        <div class="invalid-feedback">{{ getError('state') }}</div>
+                        <small class="error-small">{{ getError('state') }}</small>
                     </div>
 
                     <div class="col-md-4">
-                        <label for="address-pincode">Pincode <span class="text-danger">*</span></label>
+                        <label for="address-pincode">Pincode <span>*</span></label>
                         <input type="text" class="form-control" id="address-pincode" placeholder="6-digit Pincode"
                             formControlName="pincode" maxlength="6" [class.is-invalid]="isInvalid('pincode')" />
-                        <div class="invalid-feedback">{{ getError('pincode') }}</div>
-                        <small class="text-muted" *ngIf="pincodeChecking">
+                        <small class="error-small">{{ getError('pincode') }}</small>
+                        <small class="normal-small" *ngIf="pincodeChecking">
                             <i class="fa-solid fa-spinner fa-spin me-1"></i> Checking delivery...
                         </small>
-                        <small class="text-success" *ngIf="pincodeStatus === 'available' && !pincodeChecking">
+                        <small class="normal-small text-success"
+                            *ngIf="pincodeStatus === 'available' && !pincodeChecking">
                             <i class="fa-solid fa-circle-check me-1"></i> Delivery available for this pincode
                         </small>
-                        <small class="text-danger" *ngIf="pincodeStatus === 'unavailable' && !pincodeChecking">
+                        <small class="error-small" *ngIf="pincodeStatus === 'unavailable' && !pincodeChecking">
                             <i class="fa-solid fa-circle-xmark me-1"></i> Delivery not available for this pincode
                         </small>
                     </div>
@@ -166,13 +167,6 @@
                     </div>
 
                 </form>
-            </div>
-
-            <div class="mt-4 d-md-none">
-                <button class="login-btn w-100" [disabled]="selectedAddressId === -1 || addresses.length === 0"
-                    (click)="proceedToPayment()">
-                    Proceed to Payment <i class="fa-solid fa-arrow-right ms-2"></i>
-                </button>
             </div>
 
         </div>
@@ -229,9 +223,9 @@
                         </div>
                     </ng-container>
                 </div> -->
-                <button class="login-btn w-100 d-none d-md-block"
-                    [disabled]="selectedAddressId === -1 || addresses.length === 0" (click)="proceedToPayment()">
-                    Proceed to Payment <i class="fa-solid fa-arrow-right ms-2"></i>
+                <button class="login-btn w-100" [disabled]="selectedAddressId === -1 || addresses.length === 0"
+                    (click)="proceedToPayment()">
+                    Proceed to Payment
                 </button>
                 <hr class="my-3" />
                 <div class="summary-item d-flex align-items-center justify-content-center flex-wrap gap-4">

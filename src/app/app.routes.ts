@@ -15,6 +15,8 @@ import { ProductDetailsComponent } from './pages/product-details/product-details
 import { AllProductsComponent } from './pages/all-products/all-products.component';
 import { CartComponent } from './pages/cart/cart.component';
 import { AddressComponent } from './pages/checkout/address/address.component';
+import { PaymentComponent } from './pages/checkout/payment/payment.component';
+import { ReviewComponent } from './pages/checkout/review/review.component';
 
 export const routes: Routes = [
   // Pages
@@ -27,6 +29,8 @@ export const routes: Routes = [
       { path: 'all-products', component: AllProductsComponent },
       { path: 'cart', component: CartComponent },
       { path: 'checkout', component: AddressComponent },
+      { path: 'payment', component: PaymentComponent },
+      { path: 'review', component: ReviewComponent },
     ],
   },
   // Portal

@@ -28,7 +28,7 @@ export interface Address {
   selector: 'app-address',
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
   templateUrl: './address.component.html',
-  styleUrl: './address.component.css',
+  styleUrls: ['./address.component.css'],
 })
 export class AddressComponent implements OnInit {
   // Stepper
@@ -295,7 +295,7 @@ export class AddressComponent implements OnInit {
 
     console.log('Proceeding to payment with:', checkoutData);
     // Navigate to payment step
-    this.router.navigate(['/checkout/payment']);
+    this.router.navigate(['/payment']);
   }
 
   // Form field helpers

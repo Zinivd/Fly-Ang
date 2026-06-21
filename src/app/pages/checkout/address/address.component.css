@@ -42,12 +42,16 @@
 .address-item {
     width: 100% !important;
     display: flex;
-    align-items: start;
-    column-gap: 10px;
+    align-items: center;
+    column-gap: 15px;
     padding: 10px;
     border: 1px solid var(--border);
     border-radius: 5px;
     margin-bottom: 10px;
+}
+
+.address-item.selected {
+    border-color: var(--main);
 }
 
 .address-item h4 {
@@ -228,19 +232,16 @@
         width: 80px;
     }
 
-    .address-item h4 {
-        font-size: 18px;
-    }
-
-    .address-item h5,
+    .address-item h4,
     .product-cell h5 {
         font-size: 16px;
     }
 
-    .address-item h6 {
+    .address-item h5 {
         font-size: 14px;
     }
 
+    .address-item h6,
     .address-item a,
     .product-cell h6,
     .product-cell a,
@@ -281,15 +282,16 @@
         width: 70px;
     }
 
-    .address-item h4 {
-        font-size: 16px;
+    .address-item h4,
+    .product-cell h5 {
+        font-size: 14px;
     }
 
-    .address-item h5,
-    .product-cell h5 {
+    .address-item h5 {
         font-size: 12px;
     }
 
+    .address-item h6,
     .address-item a,
     .product-cell h6,
     .product-cell a,
@@ -314,7 +316,7 @@
 @media screen and (max-width: 767px) {
     .checkout-div {
         grid-template-columns: 100%;
-        gap: 10px;
+        gap: 30px;
     }
 
     .checkout-left,
@@ -328,15 +330,16 @@
         width: 80px;
     }
 
-    .address-item h4 {
+    .address-item h4,
+    .product-cell h5 {
         font-size: 14px;
     }
 
-    .address-item h5,
-    .product-cell h5 {
-        font-size: 12px;
+    .address-item h5 {
+        font-size: 14px;
     }
 
+    .address-item h6,
     .address-item a,
     .product-cell h6,
     .product-cell a,
@@ -357,15 +360,11 @@
     }
 }
 
-.address-item.selected {
-  border-color: var(--main);
-}
-
 /* Delivering-to preview box */
 .delivering-to {
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: 0.88rem;
-  line-height: 1.5;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    line-height: 1.5;
 }
