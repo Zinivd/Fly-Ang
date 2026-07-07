@@ -27,7 +27,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'product-details/:id', component: ProductDetailsComponent },
-      { path: 'all-products', component: AllProductsComponent },
+      { path: 'all-products/:categoryName/:categoryId', component: AllProductsComponent },
       { path: 'cart', component: CartComponent },
       { path: 'checkout', component: AddressComponent },
       { path: 'payment', component: PaymentComponent },

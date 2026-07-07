@@ -124,7 +124,7 @@
     }
 
     .otp-container {
-        grid-template-columns: repeat(6, 60px);
+        grid-template-columns: repeat(5, 60px);
     }
 
     .otp-container input {
@@ -180,7 +180,7 @@
     }
 
     .otp-container {
-        grid-template-columns: repeat(6, 50px);
+        grid-template-columns: repeat(5, 50px);
     }
 
     .otp-container input {
@@ -236,7 +236,7 @@
     }
 
     .otp-container {
-        grid-template-columns: repeat(6, 50px);
+        grid-template-columns: repeat(5 50px);
     }
 
     .otp-container input {
@@ -299,7 +299,7 @@
     }
 
     .otp-container {
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(5, 1fr);
     }
 
     .otp-container input {

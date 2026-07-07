@@ -151,3 +151,37 @@
     }
 
 }
+
+.banner-main {
+    margin-bottom: 40px;
+
+    img {
+        width: 100%;
+        border-radius: 12px;
+        object-fit: cover;
+    }
+}
+
+.carousel-indicators {
+    margin-bottom: 15px;
+
+    button {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin: 0 5px;
+        background-color: rgba(255, 255, 255, 0.6);
+        border: none;
+    }
+
+    .active {
+        background-color: #fff;
+        transform: scale(1.2);
+    }
+}
+
+/* Hide arrows */
+.carousel-control-prev,
+.carousel-control-next {
+    display: none;
+}

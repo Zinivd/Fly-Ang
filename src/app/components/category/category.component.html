@@ -1,4 +1,4 @@
-<a [routerLink]="['/category', category.name]">
+<a [routerLink]="['/all-products', category.name, category.id]">
     <div class="category-box mb-4">
         <img [src]="category.banner_url" [alt]="category.name" class="mb-2" />
         <h6 class="mb-0">{{ category.name }}</h6>

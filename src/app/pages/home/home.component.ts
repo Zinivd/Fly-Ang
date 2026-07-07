@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { CategoryComponent } from '../../components/category/category.component';
 import { ProductsComponent } from '../../components/products/products.component';
 import { CollectionComponent } from '../../components/collection/collection.component';
@@ -17,6 +18,13 @@ import { PRODUCT_DATA } from '../../data/product.data';
 import { COLLECTION_DATA } from '../../data/collection.data';
 import { ApiServiceService } from '../../service/api-service.service';
 
+interface Banner {
+  id: number;
+  title: string;
+  web_banner_url: string;
+  mobile_banner_url: string;
+}
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -29,6 +37,7 @@ import { ApiServiceService } from '../../service/api-service.service';
     SpotlightHeadComponent,
     SpotlightBottomComponent,
     TestimonialComponent,
+    RouterModule,
   ],
   templateUrl: './home.component.html',
   styleUrls: [
@@ -50,12 +59,28 @@ export class HomeComponent implements OnInit {
   isCategoryLoading = false;
   isReelLoading = false;
   activeReelIndex = 0;
+  banners: Banner[] = [];
+  isBannerLoading = true;
 
   constructor(private apiService: ApiServiceService) {}
 
   ngOnInit(): void {
     this.getCategoryList();
     this.getReelList();
+    this.loadBanners();
+  }
+
+  loadBanners() {
+    this.apiService.getBanners<any>().subscribe({
+      next: (res) => {
+        this.banners = res.data.data;
+        this.isBannerLoading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.isBannerLoading = false;
+      }
+    });
   }
 
   getCategoryList(): void {
@@ -77,7 +102,8 @@ export class HomeComponent implements OnInit {
     this.apiService.getreelList().subscribe({
       next: (res: any) => {
         this.reels = (res?.data?.data || []).filter(
-          (r: ReelItem & { is_published?: boolean }) => (r as any).is_published !== false
+          (r: ReelItem & { is_published?: boolean }) =>
+            (r as any).is_published !== false,
         );
         this.activeReelIndex = 0;
         this.isReelLoading = false;

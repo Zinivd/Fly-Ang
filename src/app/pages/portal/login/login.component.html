@@ -12,31 +12,43 @@
             <img src="assets/images/Logo-Dark.png" alt="Logo" />
             <h4>Login to unlock faster checkout and special deals!</h4>
 
+            <!-- Mode toggle -->
+            <div class="nav nav-tabs profile-nav-pill border-0">
+                <button type="button" class="nav-link pill-btn rounded-end-0 border-end-0"
+                    [class.active]="loginMode === 'otp'" (click)="setLoginMode('otp')">
+                    Login with OTP
+                </button>
+                <button type="button" class="nav-link pill-btn rounded-start-0 border-start-0"
+                    [class.active]="loginMode === 'password'" (click)="setLoginMode('password')">
+                    Login with Password
+                </button>
+            </div>
+
             <div class="w-100">
                 <form action="">
-                    <!-- Mobile Number -->
-                    <div class="mb-4">
-                        <label for="mobile">Mobile Number <span>*</span></label>
-                        <div class="input-double-flex">
-                            <label class="mb-0 text-center">+91</label>
-                            <input type="text" class="form-control border-0" name="mobile" id="mobile"
-                                placeholder="Enter 10-digit Mobile Number" [(ngModel)]="mobile" maxlength="10"
-                                (input)="onMobileInput($event)" />
-                        </div>
+
+                    <!-- Email ID: always shown -->
+                    <div class="mb-3">
+                        <label for="email">Email ID <span>*</span></label>
+                        <input type="email" class="form-control" name="email" id="email"
+                            placeholder="Enter your Email ID" [(ngModel)]="email" />
                     </div>
 
-                    <!-- Full Name -->
-                    <div class="mb-4">
-                        <label for="name">Full Name <span>*</span></label>
-                        <input type="text" class="form-control" name="name" id="name" placeholder="Enter your Full Name"
-                            [(ngModel)]="fullName" />
+                    <!-- Password: only shown in password mode -->
+                    <div class="mb-3" *ngIf="loginMode === 'password'">
+                        <label for="password">Password <span>*</span></label>
+                        <input type="password" class="form-control" name="password" id="password"
+                            placeholder="Enter your Password" [(ngModel)]="password" />
                     </div>
 
                     <!-- Submit -->
-                    <div class="mb-4">
-                        <button type="button" class="login-btn w-100" (click)="sendOtp()">
-                            <i class="fa-brands fa-whatsapp me-2"></i>
-                            Send OTP via WhatsApp
+                    <div class="mb-3">
+                        <button type="button" class="login-btn w-100" (click)="submit()" [disabled]="isLoading">
+                            <i class="fa-solid fa-envelope me-2" *ngIf="loginMode === 'otp'"></i>
+                            <i class="fa-solid fa-lock me-2" *ngIf="loginMode === 'password'"></i>
+                            {{ isLoading
+                            ? (loginMode === 'otp' ? 'Sending...' : 'Logging in...')
+                            : (loginMode === 'otp' ? 'Send OTP via Email' : 'Login') }}
                         </button>
                     </div>
 

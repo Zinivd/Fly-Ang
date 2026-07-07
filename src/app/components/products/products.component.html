@@ -8,7 +8,7 @@
             </button>
         </div>
     </div>
-    <a [routerLink]="['product-details', 1]">
+    <a [routerLink]="['/product-details', product.id]">
         <div class="product-box-content">
             <h4 class="mb-0">
                 <i class="fas fa-star text-warning"></i> {{ product.rating }} ({{ product.review }} Reviews)
@@ -17,12 +17,14 @@
             <h6 class="mb-0">{{ product.subtitle }}</h6>
             <div class="product-colors-main d-flex align-items-center justify-content-center column-gap-2 mb-0">
                 <div class="product-colors-div">
-                    <div class="colors-round green"></div>
-                    <div class="colors-round red"></div>
-                    <div class="colors-round orange"></div>
-                    <div class="colors-round blue"></div>
+                    <div *ngFor="let variant of product.color_variants || []; let i = index" class="colors-round"
+                        [style.backgroundColor]="variant.color.code" [style.marginLeft.px]="i === 0 ? 0 : -8">
+                    </div>
                 </div>
-                <span>5+ Colors</span>
+                <span>
+                    {{ product.color_variants?.length || 0 }}
+                    {{ (product.color_variants?.length || 0) === 1 ? 'Color' : 'Colors' }}
+                </span>
             </div>
             <h5 class="mb-0">
                 Rs {{ product.sp }} <span class="ms-1">Rs {{ product.mrp }}</span>

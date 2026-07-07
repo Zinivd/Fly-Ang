@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
 import { InfoComponent } from './info/info.component';
 import { PasswordComponent } from './password/password.component';
 import { OrdersComponent } from './orders/orders.component';
 import { WishlistComponent } from './wishlist/wishlist.component';
 import { AddressComponent } from './address/address.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-profile',
@@ -28,6 +28,7 @@ export class ProfileComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private toastr: ToastrService,
   ) {}
 
   ngOnInit(): void {
@@ -50,6 +51,9 @@ export class ProfileComponent implements OnInit {
   }
 
   signOut(): void {
-    this.router.navigate(['/login']);
+    localStorage.clear();
+    sessionStorage.clear();
+    this.toastr.success('You have been signed out successfully!');
+    this.router.navigate(['/']);
   }
 }

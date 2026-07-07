@@ -14,16 +14,24 @@ export interface CategoryItem {
   cover_url: string | null;
 }
 
+export interface ProductColor {
+  id: number;
+  name: string;
+  code: string;
+}
+
 export interface ProductItem {
-  id: string | number;
-  image: string;
+  id: number;
   title: string;
   subtitle: string;
+  image: string;
   badge: string;
   rating: number;
   review: number;
   sp: number;
   mrp: number;
+  category?: any;
+  color_variants?: any[];
 }
 
 export interface CollectionItem {

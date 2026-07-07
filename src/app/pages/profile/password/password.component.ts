@@ -8,6 +8,8 @@ import {
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { ApiServiceService } from '../../../service/api-service.service';
 
 // Custom validator: newPassword must not match currentPassword
 function newPasswordDifferentValidator(
@@ -44,17 +46,31 @@ export class PasswordComponent implements OnInit {
 
   passwordForm!: FormGroup;
   forgotPasswordForm!: FormGroup;
+  otpSent = false;
+  otpVerified = false;
+  hasPassword = true;
 
-  showCurrentPassword: boolean = false;
-  showNewPassword: boolean = false;
-  showConfirmPassword: boolean = false;
+  showCurrentPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
 
-  constructor(private fb: FormBuilder) {}
+  otpSending = false;
+  otpVerifying = false;
+
+  userId = '';
+
+  constructor(
+    private fb: FormBuilder,
+    private apiService: ApiServiceService,
+    private toastr: ToastrService,
+  ) {}
 
   ngOnInit(): void {
+    this.userId = localStorage.getItem('userId') || '';
     this.passwordForm = this.fb.group(
       {
-        currentPassword: ['', Validators.required],
+        email: [{ value: '', disabled: true }],
+        currentPassword: [''],
         newPassword: [
           '',
           [
@@ -64,14 +80,29 @@ export class PasswordComponent implements OnInit {
           ],
         ],
         confirmPassword: ['', Validators.required],
+        otp: ['', [Validators.required, Validators.pattern(/^[0-9]{5}$/)]],
       },
       {
         validators: [newPasswordDifferentValidator, passwordMatchValidator],
       },
     );
+    this.loadUser();
+  }
 
-    this.forgotPasswordForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+  loadUser(): void {
+    this.apiService.getUserInfo<any>(this.userId).subscribe({
+      next: (res) => {
+        console.log('User API Response:', res);
+        const user = res.data;
+        this.passwordForm.patchValue({
+          email: user.email ?? '',
+        });
+        this.hasPassword = true;
+      },
+      error: (err) => {
+        console.log(err);
+        this.toastr.error('Unable to fetch user information');
+      },
     });
   }
 
@@ -161,5 +192,61 @@ export class PasswordComponent implements OnInit {
     } else {
       this.showConfirmPassword = !this.showConfirmPassword;
     }
+  }
+
+  sendOtp(): void {
+    if (this.otpSending) return;
+    this.otpSending = true;
+    const payload = {
+      login_field: this.passwordForm.getRawValue().email,
+    };
+    this.apiService.sendPasswordOtp(payload).subscribe({
+      next: () => {
+        this.otpSent = true;
+        this.toastr.success('OTP sent successfully');
+        this.otpSending = false;
+      },
+      error: () => {
+        this.toastr.error('Unable to send OTP');
+        this.otpSending = false;
+      },
+    });
+  }
+
+  verifyOtp(): void {
+    if (this.forgotPasswordForm.invalid) {
+      this.forgotPasswordForm.markAllAsTouched();
+      return;
+    }
+    if (this.otpVerifying) return;
+    this.otpVerifying = true;
+
+    const payload = {
+      email: this.passwordForm.getRawValue().email,
+      currentPassword: this.passwordForm.value.currentPassword,
+      newPassword: this.passwordForm.value.newPassword,
+      confirmPassword: this.passwordForm.value.confirmPassword,
+      otp: this.passwordForm.value.otp,
+    };
+
+    this.apiService.verifyPasswordOtp(payload).subscribe({
+      next: () => {
+        this.toastr.success('Password changed successfully');
+        this.otpVerified = true;
+        this.otpSent = false;
+        this.passwordForm.patchValue({
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: '',
+          otp: '',
+        });
+        this.otpVerifying = false;
+      },
+      error: (err) => {
+        console.log(err);
+        this.toastr.error(err?.error?.message || 'OTP verification failed');
+        this.otpVerifying = false;
+      },
+    });
   }
 }

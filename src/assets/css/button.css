@@ -208,7 +208,8 @@
 }
 
 .size-btn:hover,
-.size-btn.selected {
+.size-btn.selected,
+.size-btn.activek {
     background-color: var(--main);
     color: var(--secondary);
     border: 2px solid var(--main);

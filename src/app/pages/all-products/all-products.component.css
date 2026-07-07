@@ -1,3 +1,10 @@
+.loader-wrapper {
+    min-height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .filter-products-main {
     width: 90%;
     margin: 30px auto;
@@ -28,6 +35,12 @@
     display: flex;
     align-items: center;
     column-gap: 5px;
+}
+
+.form-check-label {
+    font-size: 12px;
+    color: var(--text-primary);
+    font-weight: var(--fw-md);
 }
 
 @media screen and (min-width: 1098px) {

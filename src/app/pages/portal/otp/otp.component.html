@@ -29,13 +29,11 @@
                             (input)="onInput($event, 3)" (keydown)="onKeydown($event, 3)" />
                         <input #otp4 type="text" inputmode="numeric" maxlength="1" class="form-control otp-input"
                             (input)="onInput($event, 4)" (keydown)="onKeydown($event, 4)" />
-                        <input #otp5 type="text" inputmode="numeric" maxlength="1" class="form-control otp-input"
-                            (input)="onInput($event, 5)" (keydown)="onKeydown($event, 5)" />
                     </div>
 
                     <div *ngIf="!showResendButton">
-                        <button type="button" class="login-btn w-100" (click)="verifyOtp()">
-                            Verify & Continue
+                        <button type="button" class="login-btn w-100" (click)="verifyOtp()" [disabled]="isVerifying">
+                            {{ isVerifying ? 'Verifying...' : 'Verify & Continue' }}
                         </button>
                     </div>
 
@@ -49,8 +47,9 @@
             </div>
 
             <!-- Resend Button -->
-            <button *ngIf="showResendButton" type="button" class="login-resend-btn w-100" (click)="resendOtp()">
-                Resend OTP
+            <button *ngIf="showResendButton" type="button" class="login-resend-btn w-100" (click)="resendOtp()"
+                [disabled]="isResending">
+                {{ isResending ? 'Resending...' : 'Resend OTP' }}
             </button>
         </div>
 

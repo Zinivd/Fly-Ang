@@ -14,8 +14,14 @@
 
             <div class="w-100">
                 <form action="">
-                    <!-- Mobile Number -->
+                    <!-- Full Name -->
                     <div class="mb-3">
+                        <label for="name">Full Name <span>*</span></label>
+                        <input type="text" class="form-control" name="name" id="name" placeholder="Enter your Full Name"
+                            [(ngModel)]="fullName" />
+                    </div>
+                    <!-- Mobile Number -->
+                    <!-- <div class="mb-3">
                         <label for="mobile">Mobile Number <span>*</span></label>
                         <div class="input-double-flex">
                             <label class="mb-0 text-center">+91</label>
@@ -23,15 +29,7 @@
                                 placeholder="Enter 10-digit Mobile Number" [(ngModel)]="mobile" maxlength="10"
                                 (input)="onMobileInput($event)" />
                         </div>
-                    </div>
-
-                    <!-- Full Name -->
-                    <div class="mb-3">
-                        <label for="name">Full Name <span>*</span></label>
-                        <input type="text" class="form-control" name="name" id="name" placeholder="Enter your Full Name"
-                            [(ngModel)]="fullName" />
-                    </div>
-
+                    </div> -->
                     <!-- Email ID -->
                     <div class="mb-3">
                         <label for="email">Email ID <span>*</span></label>
@@ -41,9 +39,9 @@
 
                     <!-- Submit -->
                     <div class="mb-3">
-                        <button type="button" class="login-btn w-100" (click)="sendOtp()">
-                            <i class="fa-brands fa-whatsapp me-2"></i>
-                            Send OTP via WhatsApp
+                        <button type="button" class="login-btn w-100" (click)="sendOtp()" [disabled]="isLoading">
+                            <i class="fa-solid fa-envelope me-2"></i>
+                            {{ isLoading ? 'Sending...' : 'Send OTP via Email' }}
                         </button>
                     </div>
 

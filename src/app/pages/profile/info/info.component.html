@@ -19,7 +19,7 @@
         <small class="error-small" *ngIf="isInvalid('email')">{{ getError('email') }}</small>
     </div>
 
-    <div class="col-md-6">
+    <!-- <div class="col-md-6">
         <label for="phone">Mobile Number <span>*</span></label>
         <input type="text" class="form-control" id="phone" placeholder="Enter Mobile Number" formControlName="phone"
             [class.is-invalid]="isInvalid('phone')" />
@@ -41,7 +41,7 @@
             <option value="Other">Other</option>
         </select>
         <small class="error-small" *ngIf="isInvalid('gender')">{{ getError('gender') }}</small>
-    </div>
+    </div> -->
 
     <div class="col-md-12 d-flex justify-content-end gap-3">
         <button class="form-btn" type="button" (click)="saveInfo()">Save Changes</button>
