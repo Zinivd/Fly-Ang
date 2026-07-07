@@ -4,15 +4,21 @@ import { CommonModule } from '@angular/common';
 import { CategoryComponent } from '../../components/category/category.component';
 import { ProductsComponent } from '../../components/products/products.component';
 import { CollectionComponent } from '../../components/collection/collection.component';
+import { ReelComponent } from '../../components/reel/reel.component';
+import { SpotlightHeadComponent } from '../../components/spotlight-head/spotlight-head.component';
+import { SpotlightBottomComponent } from '../../components/spotlight-bottom/spotlight-bottom.component';
+import { TestimonialComponent } from '../../components/testimonial/testimonial.component';
 
 import {
   CategoryItem,
   ProductItem,
   CollectionItem,
+  ReelItem,
 } from '../../models/shop.models';
 import { CATEGORY_DATA } from '../../data/category.data';
 import { PRODUCT_DATA } from '../../data/product.data';
 import { COLLECTION_DATA } from '../../data/collection.data';
+import { REEL_DATA } from '../../data/reel.data';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +28,10 @@ import { COLLECTION_DATA } from '../../data/collection.data';
     CategoryComponent,
     ProductsComponent,
     CollectionComponent,
+    ReelComponent,
+    SpotlightHeadComponent,
+    SpotlightBottomComponent,
+    TestimonialComponent,
   ],
   templateUrl: './home.component.html',
   styleUrls: [
@@ -29,10 +39,15 @@ import { COLLECTION_DATA } from '../../data/collection.data';
     '../../components/category/category.component.css',
     '../../components/products/products.component.css',
     '../../components/collection/collection.component.css',
+    '../../components/reel/reel.component.css',
+    '../../components/spotlight-head/spotlight-head.component.css',
+    '../../components/spotlight-bottom/spotlight-bottom.component.css',
+    '../../components/testimonial/testimonial.component.css',
   ],
 })
 export class HomeComponent {
   category: CategoryItem[] = CATEGORY_DATA;
   products: ProductItem[] = PRODUCT_DATA;
   collections: CollectionItem[] = COLLECTION_DATA;
+  reels: ReelItem[] = REEL_DATA;
 }

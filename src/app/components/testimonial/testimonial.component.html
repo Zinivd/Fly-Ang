@@ -1,0 +1,27 @@
+<div class="carousel-wrap">
+    <button class="nav-btn nav-prev" (click)="prev()" aria-label="Previous review">
+        <i class="fas fa-angle-left"></i>
+    </button>
+
+    <div class="carousel-track">
+        <div class="testimonial-box">
+            <h5>{{ currentReview.title }}</h5>
+            <h6>{{ currentReview.body }}</h6>
+
+            <div class="stars">
+                <div *ngFor="let filled of starArray">
+                    <i *ngIf="filled" class="fa-solid fa-star"></i>
+                    <i *ngIf="!filled" class="fa-regular fa-star"></i>
+                </div>
+            </div>
+
+            <h6 class="reviewer">
+                - {{ currentReview.reviewer }}
+            </h6>
+        </div>
+    </div>
+
+    <button class="nav-btn nav-next" (click)="next()" aria-label="Next review">
+        <i class="fas fa-angle-right"></i>
+    </button>
+</div>

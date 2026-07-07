@@ -28,3 +28,9 @@ export interface ReviewItem {
   date: string;
   content: string;
 }
+
+export interface ReelItem {
+  id: string | number;
+  image: string;
+  name: string;
+}

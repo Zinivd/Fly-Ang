@@ -1,0 +1,166 @@
+.spotlight-head-grid {
+    margin: auto;
+}
+
+.spotlight-head-grid app-spotlight-head {
+    display: grid;
+    justify-content: space-between;
+}
+
+.spotlight-head-box {
+    position: relative;
+    border-radius: 15px;
+    background: var(--secondary);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition);
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.spotlight-head-box:hover {
+    transform: scale(1.02);
+}
+
+.spotlight-head-box .spotlight-content-1 {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+.spotlight-head-box .spotlight-content-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    right: 10%;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+.spotlight-head-box h4 {
+    font-family: "Outfit", sans-serif;
+    color: var(--sub);
+    font-weight: var(--fw-lg);
+}
+
+.spotlight-head-box h5 {
+    font-family: "Dancing Script", cursive;
+    color: var(--main);
+    font-weight: var(--fw-xl);
+}
+
+.spotlight-head-box .spotlight-content-1 h6 {
+    font-family: "Dancing Script", cursive;
+    color: var(--text-primary);
+    font-weight: var(--fw-xl);
+}
+
+.spotlight-head-box .spotlight-content-2 h6 {
+    font-family: "Outfit", sans-serif;
+    color: var(--text-primary);
+    font-weight: var(--fw-md);
+}
+
+@media screen and (min-width: 1098px) {
+    .spotlight-head-grid {
+        width: 90%;
+    }
+
+    .spotlight-head-grid app-spotlight-head {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+
+    .spotlight-head-box {
+        padding: 20px;
+        min-height: 250px;
+    }
+
+    .spotlight-head-box h4 {
+        font-size: 25px;
+    }
+
+    .spotlight-head-box h5 {
+        font-size: 35px;
+    }
+
+    .spotlight-head-box .spotlight-content-1 h6 {
+        font-size: 16px;
+    }
+
+    .spotlight-head-box .spotlight-content-2 h6 {
+        font-size: 14px;
+    }
+}
+
+@media screen and (min-width: 767px) and (max-width: 1098px) {
+    .spotlight-head-grid {
+        width: 95%;
+    }
+
+    .spotlight-head-grid app-spotlight-head {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .spotlight-head-box {
+        padding: 15px;
+        min-height: 250px;
+    }
+
+    .spotlight-head-box h4 {
+        font-size: 18px;
+    }
+
+    .spotlight-head-box h5 {
+        font-size: 28px;
+    }
+
+    .spotlight-head-box .spotlight-content-1 h6 {
+        font-size: 14px;
+    }
+
+    .spotlight-head-box .spotlight-content-2 h6 {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .spotlight-head-grid {
+        width: 98%;
+    }
+
+    .spotlight-head-grid app-spotlight-head {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 10px;
+    }
+
+    .spotlight-head-box {
+        padding: 0px;
+        min-height: 200px;
+    }
+
+    .spotlight-head-box h4 {
+        font-size: 16px;
+    }
+
+    .spotlight-head-box h5 {
+        font-size: 25px;
+    }
+
+    .spotlight-head-box .spotlight-content-1 h6 {
+        font-size: 12px;
+    }
+
+    .spotlight-head-box .spotlight-content-2 h6 {
+        font-size: 10px;
+    }
+}

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr'
 import { ProductsComponent } from '../../../components/products/products.component';
 import { PRODUCT_DATA } from '../../../data/product.data';
@@ -8,7 +7,7 @@ import { ProductItem } from '../../../models/shop.models';
 
 @Component({
   selector: 'app-wishlist',
-  imports: [CommonModule, RouterLink, ProductsComponent],
+  imports: [CommonModule, ProductsComponent],
   templateUrl: './wishlist.component.html',
   styleUrl: './wishlist.component.css',
 })

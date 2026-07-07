@@ -171,6 +171,16 @@
     transition: all var(--transition);
 }
 
+.banner-btn {
+    background: var(--secondary);
+    color: var(--main);
+    border: 2px solid var(--border);
+    padding: 9px 20px;
+    border-radius: 25px;
+    font-weight: var(--fw-md);
+    transition: all var(--transition);
+}
+
 /* Hover Effects */
 .login-btn:hover {
     background: var(--main);
@@ -231,8 +241,15 @@
     color: var(--secondary) !important;
 }
 
+.banner-btn:hover {
+    background: var(--main);
+    color: var(--secondary);
+    border: 2px solid var(--main);
+}
+
 @media screen and (min-width: 1098px) {
 
+    .banner-btn,
     .buy-btn,
     .cart-btn {
         font-size: 16px;
@@ -260,6 +277,7 @@
 
 @media screen and (min-width: 767px) and (max-width: 1098px) {
 
+    .banner-btn,
     .buy-btn,
     .cart-btn {
         font-size: 14px;
@@ -287,6 +305,7 @@
 
 @media screen and (max-width: 767px) {
 
+    .banner-btn,
     .login-btn,
     .reset-btn,
     .login-resend-btn,

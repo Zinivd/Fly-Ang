@@ -1,0 +1,112 @@
+.spotlight-bottom-grid {
+    margin: auto;
+}
+
+.spotlight-bottom-grid app-spotlight-bottom {
+    display: grid;
+    justify-content: space-between;
+}
+
+.spotlight-bottom-box {
+    border-radius: 8px;
+    background: linear-gradient(180deg, #E9047C 0%, #44122C 100%);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition);
+    cursor: pointer;
+    overflow: hidden;
+    height: 100%;
+}
+
+.spotlight-bottom-box:hover {
+    transform: scale(1.02);
+}
+
+.spotlight-bottom-box .spotlight-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+}
+
+.spotlight-bottom-box h4 {
+    font-family: "Outfit", sans-serif;
+    color: #FFFF95;
+    font-weight: var(--fw-md);
+}
+
+.spotlight-bottom-box h6 {
+    font-family: "Outfit", sans-serif;
+    color: var(--secondary);
+    font-weight: var(--fw-sm);
+}
+
+@media screen and (min-width: 1098px) {
+    .spotlight-bottom-grid {
+        width: 90%;
+    }
+
+    .spotlight-bottom-grid app-spotlight-bottom {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .spotlight-bottom-box {
+        padding: 30px 20px;
+    }
+
+    .spotlight-bottom-box h4 {
+        font-size: 22px;
+    }
+
+    .spotlight-bottom-box h6 {
+        font-size: 16px;
+    }
+}
+
+@media screen and (min-width: 767px) and (max-width: 1098px) {
+    .spotlight-bottom-grid {
+        width: 95%;
+    }
+
+    .spotlight-bottom-grid app-spotlight-bottom {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+
+    .spotlight-bottom-box {
+        padding: 20px 15px;
+    }
+
+    .spotlight-bottom-box h4 {
+        font-size: 16px;
+    }
+
+    .spotlight-bottom-box h6 {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .spotlight-bottom-grid {
+        width: 98%;
+    }
+
+    .spotlight-bottom-grid app-spotlight-bottom {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .spotlight-bottom-box {
+        padding: 15px 10px;
+    }
+
+    .spotlight-bottom-box h4 {
+        font-size: 16px;
+    }
+
+    .spotlight-bottom-box h6 {
+        font-size: 12px;
+    }
+}

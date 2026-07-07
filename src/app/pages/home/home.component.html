@@ -1,4 +1,14 @@
-<div class="home-page my-2">
+<div class="home-page mb-2">
+    <div class="banner-main">
+        <div class="banner-div">
+            <h4 class="mb-0">Elevate Your Everyday Style with Comfort & Elegance</h4>
+            <h6 class="mb-0">Discover premium leggings designed for modern lifestyle.</h6>
+            <button class="banner-btn" routerLink="/all-products">
+                Shop Now <i class="fas fa-arrow-right ms-1"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- Category -->
     <div class="category-main">
         <div class="category-div">
@@ -46,6 +56,23 @@
         </div>
     </div>
 
+    <div class="spotlight-main">
+        <div class="spotlight-div">
+            <div class="body-head mb-5">
+                <h4 class="mb-2 text-center">In the Spotlight</h4>
+                <h6 class="text-center">Handpicked styles we’re loving right now.</h6>
+            </div>
+
+            <div class="spotlight-head-grid mb-4">
+                <app-spotlight-head></app-spotlight-head>
+            </div>
+
+            <div class="spotlight-bottom-grid">
+                <app-spotlight-bottom></app-spotlight-bottom>
+            </div>
+        </div>
+    </div>
+
     <!-- Collections Grid -->
     <div class="collection-main">
         <div class="collection-div">
@@ -55,6 +82,38 @@
 
             <div class="collection-grid">
                 <app-collection *ngFor="let item of collections" [collection]="item"></app-collection>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reel Grid -->
+    <div class="reel-main">
+        <div class="reel-div">
+            <div class="body-head mb-4">
+                <h4 class="mb-2 text-center">Reel It, Feel It</h4>
+                <h6 class="text-center">
+                    From studio to street — quick looks that make a statement, captured in motion.
+                </h6>
+            </div>
+
+            <div class="reel-grid">
+                <app-reel *ngFor="let item of reels" [reel]="item"></app-reel>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonial -->
+    <div class="testimonial-main">
+        <div class="testimonial-div">
+            <div class="body-head mb-4">
+                <h4 class="mb-2 text-center">What Our Customers Say</h4>
+                <h6 class="text-center">
+                    Real stories, real comfort — hear it from the Flybirds family.
+                </h6>
+            </div>
+
+            <div class="testimonial-grid">
+                <app-testimonial></app-testimonial>
             </div>
         </div>
     </div>

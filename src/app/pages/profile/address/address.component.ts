@@ -8,7 +8,6 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 
 export interface Address {
   id: number;
@@ -26,7 +25,7 @@ export interface Address {
 
 @Component({
   selector: 'app-address',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './address.component.html',
   styleUrl: './address.component.css',
 })

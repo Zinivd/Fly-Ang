@@ -15,7 +15,7 @@
 .body-head h6 {
     font-family: var(--tertiary-font) !important;
     color: var(--text-secondary);
-    font-weight: var(--fw-md);
+    font-weight: var(--fw-sm);
     margin-bottom: 0px;
 }
 
