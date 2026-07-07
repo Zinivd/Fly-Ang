@@ -9,6 +9,8 @@ import {
   Validators,
 } from '@angular/forms';
 
+declare var Razorpay: any;
+
 export interface PaymentMethod {
   id: number;
   label: string;
@@ -175,29 +177,91 @@ export class PaymentComponent implements OnInit {
     );
     if (!selected) return;
 
-    // If card method selected, validate card form first
-    if (this.isCardMethod) {
-      if (this.cardForm.invalid) {
-        this.cardForm.markAllAsTouched();
-        return;
-      }
+    if (selected.label === 'Cash On Delivery') {
+      this.router.navigate(['/success']);
+      return;
     }
 
-    const checkoutData = {
-      paymentMethod: selected,
-      cardDetails: this.isCardMethod ? this.cardForm.value : null,
-      order: {
-        items: this.orderSummary.items,
-        subtotal: this.subtotal,
-        discount: this.discountAmount,
-        shipping: this.shippingCharge,
-        tax: this.taxAmount,
-        total: this.total,
-      },
-    };
+    // Trigger Razorpay payment gateway
+    this.payWithRazorpay();
+  }
 
-    console.log('Proceeding to review with:', checkoutData);
-    this.router.navigate(['/review']);
+  payWithRazorpay(): void {
+    // 1. Call Backend to create Razorpay Order
+    fetch('http://localhost:8000/api/payment/create-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        amount: this.total,
+        currency: 'INR'
+      })
+    })
+    .then(res => res.json())
+    .then(response => {
+      if (response.status === 'success') {
+        const options = {
+          key: response.data.key_id,
+          amount: response.data.amount,
+          currency: response.data.currency,
+          name: 'Flybirds Leggings',
+          description: 'Payment for your order',
+          image: 'assets/images/logo.png',
+          order_id: response.data.razorpay_order_id,
+          handler: (paymentResponse: any) => {
+            this.verifyPayment(paymentResponse);
+          },
+          prefill: {
+            name: 'Customer Name',
+            email: 'customer@example.com',
+            contact: '9999999999'
+          },
+          theme: {
+            color: '#c4b5fd' // Sleek purple accent matching FLY-BIRDS theme
+          }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.on('payment.failed', (failedResponse: any) => {
+          alert('Payment Failed: ' + failedResponse.error.description);
+        });
+        rzp.open();
+      } else {
+        alert('Failed to initiate payment: ' + (response.message || 'Unknown error'));
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Error connecting to backend payment service.');
+    });
+  }
+
+  verifyPayment(paymentResponse: any): void {
+    fetch('http://localhost:8000/api/payment/verify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        razorpay_order_id: paymentResponse.razorpay_order_id,
+        razorpay_payment_id: paymentResponse.razorpay_payment_id,
+        razorpay_signature: paymentResponse.razorpay_signature
+      })
+    })
+    .then(res => res.json())
+    .then(response => {
+      if (response.status === 'success') {
+        alert('Payment Successful!');
+        this.router.navigate(['/success']);
+      } else {
+        alert('Payment verification failed: ' + response.message);
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Error verifying payment.');
+    });
   }
 
   // Form field helpers
