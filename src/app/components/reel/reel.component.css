@@ -137,3 +137,14 @@
         width: 200px;
     }
 }
+
+.reel-box video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: all var(--transition);
+}
+.reel-box video:hover {
+    transform: scale(1.05);
+}

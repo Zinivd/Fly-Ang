@@ -1,12 +1,19 @@
 <div class="reel-box" [id]="reel.id">
     <div class="reel-img">
-        <img [src]="reel.image" [alt]="reel.name" />
+        <video
+            #reelVideo
+            [src]="reel.video_url"
+            muted
+            playsinline
+            preload="metadata"
+            (ended)="onEnded()"
+        ></video>
         <div class="reel-overlay"></div>
         <div class="reel-logo">
             <img src="assets/images/Logo-White.png">
         </div>
         <h6 class="mb-0">
-            {{ reel.name }}
+            {{ reel.title }}
         </h6>
     </div>
 </div>

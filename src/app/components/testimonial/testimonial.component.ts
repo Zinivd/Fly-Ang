@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 export interface Review {
@@ -10,6 +11,8 @@ export interface Review {
 
 @Component({
   selector: 'app-testimonial',
+  imports: [CommonModule],
+  standalone: true,
   templateUrl: './testimonial.component.html',
   styleUrls: ['./testimonial.component.css'],
 })

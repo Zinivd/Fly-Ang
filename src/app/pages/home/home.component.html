@@ -10,20 +10,24 @@
     </div>
 
     <!-- Category -->
-    <div class="category-main">
-        <div class="category-div">
-            <div class="body-head mb-4">
-                <h4 class="text-center">Shop By Category</h4>
-                <h6 class="text-center">
-                    Find your perfect fit form our diverse collection
-                </h6>
-            </div>
-            <!-- Category Grid -->
-            <div class="category-grid">
-                <app-category *ngFor="let item of category" [category]="item"></app-category>
-            </div>
+    <!-- Category -->
+<div class="category-main">
+    <div class="category-div">
+        <div class="body-head mb-4">
+            <h4 class="text-center">Shop By Category</h4>
+            <h6 class="text-center">
+                Find your perfect fit form our diverse collection
+            </h6>
+        </div>
+        <!-- Category Grid -->
+        <div class="category-grid" *ngIf="!isCategoryLoading">
+            <app-category *ngFor="let item of category" [category]="item"></app-category>
+        </div>
+        <div class="category-grid" *ngIf="isCategoryLoading">
+            <div class="category-box mb-4 skeleton" *ngFor="let i of [1,2,3,4,5,6]"></div>
         </div>
     </div>
+</div>
 
     <!-- Product Grid -->
     <div class="product-main">
@@ -86,21 +90,28 @@
         </div>
     </div>
 
-    <!-- Reel Grid -->
-    <div class="reel-main">
-        <div class="reel-div">
-            <div class="body-head mb-4">
-                <h4 class="mb-2 text-center">Reel It, Feel It</h4>
-                <h6 class="text-center">
-                    From studio to street — quick looks that make a statement, captured in motion.
-                </h6>
-            </div>
-
-            <div class="reel-grid">
-                <app-reel *ngFor="let item of reels" [reel]="item"></app-reel>
-            </div>
+<!-- Reel Grid -->
+<div class="reel-main">
+    <div class="reel-div">
+        <div class="body-head mb-4">
+            <h4 class="mb-2 text-center">Reel It, Feel It</h4>
+            <h6 class="text-center">
+                From studio to street — quick looks that make a statement, captured in motion.
+            </h6>
+        </div>
+        <div class="reel-grid" *ngIf="!isReelLoading">
+            <app-reel
+                *ngFor="let item of reels; let i = index"
+                [reel]="item"
+                [isActive]="i === activeReelIndex"
+                (videoEnded)="onReelEnded()"
+            ></app-reel>
+        </div>
+        <div class="reel-grid" *ngIf="isReelLoading">
+            <div class="reel-box mb-4 skeleton" *ngFor="let i of [1,2,3,4]"></div>
         </div>
     </div>
+</div>
 
     <!-- Testimonial -->
     <div class="testimonial-main">
