@@ -3,12 +3,19 @@
     <h6 class="mb-0">Add or remove items from your wishlist.</h6>
 </div>
 
-<div class="wishlist-product-grid" *ngIf="products.length > 0; else emptyWishlist">
-    <div class="product-box-wrapper" *ngFor="let item of products">
-        <app-products [product]="item"></app-products>
-        <button class="remove-btn" (click)="removeFromWishlist(item.id)" title="Remove from Wishlist">
-            <i class="fas fa-xmark"></i>
-        </button>
+<div class="text-center py-5" *ngIf="loading">
+    <div class="spinner-border text-main"></div>
+    <h6 class="mt-3">Loading Wishlist...</h6>
+</div>
+
+<div *ngIf="!loading">
+    <div class="wishlist-product-grid" *ngIf="products.length > 0; else emptyWishlist">
+        <div class="product-box-wrapper" *ngFor="let item of products">
+            <app-products [product]="item"></app-products>
+            <button class="remove-btn" (click)="removeFromWishlist(item.id)" title="Remove from Wishlist">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
     </div>
 </div>
 

@@ -32,6 +32,31 @@ export class UrlHelpersService {
   public banners = '/banners';
   public productsList = '/admin/products';
 
+  // wishlist
+  public wishlistUsersBase = '/admin/users';
+
+  // cart
+  public cartBase = '/admin/users';
+
+  // address
+  public addressUsersBase = '/admin/users';
+
+  // create order
+  public createOrder = '/orders/checkout';
+  public orderDetails = '/orders';
+  public paymentVerify = '/payment/verify';
+  public ordersByUser = '/users';
+
   // reels
   public reelList = '/admin/video-reels';
+
+  // best sellers
+  public bestSellers = '/admin/home/best-sellers';
+
+  // collections
+  public collections = '/admin/home/best-collections';
+
+  // recent viewed
+  public recentlyViewedAdd = '/recently-viewed';
+  public recentlyViewedList = '/recently-viewed';
 }

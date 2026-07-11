@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ApiServiceService } from '../../../service/api-service.service'; // ⚠️ adjust path
+import { ApiServiceService } from '../../../service/api-service.service';
 
 @Component({
   selector: 'app-login',
@@ -73,7 +73,7 @@ export class LoginComponent {
           return;
         }
 
-        this.toastr.success(response?.message || 'OTP sent successfully!');
+        this.toastr.success('OTP sent successfully!');
 
         // Tag this as a 'login' flow so the shared OTP screen knows
         // which token field / endpoint to use on verify.
@@ -142,7 +142,7 @@ export class LoginComponent {
           localStorage.setItem('tokenExpiresAt', String(expiresAt));
         }
 
-        this.toastr.success(response?.message || 'Logged in successfully!');
+        this.toastr.success('Logged in successfully!');
         this.router.navigate(['/']);
       },
       error: (err) => {

@@ -3,7 +3,7 @@
         <img [src]="product.image" [alt]="product.title" />
         <span class="product-badge">{{ product.badge }}</span>
         <div class="product-cart-btn">
-            <button class="add-cart-btn">
+            <button class="add-cart-btn" (click)="addToCart($event)">
                 <i class="bx bx-shopping-bag"></i> Add to Bag
             </button>
         </div>
@@ -30,7 +30,7 @@
                 Rs {{ product.sp }} <span class="ms-1">Rs {{ product.mrp }}</span>
             </h5>
             <p class="mb-0">You'll save Rs 21</p>
-            <button class="add-cart-btn-2 w-100">Add to Bag</button>
+            <button class="add-cart-btn-2 w-100" (click)="addToCart($event)">Add to Bag</button>
         </div>
     </a>
 </div>

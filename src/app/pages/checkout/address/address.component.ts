@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
   FormsModule,
@@ -8,7 +8,9 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { ApiServiceService } from '../../../service/api-service.service';
+import { CheckoutService } from '../../../service/checkout.service';
 
 export interface Address {
   id: number;
@@ -31,90 +33,113 @@ export interface Address {
   styleUrls: ['./address.component.css'],
 })
 export class AddressComponent implements OnInit {
-  // Stepper
-  currentStep: number = 1;
-
-  // Address selection
-  selectedAddressId: number = 1;
-
-  // Form visibility
-  showAddressForm: boolean = false;
+  currentStep = 1;
+  selectedAddressId = -1;
+  showAddressForm = false;
   editingAddressId: number | null = null;
+  loadingAddresses = true;
+  saving = false;
 
-  // Pincode delivery status
   pincodeStatus: 'available' | 'unavailable' | null = null;
-  pincodeChecking: boolean = false;
+  pincodeChecking = false;
 
-  // Saved addresses
-  addresses: Address[] = [
-    {
-      id: 1,
-      label: 'Home',
-      name: 'Sheik',
-      mobile: '+91-1234567890',
-      addressLine1: '6/408, Kel Easalpatti (Vi)',
-      addressLine2: 'Mel Easalpatti (P.o) Maniyathahalli',
-      city: 'Dharmapuri',
-      state: 'Tamil Nadu',
-      pincode: '636807',
-      type: 'Home',
-      isDefault: true,
-    },
-    {
-      id: 2,
-      label: 'Work',
-      name: 'Sheik',
-      mobile: '+91-9876543210',
-      addressLine1: '12, Industrial Estate',
-      addressLine2: 'Avinashi Road',
-      city: 'Tiruppur',
-      state: 'Tamil Nadu',
-      pincode: '641603',
-      type: 'Work',
-      isDefault: false,
-    },
-  ];
-
-  // Order Summary (passed from cart or service — hardcoded here as example)
-  orderSummary = {
-    items: [
-      {
-        name: 'Bottle Green Ankle Leggings',
-        qty: 1,
-        price: 499,
-        image: 'assets/images/Products/1.png',
-      },
-      {
-        name: 'Classic Black Sports Bra',
-        qty: 2,
-        price: 349,
-        image: 'assets/images/Products/2.png',
-      },
-      {
-        name: 'Navy Blue Yoga Pants',
-        qty: 1,
-        price: 599,
-        image: 'assets/images/Products/3.png',
-      },
-    ],
-    discount: 0,
-    shipping: 49,
-    taxRate: 0.18,
-  };
-
-  // Address Form
+  addresses: Address[] = [];
   addressForm!: FormGroup;
+
+  creatingOrder = false;
+
+  customerEmail = '';
+  customerName = '';
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private api: ApiServiceService,
+    private toastr: ToastrService,
+    public checkout: CheckoutService,
   ) {}
+
+  private get userId(): string | null {
+    return localStorage.getItem('userId');
+  }
 
   ngOnInit(): void {
     this.initForm();
-    // Select default address by default
-    const defaultAddr = this.addresses.find((a) => a.isDefault);
-    if (defaultAddr) this.selectedAddressId = defaultAddr.id;
+    this.loadAddresses();
+    this.loadUserInfo();
+  }
+
+  loadUserInfo(): void {
+    if (!this.userId) return;
+    this.api.getUserInfo<any>(this.userId).subscribe({
+      next: (res) => {
+        const user = res?.data ?? res;
+        this.customerEmail = user?.email ?? '';
+        this.customerName = user?.name ?? user?.full_name ?? '';
+      },
+      error: () => {
+        console.error('Failed to load user info for checkout.');
+      },
+    });
+  }
+
+  // ---------- Address API ----------
+  loadAddresses(): void {
+    if (!this.userId) {
+      this.loadingAddresses = false;
+      return;
+    }
+    this.loadingAddresses = true;
+    this.api.getAddresses<any>(this.userId).subscribe({
+      next: (res) => {
+        const rows = res?.data || [];
+        this.addresses = rows.map((row: any) => this.mapAddress(row));
+        const def = this.addresses.find((a) => a.isDefault);
+        this.selectedAddressId = def?.id ?? this.addresses[0]?.id ?? -1;
+        this.loadingAddresses = false;
+      },
+      error: () => {
+        this.loadingAddresses = false;
+        this.toastr.error('Failed to load addresses.');
+      },
+    });
+  }
+
+  private mapAddress(row: any): Address {
+    const type = this.capitalize(row.address_type) as Address['type'];
+    return {
+      id: row.id,
+      label: type,
+      name: row.full_name ?? '',
+      mobile: row.phone ?? '',
+      addressLine1: row.address_line_1 ?? '',
+      addressLine2: row.address_line_2 ?? '',
+      city: row.city ?? '',
+      state: row.state ?? '',
+      pincode: row.postal_code ?? '',
+      type,
+      isDefault: !!row.is_default,
+    };
+  }
+
+  private toApiPayload(val: any) {
+    return {
+      full_name: val.name,
+      phone: val.mobile,
+      address_line_1: val.addressLine1,
+      address_line_2: val.addressLine2 || null,
+      city: val.city,
+      state: val.state,
+      postal_code: val.pincode,
+      country: 'India',
+      address_type: (val.type as string).toLowerCase(),
+      is_default: val.isDefault,
+    };
+  }
+
+  private capitalize(s: string): string {
+    if (!s) return 'Home';
+    return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
   }
 
   initForm(address?: Address): void {
@@ -139,76 +164,80 @@ export class AddressComponent implements OnInit {
       isDefault: [address?.isDefault || false],
     });
 
-    // Watch pincode changes
     this.addressForm.get('pincode')?.valueChanges.subscribe((val) => {
-      if (val?.length === 6) {
-        this.checkPincodeDelivery(val);
-      } else {
-        this.pincodeStatus = null;
-      }
+      this.pincodeStatus = null;
+      if (val?.length === 6) this.checkPincodeDelivery(val);
     });
   }
 
   checkPincodeDelivery(pincode: string): void {
     this.pincodeChecking = true;
-    this.pincodeStatus = null;
-    // Simulated check — replace with real API
     setTimeout(() => {
-      const serviceablePincodes = [
-        '636807',
-        '641603',
-        '641001',
-        '600001',
-        '560001',
-      ];
-      this.pincodeStatus = serviceablePincodes.includes(pincode)
+      const serviceable = ['636807', '641603', '641001', '600001', '560001'];
+      this.pincodeStatus = serviceable.includes(pincode)
         ? 'available'
         : 'unavailable';
       this.pincodeChecking = false;
     }, 600);
   }
 
-  // Computed order values
-  get subtotal(): number {
-    return this.orderSummary.items.reduce((sum, i) => sum + i.price * i.qty, 0);
-  }
-
-  get discountAmount(): number {
-    return this.orderSummary.discount;
-  }
-
-  get shippingCharge(): number {
-    return this.subtotal - this.discountAmount >= 999
-      ? 0
-      : this.orderSummary.shipping;
-  }
-
-  get taxAmount(): number {
-    return Math.round(
-      (this.subtotal - this.discountAmount) * this.orderSummary.taxRate,
-    );
-  }
-
-  get total(): number {
+  // ---------- Order summary, sourced from cart ----------
+  get orderSummary() {
     return (
-      this.subtotal - this.discountAmount + this.shippingCharge + this.taxAmount
+      this.checkout.orderSummary ?? {
+        items: [],
+        subtotal: 0,
+        discountAmount: 0,
+        shippingCharge: 0,
+        taxAmount: 0,
+        total: 0,
+      }
+    );
+  }
+  get subtotal(): number {
+    return this.orderSummary.subtotal;
+  }
+  get discountAmount(): number {
+    return this.orderSummary.discountAmount;
+  }
+  get shippingCharge(): number {
+    return this.orderSummary.shippingCharge;
+  }
+  get taxAmount(): number {
+    return this.orderSummary.taxAmount;
+  }
+  get total(): number {
+    return this.orderSummary.total;
+  }
+  get totalItems(): number {
+    return this.orderSummary.items.reduce(
+      (sum: number, i: any) => sum + i.qty,
+      0,
     );
   }
 
-  get totalItems(): number {
-    return this.orderSummary.items.reduce((sum, i) => sum + i.qty, 0);
-  }
-
-  // Address actions
+  // ---------- Address actions ----------
   selectAddress(id: number): void {
     this.selectedAddressId = id;
   }
 
   setDefault(id: number): void {
+    if (!this.userId) return;
+    const prev = this.addresses.map((a) => ({ ...a }));
     this.addresses = this.addresses.map((a) => ({
       ...a,
       isDefault: a.id === id,
     }));
+
+    // No dedicated "set default" endpoint exists in ApiServiceService —
+    // reusing updateAddress with is_default: true. Confirm backend
+    // actually unsets the previous default on its side.
+    this.api.updateAddress(this.userId, id, { is_default: true }).subscribe({
+      error: () => {
+        this.addresses = prev;
+        this.toastr.error('Failed to set default address.');
+      },
+    });
   }
 
   editAddress(address: Address): void {
@@ -218,11 +247,21 @@ export class AddressComponent implements OnInit {
   }
 
   deleteAddress(id: number): void {
+    if (!this.userId) return;
+    const removed = this.addresses.find((a) => a.id === id);
     this.addresses = this.addresses.filter((a) => a.id !== id);
     if (this.selectedAddressId === id) {
       const def = this.addresses.find((a) => a.isDefault) || this.addresses[0];
       this.selectedAddressId = def?.id ?? -1;
     }
+
+    this.api.deleteAddress(this.userId, id).subscribe({
+      next: () => this.toastr.success('Address removed.'),
+      error: () => {
+        if (removed) this.addresses.push(removed);
+        this.toastr.error('Failed to delete address.');
+      },
+    });
   }
 
   toggleForm(): void {
@@ -245,65 +284,100 @@ export class AddressComponent implements OnInit {
       this.addressForm.markAllAsTouched();
       return;
     }
+    if (!this.userId) return;
 
-    const val = this.addressForm.value;
+    const payload = this.toApiPayload(this.addressForm.value);
+    this.saving = true;
 
-    if (val.isDefault) {
-      this.addresses = this.addresses.map((a) => ({ ...a, isDefault: false }));
-    }
+    const request$ =
+      this.editingAddressId !== null
+        ? this.api.updateAddress(this.userId, this.editingAddressId, payload)
+        : this.api.addAddress(this.userId, payload);
 
-    if (this.editingAddressId !== null) {
-      // Update existing
-      this.addresses = this.addresses.map((a) =>
-        a.id === this.editingAddressId ? { ...a, ...val, label: val.type } : a,
-      );
-      this.selectedAddressId = this.editingAddressId;
-    } else {
-      // Add new
-      const newId = Math.max(0, ...this.addresses.map((a) => a.id)) + 1;
-      const newAddress: Address = {
-        id: newId,
-        label: val.type,
-        ...val,
-      };
-      this.addresses.push(newAddress);
-      this.selectedAddressId = newId;
-    }
-
-    this.cancelForm();
+    request$.subscribe({
+      next: () => {
+        this.toastr.success(
+          this.editingAddressId !== null
+            ? 'Address updated.'
+            : 'Address added.',
+        );
+        this.saving = false;
+        this.loadAddresses();
+        this.cancelForm();
+      },
+      error: () => {
+        this.saving = false;
+        this.toastr.error('Failed to save address.');
+      },
+    });
   }
 
-  // Proceed to payment
+  // ---------- Proceed to payment ----------
   proceedToPayment(): void {
     const selected = this.addresses.find(
       (a) => a.id === this.selectedAddressId,
     );
-    if (!selected) return;
+    if (!selected) {
+      this.toastr.error('Please select a delivery address.');
+      return;
+    }
+    if (!this.userId) return;
+    if (this.creatingOrder) return;
 
-    // Store selected address + order info in a service or localStorage for payment step
-    const checkoutData = {
-      address: selected,
-      order: {
-        items: this.orderSummary.items,
-        subtotal: this.subtotal,
-        discount: this.discountAmount,
-        shipping: this.shippingCharge,
-        tax: this.taxAmount,
-        total: this.total,
-      },
+    const items = this.orderSummary.items;
+    if (!items.length) {
+      this.toastr.error('Your cart is empty.');
+      return;
+    }
+
+    const addressString = `${selected.addressLine1}, ${
+      selected.addressLine2 ? selected.addressLine2 + ', ' : ''
+    }${selected.city}, ${selected.state} - ${selected.pincode}`;
+
+    const payload = {
+      user_id: this.userId,
+      customer_name:  selected.name || this.customerName,
+      customer_email: this.customerEmail,
+      customer_phone: selected.mobile,
+      seller_name: 'Flybirds Store',
+      payment_method: 'razorpay',
+      shipping_address: addressString,
+      billing_address: addressString,
+      discount: this.discountAmount,
+      shipping_charge: this.shippingCharge,
+      tax: this.taxAmount,
+      items: items.map((i: any) => ({
+        product_id: i.productId,
+        product_color_variant_id: i.productColorVariantId,
+        product_size_stock_id: i.productSizeStockId,
+        quantity: i.qty,
+      })),
     };
 
-    console.log('Proceeding to payment with:', checkoutData);
-    // Navigate to payment step
-    this.router.navigate(['/payment']);
+    this.creatingOrder = true;
+    this.api.createOrder<any>(payload).subscribe({
+      next: (res) => {
+        this.creatingOrder = false;
+        const orderId = res?.data?.id ?? res?.data?.order_id;
+        if (!orderId) {
+          this.toastr.error('Order created but no order ID was returned.');
+          return;
+        }
+        this.checkout.setAddress(selected);
+        this.router.navigate(['/payment'], { queryParams: { orderId } });
+      },
+      error: () => {
+        this.creatingOrder = false;
+        this.toastr.error('Failed to create order. Please try again.');
+      },
+    });
   }
 
-  // Form field helpers
+  // ---------- Form helpers (unchanged) ----------
   isInvalid(field: string): boolean {
     const ctrl = this.addressForm.get(field);
     return !!(ctrl && ctrl.invalid && ctrl.touched);
   }
-
   getError(field: string): string {
     const ctrl = this.addressForm.get(field);
     if (!ctrl || !ctrl.errors || !ctrl.touched) return '';
@@ -317,7 +391,6 @@ export class AddressComponent implements OnInit {
     }
     return 'Invalid value.';
   }
-
   fieldLabel(field: string): string {
     const map: Record<string, string> = {
       name: 'Name',

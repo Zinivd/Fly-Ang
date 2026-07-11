@@ -79,9 +79,10 @@
 }
 
 .product-content-right .color-box:hover,
-.product-content-right .color-box.selected {
+.product-content-right .color-box.selected,
+.product-content-right .color-box.active {
     transform: scale(1.05);
-    border: 1px solid var(--primary) !important;
+    border: 2px solid var(--primary) !important;
 }
 
 .product-content-right .size-btn {
@@ -95,7 +96,8 @@
 }
 
 .product-content-right .size-btn:hover,
-.product-content-right .size-btn.selected {
+.product-content-right .size-btn.selected,
+.product-content-right .size-btn.active {
     background-color: var(--main);
     color: var(--secondary);
     border: 2px solid var(--main);

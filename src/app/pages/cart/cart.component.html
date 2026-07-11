@@ -1,6 +1,11 @@
 <link rel="stylesheet" href="../../../assets/css/list.css">
 
-<div class="cart my-4">
+<div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-main"></div>
+    <h6 class="mt-3">Loading Cart...</h6>
+</div>
+
+<div class="cart my-4" *ngIf="!loading">
 
     <!-- Breadcrumb -->
     <div class="body-head mb-4">
@@ -28,7 +33,7 @@
                     <div class="empty-div">
                         <div class="empty-icon">🛒</div>
                         <h2 class="mb-0">Your cart is empty!</h2>
-                        <h6 class="mb-0">Add items to get started</h6>
+                        <!-- <h6 class="mb-0">Add items to get started</h6> -->
                         <button class="form-btn" routerLink="/all-products">Browse Products</button>
                     </div>
                 </div>
@@ -51,7 +56,8 @@
                                     <div>
                                         <h5 class="mb-2">{{ item.name }}</h5>
                                         <h6 class="mb-2">{{ item.description }}</h6>
-                                        <h5 class="mb-1">₹{{ item.price }}</h5>
+                                        <h5 class="mb-2">₹{{ item.price }}</h5>
+                                        <h6 class="mb-2">{{ item.colorName }}</h6>
                                         <a class="remove-link" (click)="removeItem(item.id)">
                                             <i class="fa-solid fa-trash text-danger pe-1"></i> Remove
                                         </a>
@@ -59,10 +65,8 @@
                                 </div>
                             </td>
                             <td>
-                                <select class="form-select" [(ngModel)]="item.size">
-                                    <option *ngFor="let size of item.availableSizes" [value]="size">
-                                        {{ size }}
-                                    </option>
+                                <select class="form-select" [(ngModel)]="item.size" disabled>
+                                    <option [value]="item.size">{{ item.size }}</option>
                                 </select>
                             </td>
                             <td>
@@ -136,7 +140,7 @@
                 </div>
             </div>
 
-            <div *ngIf="!appliedCoupon" class="input-group mb-2">
+            <!-- <div *ngIf="!appliedCoupon" class="input-group mb-2">
                 <input type="text" class="form-control" placeholder="Enter Coupon Code" [(ngModel)]="couponCode"
                     (keyup.enter)="applyCoupon()" />
                 <button class="form-btn" (click)="applyCoupon()">Apply</button>
@@ -151,13 +155,13 @@
                     <b>{{ appliedCoupon }}</b> applied — {{ discountPercent }}% off!
                 </h6>
                 <a class="remove-coupon ms-2 float-end" (click)="removeCoupon()">✕</a>
-            </div>
+            </div> -->
 
-            <button class="login-btn w-100 mb-3" routerLink="/checkout" [disabled]="cartItems.length === 0">
+            <button class="login-btn w-100 mb-3" (click)="proceedToCheckout()" [disabled]="cartItems.length === 0">
                 Proceed to Checkout
             </button>
 
-            <div class="free-shipping-nudge mb-3" *ngIf="amountForFreeShipping > 0 && cartItems.length > 0">
+            <!-- <div class="free-shipping-nudge mb-3" *ngIf="amountForFreeShipping > 0 && cartItems.length > 0">
                 <i class="fa-solid fa-truck-fast me-1"></i>
                 Add <strong>₹{{ amountForFreeShipping }}</strong> more for free shipping!
             </div>
@@ -165,9 +169,9 @@
                 *ngIf="amountForFreeShipping === 0 && cartItems.length > 0">
                 <i class="fa-solid fa-circle-check me-1"></i>
                 You've unlocked free shipping!
-            </div>
+            </div> -->
 
-            <hr class="my-3" />
+            <!-- <hr class="my-3" /> -->
 
             <div class="summary-item d-flex align-items-center justify-content-center flex-wrap gap-4">
                 <h6 class="mb-0">
@@ -206,17 +210,16 @@
                         <div>
                             <h5 class="mb-2">{{ item.name }} - Blue</h5>
                             <h6 class="mb-2">{{ item.description }}</h6>
-                            <h5 class="mb-1">₹{{ item.price }}</h5>
+                            <h5 class="mb-2">₹{{ item.price }}</h5>
+                            <h6 class="mb-2">{{ item.colorName }}</h6>
                             <a class="remove-link" (click)="removeItem(item.id)">
                                 <i class="fa-solid fa-trash text-danger pe-1"></i> Remove
                             </a>
                         </div>
                     </div>
                     <div class="d-flex align-items-center justify-content-between gap-2">
-                        <select class="form-select" [(ngModel)]="item.size">
-                            <option *ngFor="let size of item.availableSizes" [value]="size">
-                                {{ size }}
-                            </option>
+                        <select class="form-select" [(ngModel)]="item.size" disabled>
+                            <option [value]="item.size">{{ item.size }}</option>
                         </select>
                         <div class="qty-div">
                             <button class="qty-btn" (click)="decreaseQty(item)" [disabled]="item.quantity <= 1">
@@ -277,7 +280,7 @@
                 </div>
             </div>
 
-            <div *ngIf="!appliedCoupon" class="input-group mb-2">
+            <!-- <div *ngIf="!appliedCoupon" class="input-group mb-2">
                 <input type="text" class="form-control" placeholder="Enter Coupon Code" [(ngModel)]="couponCode"
                     (keyup.enter)="applyCoupon()" />
                 <button class="form-btn" (click)="applyCoupon()">Apply</button>
@@ -292,13 +295,13 @@
                     <b>{{ appliedCoupon }}</b> applied — {{ discountPercent }}% off!
                 </h6>
                 <a class="remove-coupon ms-2 float-end" (click)="removeCoupon()">✕</a>
-            </div>
+            </div> -->
 
-            <button class="login-btn w-100 mb-3" routerLink="/checkout" [disabled]="cartItems.length === 0">
+            <button class="login-btn w-100 mb-3" (click)="proceedToCheckout()" [disabled]="cartItems.length === 0">
                 Proceed to Checkout
             </button>
 
-            <div class="free-shipping-nudge mb-3" *ngIf="amountForFreeShipping > 0 && cartItems.length > 0">
+            <!-- <div class="free-shipping-nudge mb-3" *ngIf="amountForFreeShipping > 0 && cartItems.length > 0">
                 <i class="fa-solid fa-truck-fast me-1"></i>
                 Add <strong>₹{{ amountForFreeShipping }}</strong> more for free shipping!
             </div>
@@ -306,9 +309,9 @@
                 *ngIf="amountForFreeShipping === 0 && cartItems.length > 0">
                 <i class="fa-solid fa-circle-check me-1"></i>
                 You've unlocked free shipping!
-            </div>
+            </div> -->
 
-            <hr class="my-3" />
+            <!-- <hr class="my-3" /> -->
 
             <div class="summary-item d-flex align-items-center justify-content-center flex-wrap gap-4">
                 <h6 class="mb-0">

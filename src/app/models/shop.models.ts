@@ -25,18 +25,20 @@ export interface ProductItem {
   title: string;
   subtitle: string;
   image: string;
-  badge: string;
   rating: number;
   review: number;
   sp: number;
   mrp: number;
-  category?: any;
+  badge: string;
   color_variants?: any[];
+  category_id?: number; // add this
 }
 
 export interface CollectionItem {
+  id: number;
   name: string;
   img: string;
+  slug: string;
 }
 
 export interface ReviewItem {

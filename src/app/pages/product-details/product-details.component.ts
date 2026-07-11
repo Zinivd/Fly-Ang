@@ -1,11 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 import { ProductsComponent } from '../../components/products/products.component';
 import { ProductItem } from '../../models/shop.models';
 import { PRODUCT_DATA } from '../../data/product.data';
 import { REVIEW_DATA } from '../../data/review.data';
 import { ApiServiceService } from '../../service/api-service.service';
+
+interface SizeStock {
+  id: number;
+  size: string;
+  stock: number;
+  price: number;
+}
+
+interface ColorVariant {
+  id: number;
+  color: { id: number; name: string; code: string };
+  gallery_images: { image_url: string; sort_order: number }[];
+  size_stocks: SizeStock[];
+}
 
 @Component({
   selector: 'app-product-details',
@@ -24,6 +39,7 @@ export class ProductDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private api: ApiServiceService,
+    private toastr: ToastrService,
   ) {}
 
   loading = true;
@@ -46,8 +62,6 @@ export class ProductDetailsComponent implements OnInit {
 
   productImages: string[] = [];
 
-  colors: { name: string; code: string; border?: boolean }[] = [];
-
   highlights = [
     { icon: 'bx bx-cart', text: '100% Original Products' },
     { icon: 'bx bx-handshake', text: 'Easy 7 days returns and exchanges' },
@@ -61,6 +75,12 @@ export class ProductDetailsComponent implements OnInit {
   variants: any[] = [];
 
   sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL'];
+
+  colorVariants: ColorVariant[] = [];
+  colors: { id: number; name: string; code: string; border?: boolean }[] = [];
+  availableSizes: string[] = [];
+  selectedVariantId: number | null = null;
+  selectedSizeStockId: number | null = null;
   selectedSize = '';
 
   fabrics = [
@@ -80,6 +100,18 @@ export class ProductDetailsComponent implements OnInit {
   currentSlide = 0;
   slidesPerPage = 3;
 
+  // Wishlist
+  isWishlisted = false;
+  private wishlistBusy = false;
+
+  // Cart
+  private addingToCart = false;
+
+  // TODO: replace with your actual auth/user source if not localStorage
+  private get userId(): string | null {
+    return localStorage.getItem('userId');
+  }
+
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       this.productId = Number(params.get('id'));
@@ -88,10 +120,6 @@ export class ProductDetailsComponent implements OnInit {
         this.getProduct();
       }
     });
-  }
-
-  selectSize(size: string) {
-    this.selectedSize = size;
   }
 
   getProduct() {
@@ -108,70 +136,175 @@ export class ProductDetailsComponent implements OnInit {
         this.discountPercent = Number(product.discount);
         this.savedAmount = this.originalPrice - this.price;
         this.estimatedDelivery = product.estimate_shipping_days + ' Days';
-        // Colors
-        this.colors =
-          product.color_variants?.map((item: any) => ({
-            name: item.color.name,
-            code: item.color.code,
-            border:
-              item.color.code.toLowerCase() === '#ffffff' ||
-              item.color.code.toLowerCase() === '#fff',
-          })) || [];
+        this.colorVariants = product.color_variants || [];
+        this.colors = this.colorVariants.map((v: any) => ({
+          id: v.id,
+          name: v.color.name,
+          code: v.color.code,
+          border: ['#fff', '#ffffff', '#fffff'].includes(
+            v.color.code.toLowerCase(),
+          ),
+        }));
+        if (this.colorVariants.length) {
+          this.selectVariant(this.colorVariants[0]); // default to first color
+        } else {
+          this.productImages = ['assets/images/no-image.png'];
+        }
+
         // Images
         this.productImages = [];
-        product.color_variants?.forEach((variant: any) => {
-          if (variant.thumbnail_image?.image_url) {
-            this.productImages.push(variant.thumbnail_image.image_url);
-          }
-          variant.gallery_images?.forEach((img: any) => {
-            this.productImages.push(img.image_url);
-          });
-        });
-        if (!this.productImages.length) {
-          this.productImages.push('assets/images/no-image.png');
+        const firstVariant = product.color_variants?.[0];
+
+        if (firstVariant) {
+          this.selectedVariantId = firstVariant.id;
+
+          const sortedImages = (firstVariant.gallery_images || [])
+            .slice()
+            .sort((a: any, b: any) => a.sort_order - b.sort_order);
+
+          this.productImages = sortedImages.map((img: any) => img.image_url);
+          this.availableSizes = (firstVariant.size_stocks || []).map(
+            (s: any) => s.size,
+          );
         }
+
+        if (!this.productImages.length) {
+          this.productImages = ['assets/images/no-image.png'];
+        }
+
         this.detailsMainImg = this.productImages[0];
         // Specifications
         this.specifications = [
-          {
-            label: 'Brand',
-            value: product.brand,
-          },
-          {
-            label: 'Category',
-            value: product.category?.name,
-          },
-          {
-            label: 'Unit',
-            value: product.unit,
-          },
-          {
-            label: 'Weight',
-            value: product.weight,
-          },
-          {
-            label: 'Minimum Quantity',
-            value: product.min_qty,
-          },
-          {
-            label: 'Reward Points',
-            value: product.reward_points,
-          },
-          {
-            label: 'Tags',
-            value: product.tags,
-          },
+          { label: 'Brand', value: product.brand },
+          { label: 'Category', value: product.category?.name },
+          { label: 'Unit', value: product.unit },
+          { label: 'Weight', value: product.weight },
+          { label: 'Minimum Quantity', value: product.min_qty },
+          { label: 'Reward Points', value: product.reward_points },
+          { label: 'Tags', value: product.tags },
           {
             label: 'Shipping Days',
             value: product.estimate_shipping_days + ' Days',
           },
         ];
+        // Wishlist state, if the product API tells us (adjust key if different)
+        this.isWishlisted = !!product.is_wishlisted;
         this.loading = false;
+        this.trackRecentlyViewed();
       },
       error: () => {
         this.loading = false;
       },
     });
+  }
+
+  selectColor(colorId: number): void {
+    const variant = this.colorVariants.find((v) => v.id === colorId);
+    if (variant) this.selectVariant(variant);
+  }
+
+  private selectVariant(variant: ColorVariant): void {
+    this.selectedVariantId = variant.id;
+
+    const images = (variant.gallery_images || [])
+      .slice()
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((img) => img.image_url);
+    this.productImages = images.length
+      ? images
+      : ['assets/images/no-image.png'];
+    this.detailsMainImg = this.productImages[0];
+
+    this.availableSizes = (variant.size_stocks || []).map((s) => s.size);
+    this.selectedSize = '';
+    this.selectedSizeStockId = null;
+  }
+
+  selectSize(size: string): void {
+    this.selectedSize = size;
+    const variant = this.colorVariants.find(
+      (v) => v.id === this.selectedVariantId,
+    );
+    const stock = variant?.size_stocks.find((s) => s.size === size);
+    this.selectedSizeStockId = stock ? stock.id : null;
+  }
+
+  toggleWishlist(): void {
+    if (!this.userId) {
+      this.toastr.info('Please log in to use your wishlist.');
+      return;
+    }
+    if (this.wishlistBusy) return;
+
+    this.wishlistBusy = true;
+
+    if (this.isWishlisted) {
+      this.api.removeFromWishlist(this.userId, this.productId).subscribe({
+        next: () => {
+          this.isWishlisted = false;
+          this.toastr.success('Removed from wishlist!');
+          this.wishlistBusy = false;
+        },
+        error: () => {
+          this.toastr.error('Failed to remove from wishlist.');
+          this.wishlistBusy = false;
+        },
+      });
+    } else {
+      this.api
+        .addToWishlist(this.userId, { product_id: this.productId })
+        .subscribe({
+          next: () => {
+            this.isWishlisted = true;
+            this.toastr.success('Added to wishlist!');
+            this.wishlistBusy = false;
+          },
+          error: () => {
+            this.toastr.error('Failed to add to wishlist.');
+            this.wishlistBusy = false;
+          },
+        });
+    }
+  }
+
+  addToBag(): void {
+    if (!this.userId) {
+      this.toastr.info('Please log in to add items to your bag.');
+      return;
+    }
+    if (!this.selectedVariantId) {
+      this.toastr.info('Please select a color.');
+      return;
+    }
+    if (!this.selectedSizeStockId) {
+      this.toastr.info('Please select a size.');
+      return;
+    }
+    if (this.addingToCart) return;
+
+    this.addingToCart = true;
+    this.api
+      .addToCart(this.userId, {
+        product_id: this.productId,
+        product_color_variant_id: this.selectedVariantId,
+        product_size_stock_id: this.selectedSizeStockId,
+        quantity: 1,
+      })
+      .subscribe({
+        next: () => {
+          this.toastr.success('Added to bag!');
+          this.addingToCart = false;
+        },
+        error: () => {
+          this.toastr.error('Failed to add to bag.');
+          this.addingToCart = false;
+        },
+      });
+  }
+
+  buyNow(): void {
+    this.addToBag();
+    // navigate to cart/checkout once addToBag succeeds if you want
   }
 
   get visibleReviews() {
@@ -192,5 +325,14 @@ export class ProductDetailsComponent implements OnInit {
 
   getStars(count: number): number[] {
     return Array(count).fill(0);
+  }
+
+  private trackRecentlyViewed(): void {
+    if (!this.userId) return;
+    this.api
+      .addRecentlyViewed({ user_id: this.userId, product_id: this.productId })
+      .subscribe({
+        error: (err) => console.error('Failed to record recently viewed:', err),
+      });
   }
 }

@@ -3,10 +3,10 @@
         <img [src]="collection.img" [alt]="collection.name" />
     </div>
     <div class="collection-box-content">
-        <button class="add-cart-btn-2">
+        <button class="add-cart-btn-2" [routerLink]="['/all-products', collection.slug, collection.id]">
             {{ collection.name }}
         </button>
-        <button class="collection-btn">
+        <button class="collection-btn" [routerLink]="['/all-products', collection.slug, collection.id]">
             <div class="collection-sign">
                 <svg viewBox="0 0 640 640">
                     <path

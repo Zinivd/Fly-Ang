@@ -11,7 +11,8 @@ export class BaseUrlService {
   public getAPIURL(): string {
     // return 'https://backend-dev.flybirdsleggings.com/api';
     // return 'http://127.0.0.1:8000/api';
-    return 'http://10.66.81.191:8000/api';
+    // return 'http://10.66.81.191:8000/api';
+    return 'http://192.168.29.72:8000/api';
     // return 'https://selene-overconstant-albertina.ngrok-free.dev/api';
   }
 

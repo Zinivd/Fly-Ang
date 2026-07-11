@@ -31,6 +31,14 @@
     font-weight: var(--fw-md);
 }
 
+.carousel-item .banner-mobile {
+    display: block;
+}
+
+.carousel-item .banner-web {
+    display: none;
+}
+
 /* Category */
 .category-main {
     background: #FAF1F8;
@@ -148,6 +156,14 @@
 
     .banner-div h6 {
         font-size: 20px;
+    }
+
+    .carousel-item .banner-mobile {
+        display: none;
+    }
+
+    .carousel-item .banner-web {
+        display: block;
     }
 
 }

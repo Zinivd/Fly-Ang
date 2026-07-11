@@ -25,7 +25,7 @@ export class OtpComponent implements OnInit, OnDestroy {
   @ViewChildren('otp0, otp1, otp2, otp3, otp4')
   otpInputs!: QueryList<ElementRef<HTMLInputElement>>;
 
-  countdown: number = 30;
+  countdown: number = 60;
   showResendButton: boolean = false;
   isVerifying: boolean = false;
   isResending: boolean = false;
@@ -158,7 +158,7 @@ export class OtpComponent implements OnInit, OnDestroy {
 
     this.clearOtpSession();
 
-    this.toastr.success(response?.message || 'OTP verified successfully!');
+    this.toastr.success('OTP verified successfully!');
     this.router.navigate(['/']);
   }
 

@@ -127,6 +127,11 @@
     font-weight: var(--fw-md);
 }
 
+.summary-item p {
+    color: var(--text-secondary);
+    font-weight: var(--fw-md);
+}
+
 .summary-item img.brand-logo {
     height: 25px;
 }
@@ -272,6 +277,10 @@
         font-size: 15px;
     }
 
+    .summary-item p {
+        font-size: 12px;
+    }
+
 }
 
 @media screen and (min-width: 767px) and (max-width: 1098px) {
@@ -322,6 +331,10 @@
         font-size: 12px;
     }
 
+    .summary-item p {
+        font-size: 10px;
+    }
+
 }
 
 @media screen and (max-width: 767px) {
@@ -368,6 +381,10 @@
 
     .summary-item h5 {
         font-size: 12px;
+    }
+
+    .summary-item p {
+        font-size: 10px;
     }
 }
 

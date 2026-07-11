@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ApiServiceService } from '../../../service/api-service.service'; // ⚠️ adjust path
+import { ApiServiceService } from '../../../service/api-service.service';
 
 @Component({
   selector: 'app-register',
@@ -54,8 +54,6 @@ export class RegisterComponent {
       next: (response) => {
         this.isLoading = false;
 
-        // ⚠️ ASSUMPTION: otp_token comes back either at the top level
-        // or nested under `data`/`result`. Adjust once you confirm the shape.
         const otpToken =
           response?.otp_token ??
           response?.data?.otp_token ??
@@ -66,7 +64,7 @@ export class RegisterComponent {
           return;
         }
 
-        this.toastr.success(response?.message || 'OTP sent successfully!');
+        this.toastr.success('OTP sent successfully!');
 
         // Persist so a page refresh on /otp doesn't lose it
         sessionStorage.setItem('otpToken', otpToken);

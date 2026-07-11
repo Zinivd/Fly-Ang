@@ -17,10 +17,10 @@
 <div class="shop-all">
     <div class="shop-all-div">
         <h3 class="mb-3">Shop All</h3>
-        <ul class="nav ps-0 flex-row column-gap-1">
+        <ul class="nav ps-0 flex-row column-gap-1" *ngIf="!isShopAllLoading">
             <ng-container *ngFor="let item of shopAllItems; let last = last">
-                <li class="nav-item mb-1">
-                    <a [routerLink]="item.link || null" class="nav-link">{{ item.label }}</a>
+                <li class="nav-item mb-1 text-capitalize">
+                    <a [routerLink]="item.link" class="nav-link">{{ item.label }}</a>
                 </li>
                 <li *ngIf="!last" class="nav-item mb-1">
                     <span class="nav-link">|</span>

@@ -20,7 +20,7 @@
 
                     <div class="mb-4 otp-container">
                         <input #otp0 type="text" inputmode="numeric" maxlength="1" class="form-control otp-input"
-                            (input)="onInput($event, 0)" (keydown)="onKeydown($event, 0)" (paste)="onPaste($event)" />
+                            (input)="onInput($event, 0)" (keydown)="onKeydown($event, 0)" (paste)="onPaste($event)" autofocus />
                         <input #otp1 type="text" inputmode="numeric" maxlength="1" class="form-control otp-input"
                             (input)="onInput($event, 1)" (keydown)="onKeydown($event, 1)" />
                         <input #otp2 type="text" inputmode="numeric" maxlength="1" class="form-control otp-input"

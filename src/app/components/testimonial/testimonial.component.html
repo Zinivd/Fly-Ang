@@ -9,10 +9,10 @@
             <h6>{{ currentReview.body }}</h6>
 
             <div class="stars">
-                <div *ngFor="let filled of starArray">
+                <span *ngFor="let filled of starArray">
                     <i *ngIf="filled" class="fa-solid fa-star"></i>
                     <i *ngIf="!filled" class="fa-regular fa-star"></i>
-                </div>
+                </span>
             </div>
 
             <h6 class="reviewer">

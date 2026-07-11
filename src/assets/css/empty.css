@@ -24,13 +24,13 @@
 }
 
 .empty-div h2 {
-    font-size: 28px;
-    font-weight: var(--fw-xl);
+    font-size: 20px;
+    font-weight: var(--fw-lg);
     color: var(--sub);
 }
 
 .empty-div h6 {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: var(--fw-md);
     color: var(--text-primary);
 }

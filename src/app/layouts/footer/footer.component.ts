@@ -1,6 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ApiServiceService } from '../../service/api-service.service';
+
+interface ShopAllItem {
+  label: string;
+  link: any[]; // routerLink array
+}
 
 @Component({
   selector: 'app-footer',
@@ -9,24 +15,43 @@ import { CommonModule } from '@angular/common';
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css'],
 })
-export class FooterComponent {
-  shopAllItems = [
-    { label: 'Ankle Leggings', link: '/all-products' },
-    { label: 'Full Length Leggings', link: '' },
-    { label: 'Shimmer Leggings', link: '' },
-    { label: 'Capri Leggings', link: '' },
-    { label: 'Denim Leggings', link: '' },
-    { label: 'Kurti Pant', link: '' },
-    { label: 'Palazzo Pant', link: '' },
-    { label: 'Metallic Pant', link: '' },
-    { label: 'Yoga Shorts', link: '' },
-    { label: 'Saree Shaper', link: '' },
-    { label: 'Pyjama Set', link: '' },
-    { label: 'Capri Set', link: '' },
-    { label: 'Shimmer Dupatta', link: '' },
-    { label: 'Nazmin Dupatta', link: '' },
-  ];
+export class FooterComponent implements OnInit {
+  constructor(private api: ApiServiceService) {}
 
+  shopAllItems: ShopAllItem[] = [];
+  isShopAllLoading = true;
+
+  ngOnInit(): void {
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    this.isShopAllLoading = true;
+    this.api.getCategoryList<any>().subscribe({
+      next: (res) => {
+        const rows = res?.data ?? [];
+        this.shopAllItems = rows.map((cat: any) => ({
+          label: cat.name,
+          link: ['/all-products', this.slugify(cat.name), cat.id],
+        }));
+        this.isShopAllLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching categories for footer:', err);
+        this.isShopAllLoading = false;
+      },
+    });
+  }
+
+  private slugify(name: string): string {
+    return (name || '')
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  }
+
+  // quickLinks, helpLinks, shopLinks, policyLinks, socialLinks — unchanged
   quickLinks = [
     { label: 'Our Story', link: '' },
     { label: "FAQ's", link: '' },

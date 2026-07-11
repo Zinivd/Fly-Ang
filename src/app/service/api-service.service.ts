@@ -256,7 +256,7 @@ export class ApiServiceService {
   }
 
   // Get Products
-  public getProducts<T>(params: any) {
+  public getProducts<T>(params: Record<string, any>): Observable<T> {
     const url = `${this.urlHelper.getAPIURL()}${this.envUrl.productsList}`;
     return this.http.get<T>(url, {
       headers: this.getHeaders(),
@@ -282,6 +282,355 @@ export class ApiServiceService {
         return throwError(() => ({
           statusCode: 500,
           message: 'Get Reel List API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Wishlist - Add
+  public addToWishlist<T>(
+    userId: string | number,
+    payload: any,
+  ): Observable<T> {
+    const serviceURL = `${this.urlHelper.getAPIURL()}${this.envUrl.wishlistUsersBase}/${userId}/wishlist`;
+
+    return this.http
+      .post<T>(serviceURL, payload, { headers: this.getHeaders() })
+      .pipe(
+        catchError((error) => {
+          this.handleAuthErrors(error);
+          return throwError(() => ({
+            statusCode: 500,
+            message: 'Add To Wishlist API error',
+            error,
+          }));
+        }),
+      );
+  }
+
+  // Wishlist - List
+  public getWishlist<T>(userId: string | number): Observable<T> {
+    const serviceURL = `${this.urlHelper.getAPIURL()}${this.envUrl.wishlistUsersBase}/${userId}/wishlist`;
+
+    return this.http.get<T>(serviceURL, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Get Wishlist API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Wishlist - Remove by product id
+  public removeFromWishlist<T>(
+    userId: string | number,
+    productId: string | number,
+  ): Observable<T> {
+    const serviceURL = `${this.urlHelper.getAPIURL()}${this.envUrl.wishlistUsersBase}/${userId}/wishlist/product/${productId}`;
+
+    return this.http.delete<T>(serviceURL, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Remove From Wishlist API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Cart - Add
+  public addToCart<T>(userId: string | number, payload: any): Observable<T> {
+    const serviceURL = `${this.urlHelper.getAPIURL()}${this.envUrl.cartBase}/${userId}/cart`;
+
+    return this.http
+      .post<T>(serviceURL, payload, { headers: this.getHeaders() })
+      .pipe(
+        catchError((error) => {
+          this.handleAuthErrors(error);
+          return throwError(() => ({
+            statusCode: 500,
+            message: 'Add To Cart API error',
+            error,
+          }));
+        }),
+      );
+  }
+
+  // Cart - List
+  public getCart<T>(userId: string | number): Observable<T> {
+    const serviceURL = `${this.urlHelper.getAPIURL()}${this.envUrl.cartBase}/${userId}/cart`;
+
+    return this.http.get<T>(serviceURL, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Get Cart API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Cart - Update quantity
+  public updateCartItem<T>(
+    userId: string | number,
+    cartId: string | number,
+    payload: any,
+  ): Observable<T> {
+    const serviceURL = `${this.urlHelper.getAPIURL()}${this.envUrl.cartBase}/${userId}/cart/${cartId}`;
+
+    return this.http
+      .patch<T>(serviceURL, payload, { headers: this.getHeaders() })
+      .pipe(
+        catchError((error) => {
+          this.handleAuthErrors(error);
+          return throwError(() => ({
+            statusCode: 500,
+            message: 'Update Cart Item API error',
+            error,
+          }));
+        }),
+      );
+  }
+
+  // Cart - Remove
+  public removeCartItem<T>(
+    userId: string | number,
+    cartId: string | number,
+  ): Observable<T> {
+    const serviceURL = `${this.urlHelper.getAPIURL()}${this.envUrl.cartBase}/${userId}/cart/${cartId}`;
+
+    return this.http.delete<T>(serviceURL, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Remove Cart Item API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Address - Add
+  public addAddress<T>(userId: string | number, payload: any): Observable<T> {
+    const serviceURL = `${this.urlHelper.getAPIURL()}${this.envUrl.addressUsersBase}/${userId}/addresses`;
+
+    return this.http
+      .post<T>(serviceURL, payload, { headers: this.getHeaders() })
+      .pipe(
+        catchError((error) => {
+          this.handleAuthErrors(error);
+          return throwError(() => ({
+            statusCode: 500,
+            message: 'Add Address API error',
+            error,
+          }));
+        }),
+      );
+  }
+
+  // Address - Get all by user id (optionally filter by type: Home/Work/Other)
+  public getAddresses<T>(
+    userId: string | number,
+    type?: string,
+  ): Observable<T> {
+    const serviceURL = `${this.urlHelper.getAPIURL()}${this.envUrl.addressUsersBase}/${userId}/addresses`;
+    // const params = type ? { type } : {};
+
+    return this.http.get<T>(serviceURL, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Get Addresses API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Address - Get single
+  public getAddressById<T>(
+    userId: string | number,
+    addressId: string | number,
+  ): Observable<T> {
+    const serviceURL = `${this.urlHelper.getAPIURL()}${this.envUrl.addressUsersBase}/${userId}/addresses/${addressId}`;
+
+    return this.http.get<T>(serviceURL, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Get Address API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Address - Update
+  public updateAddress<T>(
+    userId: string | number,
+    addressId: string | number,
+    payload: any,
+  ): Observable<T> {
+    const serviceURL = `${this.urlHelper.getAPIURL()}${this.envUrl.addressUsersBase}/${userId}/addresses/${addressId}`;
+
+    return this.http
+      .patch<T>(serviceURL, payload, { headers: this.getHeaders() })
+      .pipe(
+        catchError((error) => {
+          this.handleAuthErrors(error);
+          return throwError(() => ({
+            statusCode: 500,
+            message: 'Update Address API error',
+            error,
+          }));
+        }),
+      );
+  }
+
+  // Address - Delete
+  public deleteAddress<T>(
+    userId: string | number,
+    addressId: string | number,
+  ): Observable<T> {
+    const serviceURL = `${this.urlHelper.getAPIURL()}${this.envUrl.addressUsersBase}/${userId}/addresses/${addressId}`;
+
+    return this.http.delete<T>(serviceURL, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Delete Address API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Best Sellers
+  public getBestSellers<T>(): Observable<T> {
+    const url = `${this.urlHelper.getAPIURL()}${this.envUrl.bestSellers}`;
+    return this.http.get<T>(url, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Get Best Sellers API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Collections
+  public getCollections<T>(): Observable<T> {
+    const url = `${this.urlHelper.getAPIURL()}${this.envUrl.collections}`;
+    return this.http.get<T>(url, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Get Collections API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Orders - Create (checkout)
+  public createOrder<T>(payload: any): Observable<T> {
+    const url = `${this.urlHelper.getAPIURL()}${this.envUrl.createOrder}`;
+    return this.http.post<T>(url, payload, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Create Order API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Orders - Get by id
+  public getOrderById<T>(orderId: string | number): Observable<T> {
+    const url = `${this.urlHelper.getAPIURL()}${this.envUrl.orderDetails}/${orderId}`;
+    return this.http.get<T>(url, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Get Order By Id API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Payment - Verify
+  public verifyPayment<T>(payload: any): Observable<T> {
+    const url = `${this.urlHelper.getAPIURL()}${this.envUrl.paymentVerify}`;
+    return this.http.post<T>(url, payload, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Verify Payment API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Orders - Get all by user id
+  public getOrdersByUser<T>(userId: string | number): Observable<T> {
+    const url = `${this.urlHelper.getAPIURL()}${this.envUrl.ordersByUser}/${userId}/orders`;
+    return this.http.get<T>(url, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Get Orders By User API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Recently Viewed - Add
+  public addRecentlyViewed<T>(payload: any): Observable<T> {
+    const url = `${this.urlHelper.getAPIURL()}${this.envUrl.recentlyViewedAdd}`;
+    return this.http.post<T>(url, payload, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Add Recently Viewed API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Recently Viewed - List
+  public getRecentlyViewed<T>(userId: string | number): Observable<T> {
+    const url = `${this.urlHelper.getAPIURL()}${this.envUrl.recentlyViewedList}/${userId}`;
+    return this.http.get<T>(url, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Get Recently Viewed API error',
           error,
         }));
       }),
