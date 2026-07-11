@@ -59,4 +59,7 @@ export class UrlHelpersService {
   // recent viewed
   public recentlyViewedAdd = '/recently-viewed';
   public recentlyViewedList = '/recently-viewed';
+
+
+  public sentMail = '/orders'
 }

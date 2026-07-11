@@ -1,10 +1,24 @@
 <link rel="stylesheet" href="../stepper.css">
 
+<!-- Success popup — same visual language as the invoice sheet, shown as an overlay -->
+<app-order-success-modal
+  [show]="showSuccessModal"
+  [orderDetails]="orderDetails"
+  [items]="items"
+  [subtotal]="subtotal"
+  [discountAmount]="discountAmount"
+  [shippingCharge]="shippingCharge"
+  [taxAmount]="taxAmount"
+  [total]="total"
+  [orderNumber]="orderNumber"
+  [orderDate]="orderDate"
+  (closed)="closeSuccessModal()"
+></app-order-success-modal>
+
 <div *ngIf="loading" class="text-center py-5">
     <div class="spinner-border text-main"></div>
     <h6 class="mt-3">Loading Order...</h6>
 </div>
-
 <div class="review my-4" *ngIf="!loading">
     <div class="stepper mb-4">
         <div class="step done">
@@ -22,23 +36,13 @@
             <span class="step-label">Review</span>
         </div>
     </div>
-
     <div class="review-div">
-
-        <!-- Success state -->
-        <div class="body-head text-center d-block mx-auto mb-4" *ngIf="status === 'success'">
-            <img src="assets/images/Success.png" height="50px" class="mb-2" alt="Success" />
-            <h4 class="mb-2">Your Order Has Been Placed!</h4>
-            <h6 class="mb-0">Thank you for your purchase. We're processing your order now.</h6>
-        </div>
-
-        <!-- Failed state -->
+        <!-- Failed state stays inline (no popup needed for this) -->
         <div class="body-head text-center d-block mx-auto mb-4" *ngIf="status === 'failed'">
             <i class="fa-solid fa-circle-xmark text-danger mb-2" style="font-size: 50px;"></i>
             <h4 class="mb-2 text-danger">Payment Failed</h4>
             <h6 class="mb-0">Something went wrong while processing your payment. Please try again.</h6>
         </div>
-
         <!-- Order details -->
         <div class="review-card form mb-3" *ngIf="orderDetails">
             <div class="body-head mb-4 d-flex align-items-center justify-content-between flex-wrap gap-2">
@@ -47,7 +51,6 @@
                     Payment: {{ paymentStatus }}
                 </span>
             </div>
-
             <div class="row row-gap-3">
                 <div class="col-md-4">
                     <label>Order ID</label>
@@ -58,13 +61,10 @@
                     <h5 class="mb-0">{{ orderDate | date:'mediumDate' }}</h5>
                 </div>
             </div>
-
             <div class="divider-line my-4"></div>
-
             <div class="body-head mb-4">
                 <h5 class="mb-0">Order Summary</h5>
             </div>
-
             <div class="summary-list">
                 <div class="summary-item" *ngFor="let item of items">
                     <div class="product-cell">
@@ -79,9 +79,7 @@
                     <h5 class="mb-0 fw-bold">₹{{ item.total }}</h5>
                 </div>
             </div>
-
             <div class="divider-line my-4"></div>
-
             <div class="summary-list">
                 <div class="summary-item">
                     <h6 class="mb-0">Subtotal</h6>
@@ -105,14 +103,11 @@
                 </div>
             </div>
         </div>
-
         <div class="divider-line my-3 d-block d-md-none" *ngIf="orderDetails"></div>
-
         <div class="review-card form mb-4" *ngIf="orderDetails">
             <div class="body-head mb-3">
                 <h5 class="mb-0">Shipping Information</h5>
             </div>
-
             <div class="row row-gap-3">
                 <div class="col-md-6">
                     <label>Delivery Address</label>
@@ -126,7 +121,6 @@
                 </div>
             </div>
         </div>
-
         <div class="d-flex align-items-center justify-content-center flex-wrap gap-4">
             <button class="cart-btn" *ngIf="status === 'success'">
                 <i class="fas fa-truck-fast me-1"></i> Track Your Order
@@ -138,6 +132,5 @@
                 <i class="fas fa-rotate-left me-1"></i> Try Again
             </button>
         </div>
-
     </div>
 </div>

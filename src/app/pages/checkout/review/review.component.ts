@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiServiceService } from '../../../service/api-service.service';
+import { OrderSuccessModalComponent } from '../order-success-modal/order-success-modal.component';
 
 @Component({
   selector: 'app-review',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, OrderSuccessModalComponent],
   templateUrl: './review.component.html',
   styleUrl: './review.component.css',
 })
@@ -14,6 +15,7 @@ export class ReviewComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private api: ApiServiceService,
+    private Router: Router,
   ) {}
 
   loading = true;
@@ -21,11 +23,14 @@ export class ReviewComponent implements OnInit {
   status: 'success' | 'failed' | null = null;
   orderDetails: any = null;
 
+  // Controls the success popup — opens automatically once the order
+  // loads successfully with ?status=success in the URL.
+  showSuccessModal = false;
+
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((params) => {
       this.orderId = params.get('orderId');
       this.status = (params.get('status') as 'success' | 'failed') || null;
-
       if (this.orderId) {
         this.loadOrder(this.orderId);
       } else {
@@ -40,11 +45,56 @@ export class ReviewComponent implements OnInit {
       next: (res) => {
         this.orderDetails = res?.data ?? null;
         this.loading = false;
+        if (this.status === 'success' && this.orderDetails) {
+          this.showSuccessModal = true;
+          this.sentMail();
+        }
       },
       error: () => {
         this.loading = false;
       },
     });
+  }
+
+  closeSuccessModal(): void {
+    this.showSuccessModal = false;
+    this.Router.navigateByUrl('/review');
+  }
+
+  sentMail(): void {
+    this.api.sentMail<any>(this.orderId).subscribe({
+      next: (res) => {
+        // this.toastr.success('Mail sent successfully');
+      },
+      error: () => {
+        // this.toastr.error('Error sending mail');
+      },
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // NEW — Pulls the correct product image for each order line item.
+  // Priority: order item's own color-variant gallery image (first one)
+  // -> thumbnail image -> product_details.color gallery (string URLs)
+  // -> fallback placeholder.
+  // ═══════════════════════════════════════════════════════════════
+  private resolveItemImage(item: any): string {
+    const variantGallery = item?.product_color_variant?.gallery_images;
+    if (Array.isArray(variantGallery) && variantGallery.length > 0) {
+      return variantGallery[0]?.image_url || 'assets/images/no-image.png';
+    }
+
+    const variantThumb = item?.product_color_variant?.thumbnail_image?.image_url;
+    if (variantThumb) {
+      return variantThumb;
+    }
+
+    const detailsGallery = item?.product_details?.color?.gallery_images;
+    if (Array.isArray(detailsGallery) && detailsGallery.length > 0) {
+      return detailsGallery[0];
+    }
+
+    return 'assets/images/no-image.png';
   }
 
   get items(): any[] {
@@ -55,9 +105,10 @@ export class ReviewComponent implements OnInit {
       qty: i.quantity ?? 1,
       price: Number(i.price ?? 0),
       total: Number(i.total ?? 0),
-      image: 'assets/images/no-image.png', // order items API doesn't return an image URL
+      image: this.resolveItemImage(i),
     }));
   }
+
   get subtotal(): number {
     return Number(this.orderDetails?.subtotal ?? 0);
   }

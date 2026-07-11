@@ -1,0 +1,87 @@
+<div class="modal-backdrop-custom" *ngIf="show" (click)="onBackdropClick()">
+  <div class="success-modal-card" (click)="$event.stopPropagation()">
+
+    <!-- Close button -->
+    <button class="modal-close-btn" (click)="close()" aria-label="Close">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <!-- Header: success message + brand -->
+    <div class="modal-header-block">
+      <div class="header-left">
+        <img src="assets/images/Success.png" height="42px" class="success-icon" alt="Success" />
+        <div>
+          <h2 class="modal-title">Order Placed!</h2>
+          <p class="modal-subtitle">Thank you for shopping with Flybirds.</p>
+        </div>
+      </div>
+      <img src="assets/images/Logo-Dark.png" alt="Flybirds" class="modal-brand-logo" />
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Order meta -->
+    <div class="section two-col">
+      <div class="col">
+        <h3 class="section-title">Order Number</h3>
+        <p class="value-line">{{ orderNumber }}</p>
+      </div>
+      <div class="col">
+        <h3 class="section-title">Order Date</h3>
+        <p class="value-line">{{ formatDate(orderDate) }}</p>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Items -->
+    <div class="section">
+      <h3 class="section-title">Order Summary</h3>
+      <div class="modal-item-row" *ngFor="let item of items">
+        <img [src]="item.image" [alt]="item.name" class="modal-item-image" />
+        <div class="modal-item-info">
+          <p class="item-name">{{ item.name }}</p>
+          <p class="item-meta">{{ item.color }} · {{ item.size }} · Qty {{ item.qty }}</p>
+        </div>
+        <p class="item-total">₹{{ item.total }}</p>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Totals -->
+    <div class="totals-block">
+      <div class="totals-row">
+        <span>Subtotal</span>
+        <span>₹{{ subtotal }}</span>
+      </div>
+      <div class="totals-row" *ngIf="discountAmount > 0">
+        <span>Discount</span>
+        <span>− ₹{{ discountAmount }}</span>
+      </div>
+      <div class="totals-row" *ngIf="shippingCharge > 0">
+        <span>Shipping</span>
+        <span>₹{{ shippingCharge }}</span>
+      </div>
+      <div class="totals-row" *ngIf="taxAmount > 0">
+        <span>Tax</span>
+        <span>₹{{ taxAmount }}</span>
+      </div>
+      <div class="totals-row grand-total">
+        <span>Total</span>
+        <span>₹{{ total }}</span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="modal-actions">
+      <button class="modal-btn secondary-btn" (click)="close()">
+        <i class="fas fa-truck-fast me-1"></i> Track Order
+      </button>
+      <button class="modal-btn primary-btn" routerLink="/all-products" (click)="close()">
+        <i class="fas fa-shopping-bag me-1"></i> Continue Shopping
+      </button>
+    </div>
+
+  </div>
+</div>
