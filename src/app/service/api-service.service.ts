@@ -637,6 +637,20 @@ export class ApiServiceService {
     );
   }
 
+    public sentMail<T>(payload: any): Observable<T> {
+    const url = `${this.urlHelper.getAPIURL()}${this.envUrl.sentMail}/${payload}/invoice-mail`;
+    return this.http.post<T>(url, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Add Recently Viewed API error',
+          error,
+        }));
+      }),
+    );
+  }
+
   // Reviews - Create
   public createReview<T>(payload: any): Observable<T> {
     const url = `${this.urlHelper.getAPIURL()}${this.envUrl.reviewsCreate}`;

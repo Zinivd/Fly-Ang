@@ -166,7 +166,7 @@ export class PaymentComponent implements OnInit {
       body: JSON.stringify({
         amount: this.total,
         currency: 'INR',
-        order_id: this.orderId,
+        order_table_id: this.orderId, // FIXED: key must match backend's 'order_table_id'
       }),
     })
       .then((res) => res.json())
@@ -190,7 +190,6 @@ export class PaymentComponent implements OnInit {
             },
             theme: { color: '#c4b5fd' },
           };
-
           const rzp = new Razorpay(options);
           rzp.on('payment.failed', (failedResponse: any) => {
             this.toastr.error(
@@ -214,16 +213,21 @@ export class PaymentComponent implements OnInit {
       });
   }
 
+
   verifyPayment(paymentResponse: any): void {
     this.api
       .verifyPayment<any>({
         razorpay_order_id: paymentResponse.razorpay_order_id,
         razorpay_payment_id: paymentResponse.razorpay_payment_id,
         razorpay_signature: paymentResponse.razorpay_signature,
+        order_table_id: this.orderId, // FIXED: fallback link, in case create-order's link didn't take
       })
       .subscribe({
         next: (response) => {
-          const success = response?.status === 'success';
+          const success = response?.status === 'success' && response?.data?.payment_status === 'Paid';
+          if (!success) {
+            this.toastr.warning('Payment verified but order could not be confirmed as Paid.');
+          }
           this.router.navigate(['/review'], {
             queryParams: {
               orderId: this.orderId,

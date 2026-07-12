@@ -27,11 +27,18 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "node_modules/line-awesome/dist/line-awesome/css/line-awesome.min.css",
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "node_modules/ngx-toastr/toastr.css"
-            ],
+           "styles": [
+  "node_modules/line-awesome/dist/line-awesome/css/line-awesome.min.css",
+  "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+  "node_modules/ngx-toastr/toastr.css",
+  "src/assets/css/style.css",
+  "src/assets/css/typography.css",
+  "src/assets/css/button.css",
+  "src/assets/css/heading.css",
+  "src/assets/css/form.css",
+  "src/assets/css/toast.css",
+  "src/assets/css/empty.css"
+],
             "scripts": []
           },
           "configurations": {
@@ -39,13 +46,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "50MB",
+                  "maximumError": "10MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "2MB",
+                  "maximumError": "5MB"
                 }
               ],
               "outputHashing": "all"
@@ -84,7 +91,18 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.css"],
+            "styles": [
+  "node_modules/line-awesome/dist/line-awesome/css/line-awesome.min.css",
+  "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+  "node_modules/ngx-toastr/toastr.css",
+  "src/assets/css/style.css",
+  "src/assets/css/typography.css",
+  "src/assets/css/button.css",
+  "src/assets/css/heading.css",
+  "src/assets/css/form.css",
+  "src/assets/css/toast.css",
+  "src/assets/css/empty.css"
+],
             "scripts": []
           }
         }

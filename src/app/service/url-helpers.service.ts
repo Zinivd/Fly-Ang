@@ -61,6 +61,8 @@ export class UrlHelpersService {
   public recentlyViewedAdd = '/recently-viewed';
   public recentlyViewedList = '/recently-viewed';
 
+  public sentMail = '/orders';
+
   // reviews
   public reviewsCreate = '/reviews';
   public reviewsByProduct = '/products';
