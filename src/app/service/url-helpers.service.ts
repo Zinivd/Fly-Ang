@@ -31,6 +31,7 @@ export class UrlHelpersService {
   // products
   public banners = '/banners';
   public productsList = '/admin/products';
+  public similarProducts = '/admin/products';
 
   // wishlist
   public wishlistUsersBase = '/admin/users';
@@ -59,4 +60,8 @@ export class UrlHelpersService {
   // recent viewed
   public recentlyViewedAdd = '/recently-viewed';
   public recentlyViewedList = '/recently-viewed';
+
+  // reviews
+  public reviewsCreate = '/reviews';
+  public reviewsByProduct = '/products';
 }

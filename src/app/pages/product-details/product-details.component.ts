@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ProductsComponent } from '../../components/products/products.component';
 import { ProductItem } from '../../models/shop.models';
 import { PRODUCT_DATA } from '../../data/product.data';
-import { REVIEW_DATA } from '../../data/review.data';
 import { ApiServiceService } from '../../service/api-service.service';
 
 interface SizeStock {
@@ -22,10 +22,19 @@ interface ColorVariant {
   size_stocks: SizeStock[];
 }
 
+interface ProductReview {
+  id: number;
+  title: string;
+  description: string;
+  rating: number;
+  userName: string;
+  createdAt: string;
+}
+
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [RouterLink, CommonModule, ProductsComponent],
+  imports: [RouterLink, CommonModule, FormsModule, ProductsComponent],
   templateUrl: './product-details.component.html',
   styleUrls: [
     './product-details.component.css',
@@ -50,7 +59,7 @@ export class ProductDetailsComponent implements OnInit {
   productName = '';
   productDescription = '';
   subtitle = '';
-  rating = 5;
+  rating = 0;
   reviewCount = 0;
 
   price = 0;
@@ -71,10 +80,7 @@ export class ProductDetailsComponent implements OnInit {
   specifications: { label: string; value: any }[] = [];
 
   detailsMainImg = '';
-
   variants: any[] = [];
-
-  sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL'];
 
   colorVariants: ColorVariant[] = [];
   colors: { id: number; name: string; code: string; border?: boolean }[] = [];
@@ -93,21 +99,28 @@ export class ProductDetailsComponent implements OnInit {
     { text: 'Wash Inside Out', img: 'assets/images/Icons/7.png' },
   ];
 
-  reviews = [...REVIEW_DATA];
-
-  products: ProductItem[] = PRODUCT_DATA;
-
+  // Reviews
+  reviews: ProductReview[] = [];
+  isReviewsLoading = true;
   currentSlide = 0;
   slidesPerPage = 3;
 
-  // Wishlist
+  showReviewModal = false;
+  submittingReview = false;
+  reviewForm = {
+    title: '',
+    description: '',
+    rating: 0,
+  };
+  hoverStar = 0;
+
+  products: ProductItem[] = [];
+  isSimilarLoading = true;
+
   isWishlisted = false;
   private wishlistBusy = false;
-
-  // Cart
   private addingToCart = false;
 
-  // TODO: replace with your actual auth/user source if not localStorage
   private get userId(): string | null {
     return localStorage.getItem('userId');
   }
@@ -115,9 +128,9 @@ export class ProductDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       this.productId = Number(params.get('id'));
-
       if (this.productId) {
         this.getProduct();
+        this.loadReviews();
       }
     });
   }
@@ -145,35 +158,24 @@ export class ProductDetailsComponent implements OnInit {
             v.color.code.toLowerCase(),
           ),
         }));
-        if (this.colorVariants.length) {
-          this.selectVariant(this.colorVariants[0]); // default to first color
-        } else {
-          this.productImages = ['assets/images/no-image.png'];
-        }
 
-        // Images
         this.productImages = [];
         const firstVariant = product.color_variants?.[0];
-
         if (firstVariant) {
           this.selectedVariantId = firstVariant.id;
-
           const sortedImages = (firstVariant.gallery_images || [])
             .slice()
             .sort((a: any, b: any) => a.sort_order - b.sort_order);
-
           this.productImages = sortedImages.map((img: any) => img.image_url);
           this.availableSizes = (firstVariant.size_stocks || []).map(
             (s: any) => s.size,
           );
         }
-
         if (!this.productImages.length) {
           this.productImages = ['assets/images/no-image.png'];
         }
-
         this.detailsMainImg = this.productImages[0];
-        // Specifications
+
         this.specifications = [
           { label: 'Brand', value: product.brand },
           { label: 'Category', value: product.category?.name },
@@ -187,10 +189,11 @@ export class ProductDetailsComponent implements OnInit {
             value: product.estimate_shipping_days + ' Days',
           },
         ];
-        // Wishlist state, if the product API tells us (adjust key if different)
+
         this.isWishlisted = !!product.is_wishlisted;
         this.loading = false;
         this.trackRecentlyViewed();
+        this.loadSimilarProducts();
       },
       error: () => {
         this.loading = false;
@@ -198,6 +201,154 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
+  loadSimilarProducts(): void {
+    this.isSimilarLoading = true;
+    this.api.getSimilarProducts<any>(this.productId).subscribe({
+      next: (res) => {
+        const rows = res?.data?.data ?? res?.data ?? [];
+        this.products = rows.map((row: any) => this.mapProduct(row));
+        this.isSimilarLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching similar products:', err);
+        this.isSimilarLoading = false;
+      },
+    });
+  }
+
+  private mapProduct(row: any): ProductItem {
+    const firstVariant = row.color_variants?.[0];
+    const sortedImages = firstVariant?.gallery_images
+      ?.slice()
+      .sort((a: any, b: any) => a.sort_order - b.sort_order);
+
+    const discount = Number(row.discount) || 0;
+
+    return {
+      id: row.id,
+      title: row.name,
+      subtitle: row.brand,
+      image: sortedImages?.[0]?.image_url ?? 'assets/images/no-image.png',
+      rating: 5,
+      review: 0,
+      sp: row.effective_price,
+      mrp: Number(row.unit_price),
+      badge: row.is_flash_sale
+        ? row.flash_sale_title || 'Sale'
+        : discount > 0
+          ? `${discount}% OFF`
+          : '',
+      color_variants: row.color_variants || [],
+      category_id: row.category_id,
+    } as ProductItem;
+  }
+
+  // ---------- Reviews ----------
+  loadReviews(): void {
+    this.isReviewsLoading = true;
+    this.api.getReviewsByProduct<any>(this.productId).subscribe({
+      next: (res) => {
+        const data = res?.data ?? res;
+        const rows = data?.reviews?.data ?? [];
+
+        this.reviews = rows.map((r: any) => ({
+          id: r.id,
+          title: r.title ?? '',
+          description: r.description ?? '',
+          rating: Number(r.rating ?? 0),
+          userName: r.user?.name ?? 'Customer', // API doesn't return a name field on reviews
+          createdAt: r.created_at ?? '',
+        }));
+
+        this.rating = Number(data?.rating_summary?.average_rating ?? 0);
+        this.reviewCount = Number(data?.rating_summary?.total_reviews ?? 0);
+
+        this.currentSlide = 0;
+        this.isReviewsLoading = false;
+      },
+      error: () => {
+        this.isReviewsLoading = false;
+      },
+    });
+  }
+
+  openReviewModal(): void {
+    if (!this.userId) {
+      this.toastr.info('Please log in to write a review.');
+      return;
+    }
+    this.reviewForm = { title: '', description: '', rating: 0 };
+    this.showReviewModal = true;
+  }
+
+  closeReviewModal(): void {
+    this.showReviewModal = false;
+  }
+
+  setReviewRating(star: number): void {
+    this.reviewForm.rating = star;
+  }
+
+  submitReview(): void {
+    if (!this.userId) return;
+    if (!this.reviewForm.title.trim()) {
+      this.toastr.error('Please enter a title.');
+      return;
+    }
+    if (!this.reviewForm.description.trim()) {
+      this.toastr.error('Please enter a description.');
+      return;
+    }
+    if (this.reviewForm.rating < 1) {
+      this.toastr.error('Please select a star rating.');
+      return;
+    }
+    if (this.submittingReview) return;
+
+    this.submittingReview = true;
+    this.api
+      .createReview<any>({
+        user_id: this.userId,
+        product_id: this.productId,
+        title: this.reviewForm.title.trim(),
+        description: this.reviewForm.description.trim(),
+        rating: this.reviewForm.rating,
+      })
+      .subscribe({
+        next: () => {
+          this.submittingReview = false;
+          this.toastr.success('Review submitted!');
+          this.showReviewModal = false;
+          this.loadReviews();
+        },
+        error: () => {
+          this.submittingReview = false;
+          this.toastr.error('Failed to submit review.');
+        },
+      });
+  }
+
+  get visibleReviews() {
+    return this.reviews.slice(
+      this.currentSlide,
+      this.currentSlide + this.slidesPerPage,
+    );
+  }
+
+  prevSlide() {
+    if (this.currentSlide > 0) this.currentSlide--;
+  }
+
+  nextSlide() {
+    if (this.currentSlide + this.slidesPerPage < this.reviews.length)
+      this.currentSlide++;
+  }
+
+  getStars(count: number): number[] {
+    return Array(Math.round(count)).fill(0);
+  }
+
+  // ---------- Colors / sizes (unchanged) ----------
   selectColor(colorId: number): void {
     const variant = this.colorVariants.find((v) => v.id === colorId);
     if (variant) this.selectVariant(variant);
@@ -205,7 +356,6 @@ export class ProductDetailsComponent implements OnInit {
 
   private selectVariant(variant: ColorVariant): void {
     this.selectedVariantId = variant.id;
-
     const images = (variant.gallery_images || [])
       .slice()
       .sort((a, b) => a.sort_order - b.sort_order)
@@ -214,7 +364,6 @@ export class ProductDetailsComponent implements OnInit {
       ? images
       : ['assets/images/no-image.png'];
     this.detailsMainImg = this.productImages[0];
-
     this.availableSizes = (variant.size_stocks || []).map((s) => s.size);
     this.selectedSize = '';
     this.selectedSizeStockId = null;
@@ -229,13 +378,13 @@ export class ProductDetailsComponent implements OnInit {
     this.selectedSizeStockId = stock ? stock.id : null;
   }
 
+  // ---------- Wishlist / cart (unchanged) ----------
   toggleWishlist(): void {
     if (!this.userId) {
       this.toastr.info('Please log in to use your wishlist.');
       return;
     }
     if (this.wishlistBusy) return;
-
     this.wishlistBusy = true;
 
     if (this.isWishlisted) {
@@ -304,27 +453,6 @@ export class ProductDetailsComponent implements OnInit {
 
   buyNow(): void {
     this.addToBag();
-    // navigate to cart/checkout once addToBag succeeds if you want
-  }
-
-  get visibleReviews() {
-    return this.reviews.slice(
-      this.currentSlide,
-      this.currentSlide + this.slidesPerPage,
-    );
-  }
-
-  prevSlide() {
-    if (this.currentSlide > 0) this.currentSlide--;
-  }
-
-  nextSlide() {
-    if (this.currentSlide + this.slidesPerPage < this.reviews.length)
-      this.currentSlide++;
-  }
-
-  getStars(count: number): number[] {
-    return Array(count).fill(0);
   }
 
   private trackRecentlyViewed(): void {

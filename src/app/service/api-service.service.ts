@@ -636,4 +636,49 @@ export class ApiServiceService {
       }),
     );
   }
+
+  // Reviews - Create
+  public createReview<T>(payload: any): Observable<T> {
+    const url = `${this.urlHelper.getAPIURL()}${this.envUrl.reviewsCreate}`;
+    return this.http.post<T>(url, payload, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Create Review API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Reviews - By product (with rating summary)
+  public getReviewsByProduct<T>(productId: number | string): Observable<T> {
+    const url = `${this.urlHelper.getAPIURL()}${this.envUrl.reviewsByProduct}/${productId}/reviews`;
+    return this.http.get<T>(url, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Get Reviews By Product API error',
+          error,
+        }));
+      }),
+    );
+  }
+
+  // Similar Products
+  public getSimilarProducts<T>(productId: number | string): Observable<T> {
+    const url = `${this.urlHelper.getAPIURL()}${this.envUrl.similarProducts}/${productId}/similar`;
+    return this.http.get<T>(url, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Get Similar Products API error',
+          error,
+        }));
+      }),
+    );
+  }
 }
