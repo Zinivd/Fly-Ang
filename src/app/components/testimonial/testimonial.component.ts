@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ApiServiceService } from '../../service/api-service.service';
 
 export interface Review {
   title: string;
@@ -17,63 +18,67 @@ export interface Review {
   styleUrls: ['./testimonial.component.css'],
 })
 export class TestimonialComponent implements OnInit, OnDestroy {
-  reviews: Review[] = [
-    {
-      title: '"The fit is absolutely perfect!"',
-      body: "I've worn so many leggings brands, but Flybirds really nailed the comfort and stretch. It doesn't lose shape even after long hours.",
-      rating: 5,
-      reviewer: 'Priya S',
-      verified: true,
-    },
-    {
-      title: '"Worth every penny!"',
-      body: "I was skeptical at first, but after trying Flybirds I won't go back. The fabric is buttery soft and the waistband stays put through every workout.",
-      rating: 4,
-      reviewer: 'Maya R',
-      verified: true,
-    },
-    {
-      title: '"My go-to for every run"',
-      body: 'From morning jogs to long trail runs, these leggings have been with me every step. Zero chafing, great compression — ordered three pairs already.',
-      rating: 5,
-      reviewer: 'John D',
-      verified: false,
-    },
-    {
-      title: '"Obsessed with the quality"',
-      body: "These are hands down the best leggings I've ever owned. The material is thick enough to be opaque but still breathable. Totally worth it.",
-      rating: 5,
-      reviewer: 'Sarah K',
-      verified: true,
-    },
-  ];
+  constructor(private api: ApiServiceService) {}
+
+  reviews: Review[] = [];
+  isLoading = true;
 
   currentIndex = 0;
   private autoPlayInterval: any;
 
-  get currentReview(): Review {
-    return this.reviews[this.currentIndex];
+  get currentReview(): Review | null {
+    return this.reviews.length ? this.reviews[this.currentIndex] : null;
   }
 
   get starArray(): boolean[] {
-    return Array.from({ length: 5 }, (_, i) => i < this.currentReview.rating);
+    if (!this.currentReview) return [];
+    return Array.from({ length: 5 }, (_, i) => i < this.currentReview!.rating);
   }
 
   ngOnInit(): void {
-    this.startAutoPlay();
+    this.loadTestimonials();
   }
 
   ngOnDestroy(): void {
     this.stopAutoPlay();
   }
 
+  loadTestimonials(): void {
+    this.isLoading = true;
+    this.api.getTestimonials<any>().subscribe({
+      next: (res) => {
+        const rows = res?.data?.data ?? res?.data ?? [];
+        this.reviews = rows.map((r: any) => this.mapReview(r));
+        this.isLoading = false;
+        if (this.reviews.length > 1) this.startAutoPlay();
+      },
+      error: (err) => {
+        console.error('Error fetching testimonials:', err);
+        this.isLoading = false;
+      },
+    });
+  }
+
+  // ASSUMED field names — adjust once the real response is confirmed
+  private mapReview(r: any): Review {
+    return {
+      title: r.title ?? '',
+      body: r.description ?? r.body ?? '',
+      rating: Number(r.rating ?? 0),
+      reviewer: r.user?.name ?? r.customer_name ?? 'Customer',
+      verified: !!r.verified,
+    };
+  }
+
   prev(): void {
+    if (!this.reviews.length) return;
     this.currentIndex =
       (this.currentIndex - 1 + this.reviews.length) % this.reviews.length;
     this.resetAutoPlay();
   }
 
   next(): void {
+    if (!this.reviews.length) return;
     this.currentIndex = (this.currentIndex + 1) % this.reviews.length;
     this.resetAutoPlay();
   }

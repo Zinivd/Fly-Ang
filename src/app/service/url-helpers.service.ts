@@ -66,4 +66,5 @@ export class UrlHelpersService {
   // reviews
   public reviewsCreate = '/reviews';
   public reviewsByProduct = '/products';
+  public testimonials = '/reviews'
 }

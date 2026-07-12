@@ -62,7 +62,10 @@
                         </div>
                     </div>
                 </div>
-                <p class="text-center text-muted py-4" *ngIf="!activeOrders.length">No active orders.</p>
+                <div class="text-center text-muted py-4" *ngIf="!activeOrders.length">
+                    <i class="fas fa-truck-fast fa-2x mb-3"></i>
+                    <p class="mb-0">No Active Orders.</p>
+                </div>
             </div>
 
             <div class="tab-pane" [class.active]="activeTab === 1">
@@ -88,7 +91,10 @@
                         </div>
                     </div>
                 </div>
-                <p class="text-center text-muted py-4" *ngIf="!cancelledOrders.length">No cancelled orders.</p>
+                <div class="text-center text-muted py-4" *ngIf="!cancelledOrders.length">
+                    <i class="fas fa-circle-xmark fa-2x mb-3"></i>
+                    <p class="mb-0">No Cancelled Orders.</p>
+                </div>
             </div>
 
             <div class="tab-pane" [class.active]="activeTab === 2">
@@ -114,7 +120,10 @@
                         </div>
                     </div>
                 </div>
-                <p class="text-center text-muted py-4" *ngIf="!completedOrders.length">No completed orders.</p>
+                <div class="text-center text-muted py-4" *ngIf="!completedOrders.length">
+                    <i class="fas fa-circle-check fa-2x mb-3"></i>
+                    <p class="mb-0">No Completed Orders.</p>
+                </div>
             </div>
         </div>
     </ng-container>

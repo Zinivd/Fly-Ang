@@ -681,6 +681,21 @@ export class ApiServiceService {
     );
   }
 
+  // Testimonials
+  public getTestimonials<T>(): Observable<T> {
+    const url = `${this.urlHelper.getAPIURL()}${this.envUrl.testimonials}`;
+    return this.http.get<T>(url, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        this.handleAuthErrors(error);
+        return throwError(() => ({
+          statusCode: 500,
+          message: 'Get Testimonials API error',
+          error,
+        }));
+      }),
+    );
+  }
+
   // Similar Products
   public getSimilarProducts<T>(productId: number | string): Observable<T> {
     const url = `${this.urlHelper.getAPIURL()}${this.envUrl.similarProducts}/${productId}/similar`;

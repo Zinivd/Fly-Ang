@@ -1,5 +1,9 @@
-<div class="carousel-wrap">
-    <button class="nav-btn nav-prev" (click)="prev()" aria-label="Previous review">
+<div class="text-center py-4" *ngIf="isLoading">
+    <div class="spinner-border text-main"></div>
+</div>
+
+<div class="carousel-wrap" *ngIf="!isLoading && currentReview">
+    <button class="nav-btn nav-prev" (click)="prev()" aria-label="Previous review" *ngIf="reviews.length > 1">
         <i class="fas fa-angle-left"></i>
     </button>
 
@@ -21,7 +25,12 @@
         </div>
     </div>
 
-    <button class="nav-btn nav-next" (click)="next()" aria-label="Next review">
+    <button class="nav-btn nav-next" (click)="next()" aria-label="Next review" *ngIf="reviews.length > 1">
         <i class="fas fa-angle-right"></i>
     </button>
+</div>
+
+<div class="text-center text-muted py-4" *ngIf="!isLoading && !reviews.length">
+    <i class="fas fa-star fa-2x mb-3"></i>
+    <p>No Customer Reviews Yet.</p>
 </div>
