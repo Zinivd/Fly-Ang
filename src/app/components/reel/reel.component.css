@@ -148,3 +148,40 @@
 .reel-box video:hover {
     transform: scale(1.05);
 }
+
+
+/* Sound toggle button */
+.sound-btn {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+    transition: background var(--transition), transform 0.2s ease;
+}
+
+.sound-btn:hover {
+    background: var(--main);
+}
+
+.sound-btn:active {
+    transform: scale(0.92);
+}
+
+.sound-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.sound-btn svg path {
+    fill: var(--secondary);
+}

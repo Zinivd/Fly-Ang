@@ -63,7 +63,7 @@ export class ReviewComponent implements OnInit {
 
   sentMail(): void {
     this.api.sentMail<any>(this.orderId).subscribe({
-      next: (res) => {
+      next: () => {
         // this.toastr.success('Mail sent successfully');
       },
       error: () => {
@@ -73,28 +73,58 @@ export class ReviewComponent implements OnInit {
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // NEW — Pulls the correct product image for each order line item.
-  // Priority: order item's own color-variant gallery image (first one)
-  // -> thumbnail image -> product_details.color gallery (string URLs)
-  // -> fallback placeholder.
+  // Pulls the correct product image for each order line item.
+  //
+  // Priority (matched against the ACTUAL API payload shape):
+  // 1. item.product_color_variant.gallery_images[0].image_url
+  //    -> array of OBJECTS: { image_url, sort_order, ... }
+  //    sorted by sort_order so we always grab the first uploaded image.
+  // 2. item.product_color_variant.thumbnail_image.image_url
+  // 3. item.product_details.color.gallery_images[0]
+  //    -> array of plain STRING urls (different shape than #1!)
+  // 4. item.product.color_variants[] matched by product_color_variant_id
+  //    -> fallback when the order-item snapshot itself has no gallery
+  //       but the live product record still does (variant only has
+  //       color info, no images, in some responses).
+  // 5. placeholder image
   // ═══════════════════════════════════════════════════════════════
   private resolveItemImage(item: any): string {
+    const PLACEHOLDER = 'assets/images/no-image.png';
+
+    // 1. product_color_variant.gallery_images -> array of objects
     const variantGallery = item?.product_color_variant?.gallery_images;
     if (Array.isArray(variantGallery) && variantGallery.length > 0) {
-      return variantGallery[0]?.image_url || 'assets/images/no-image.png';
+      const sorted = [...variantGallery].sort(
+        (a: any, b: any) => (a.sort_order ?? 0) - (b.sort_order ?? 0),
+      );
+      const url = sorted[0]?.image_url;
+      if (url) return url;
     }
 
+    // 2. product_color_variant.thumbnail_image
     const variantThumb = item?.product_color_variant?.thumbnail_image?.image_url;
-    if (variantThumb) {
-      return variantThumb;
-    }
+    if (variantThumb) return variantThumb;
 
+    // 3. product_details.color.gallery_images -> array of plain strings
     const detailsGallery = item?.product_details?.color?.gallery_images;
-    if (Array.isArray(detailsGallery) && detailsGallery.length > 0) {
+    if (Array.isArray(detailsGallery) && detailsGallery.length > 0 && detailsGallery[0]) {
       return detailsGallery[0];
     }
 
-    return 'assets/images/no-image.png';
+    // 4. product.color_variants[] matched by product_color_variant_id
+    const productVariants = item?.product?.color_variants;
+    if (Array.isArray(productVariants) && item?.product_color_variant_id) {
+      const matched = productVariants.find(
+        (v: any) => v.id === item.product_color_variant_id,
+      );
+      const matchedGallery = matched?.gallery_images;
+      if (Array.isArray(matchedGallery) && matchedGallery.length > 0) {
+        const url = matchedGallery[0]?.image_url || matchedGallery[0];
+        if (url) return url;
+      }
+    }
+
+    return PLACEHOLDER;
   }
 
   get items(): any[] {

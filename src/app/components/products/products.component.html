@@ -1,10 +1,11 @@
 <div class="product-box" [id]="product.id">
     <div class="product-img">
         <img [src]="product.image" [alt]="product.title" />
-        <span class="product-badge">{{ product.badge }}</span>
+        <span class="product-badge" *ngIf="product.badge">{{ product.badge }}</span>
         <div class="product-cart-btn">
-            <button class="add-cart-btn" (click)="addToCart($event)">
-                <i class="bx bx-shopping-bag"></i> Add to Bag
+            <button class="add-cart-btn" (click)="addToCart($event)" [disabled]="addingToCart">
+                <i class="bx bx-shopping-bag"></i>
+                {{ addingToCart ? 'Adding...' : 'Add to Bag' }}
             </button>
         </div>
     </div>
@@ -15,6 +16,7 @@
             </h4>
             <h3 class="mb-0">{{ product.title }}</h3>
             <h6 class="mb-0">{{ product.subtitle }}</h6>
+
             <div class="product-colors-main d-flex align-items-center justify-content-center column-gap-2 mb-0">
                 <div class="product-colors-div">
                     <div *ngFor="let variant of product.color_variants || []; let i = index" class="colors-round"
@@ -26,11 +28,16 @@
                     {{ (product.color_variants?.length || 0) === 1 ? 'Color' : 'Colors' }}
                 </span>
             </div>
+
             <h5 class="mb-0">
                 Rs {{ product.sp }} <span class="ms-1">Rs {{ product.mrp }}</span>
             </h5>
-            <p class="mb-0">You'll save Rs 21</p>
-            <button class="add-cart-btn-2 w-100" (click)="addToCart($event)">Add to Bag</button>
+            <p class="mb-0" *ngIf="savedAmount > 0">You'll save Rs {{ savedAmount | currency:'INR' }}</p>
+
+            <button class="add-cart-btn-2 w-100" (click)="addToCart($event)" [disabled]="addingToCart">
+                <i class="bx bx-shopping-bag"></i>
+                {{ addingToCart ? 'Adding...' : 'Add to Bag' }}
+            </button>
         </div>
     </a>
 </div>

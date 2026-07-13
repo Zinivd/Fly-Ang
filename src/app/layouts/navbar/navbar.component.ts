@@ -11,11 +11,13 @@ import { CommonModule } from '@angular/common';
 })
 export class NavbarComponent implements OnInit {
   isLoggedIn: boolean = false;
+  cartCount: number = 0;
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.checkAuthStatus();
+    this.loadCartCount();
 
     const hash = window.location.hash;
     if (hash) {
@@ -31,6 +33,13 @@ export class NavbarComponent implements OnInit {
   private checkAuthStatus(): void {
     const token = localStorage.getItem('authToken');
     this.isLoggedIn = !!token;
+  }
+
+  private loadCartCount(): void {
+    // Replace this with your actual cart service call, e.g.:
+    // this.cartService.getCartCount().subscribe(count => this.cartCount = count);
+    const storedCount = localStorage.getItem('cartCount');
+    this.cartCount = storedCount ? +storedCount : 0;
   }
 
   logout(): void {

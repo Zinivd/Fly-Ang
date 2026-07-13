@@ -1,6 +1,6 @@
 .navbar-nav .nav-link.active,
 .icons-div .nav-link.active i,
-.navbar-nav .show>.nav-link,
+.navbar-nav .show > .nav-link,
 .navbar ul .nav-link:hover {
     color: var(--main) !important;
 }
@@ -13,7 +13,6 @@
     padding: 10px 0px !important;
     background: var(--secondary);
     transition: background-color 1s ease 0s;
-    border-bottom: 2px solid var(--border);
     margin: auto;
 }
 
@@ -25,6 +24,9 @@
 }
 
 .navbar ul .nav-link {
+    display: flex;
+    align-items: center;
+    column-gap: 4px;
     color: var(--text-primary);
     font-weight: var(--fw-md);
     transition: all var(--transition);
@@ -39,28 +41,90 @@
     background-color: var(--secondary);
 }
 
+/* ---------- Logo ---------- */
+.navbar-brand img,
+.logo-div img {
+    border-radius: 12px;
+}
+
+/* ---------- Dropdowns (Womens / Kids / New Arrivals) ---------- */
+.dropdown-toggle-custom i {
+    font-size: 16px;
+    transition: transform var(--transition);
+}
+
+.dropdown-item-custom:hover .dropdown-toggle-custom i {
+    transform: rotate(180deg);
+    color: var(--main);
+}
+
+.dropdown-menu-custom {
+    list-style: none;
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    padding: 8px 0;
+    min-width: 160px;
+    margin: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+}
+
+.dropdown-item-custom:hover .dropdown-menu-custom {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}
+
+.dropdown-menu-custom li a {
+    display: block;
+    padding: 8px 18px;
+    font-size: 14px;
+    color: var(--text-primary);
+    white-space: nowrap;
+    text-decoration: none;
+    transition: all var(--transition);
+}
+
+.dropdown-menu-custom li a:hover {
+    color: var(--main);
+    background: rgba(233, 4, 124, 0.08);
+}
+
+/* ---------- Search bar (pill style like design) ---------- */
 .search-bar {
     width: 100%;
     display: grid;
-    grid-template-columns: 12% 88%;
+    grid-template-columns: 15% 85%;
     align-items: center;
     justify-content: space-between;
-    border: 2px solid var(--border);
-    border-radius: 20px;
-    background-color: var(--input-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 24px;
+    /* background-color: var(--input-bg); */
+    padding: 2px 6px;
 }
 
 .search-bar i {
-    font-size: 18px;
+    font-size: 17px;
     color: var(--text-primary);
+    justify-self: center;
 }
 
 .search-bar input {
     background-color: var(--input-bg);
     padding: 6px;
-    font-size: 16px;
+    font-size: 15px;
     color: var(--text-primary);
-    border-radius: 0px 20px 20px 0px !important;
+    border-radius: 0px 24px 24px 0px !important;
 }
 
 .search-bar input:hover,
@@ -77,13 +141,14 @@
 
 .search-bar:hover,
 .search-bar:focus-within {
-    border: 2px solid var(--main) !important;
+    border: 1.5px solid var(--main) !important;
 }
 
-.navbar>.container-fluid {
+.navbar > .container-fluid {
     display: block !important;
 }
 
+/* ---------- Free shipping strip ---------- */
 .free-shipping {
     background: linear-gradient(90deg, #E9047C 0%, #44122C 100%);
     padding: 10px;
@@ -96,88 +161,156 @@
     text-align: center;
 }
 
+/* ---------- Icons (heart / cart / profile) ---------- */
+.nav-icon-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+}
+
+.nav-icon-btn i {
+    font-size: 18px;
+}
+
+.nav-icon-btn:hover,
+.nav-icon-btn.active {
+    border-color: var(--main);
+}
+
+.cart-icon {
+    position: relative;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: var(--main);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+}
+
+/* ---------- Sign In button ---------- */
+.nav-btn {
+    background: var(--main);
+    color: #fff;
+    border: none;
+    padding: 9px 22px;
+    border-radius: 24px;
+    font-weight: var(--fw-md);
+    font-size: 14px;
+    transition: all var(--transition);
+}
+
+.nav-btn:hover {
+    background: #c9036c;
+}
+
+.nav-btn-sm {
+    padding: 6px 16px;
+    font-size: 13px;
+}
+
 .response-nav-content {
     display: none;
 }
 
-@media screen and (min-width: 1098px) {
+.icons-div .nav-link {
+    color: var(--text-primary);
+}
 
+.icons-div i {
+    font-size: 20px;
+}
+
+/* ---------- Breakpoints ---------- */
+@media screen and (min-width: 1098px) {
     .navbar ul .nav-link {
         font-size: 15px;
     }
-
     .icon-end {
         justify-content: space-evenly !important;
+        column-gap: 10px;
     }
-
 }
 
 @media screen and (min-width: 990px) and (max-width: 1139px) {
-
     .logo-div img {
         display: none;
     }
-
     .navbar-brand img {
-        height: 45px !important;
+        height: 42px !important;
     }
-
     .icon-end {
         justify-content: space-evenly !important;
     }
-
 }
 
 @media screen and (max-width: 989px) {
-
     .logo-div img {
-        height: 40px !important;
+        height: 38px !important;
     }
-
     .navbar {
         width: 100%;
     }
-
     .navbar-brand {
         display: none;
     }
-
     .icon-end {
         justify-content: space-between !important;
     }
-
     .response-nav-content {
         display: flex;
     }
-
     .responsive-div {
         width: 95%;
         margin: auto;
     }
-
     .responsive-button {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin: auto;
     }
-
     .icons-div {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        column-gap: 20px;
+        column-gap: 18px;
     }
-
     .icons-div i {
         color: var(--text-primary);
         font-size: 20px;
     }
-
     .free-shipping h6 {
         font-size: 12px;
     }
-
+    .dropdown-menu-custom {
+        position: static;
+        transform: none;
+        display: none;
+        box-shadow: none;
+        border: none;
+        padding-left: 12px;
+    }
+    .dropdown-item-custom:hover .dropdown-menu-custom {
+        display: block;
+        transform: none;
+    }
 }
 
 @media screen and (min-width: 1098px) {
@@ -187,10 +320,8 @@
 }
 
 @media screen and (max-width: 1139px) {
-
     .navbar ul .nav-link {
         font-size: 13px;
         padding-block: 0px !important;
     }
-
 }

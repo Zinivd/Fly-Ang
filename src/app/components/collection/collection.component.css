@@ -3,18 +3,16 @@
     margin: auto;
 }
 
+/* background color cycle to match design (pink / grey / cream-yellow / cream-tan) */
 .collection-box:nth-child(4n+1) .collection-img {
     background-color: #F6E9E6;
 }
-
 .collection-box:nth-child(4n+2) .collection-img {
     background-color: #F4F5F6;
 }
-
 .collection-box:nth-child(4n+3) .collection-img {
     background-color: #FFF2D9;
 }
-
 .collection-box:nth-child(4n+4) .collection-img {
     background-color: #FAF1E6;
 }
@@ -28,6 +26,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
 .collection-box img {
@@ -44,7 +43,8 @@
 
 .collection-grid {
     display: grid;
-    align-items: start;
+    align-items: center;
+    justify-content: center;
     gap: 25px;
 }
 
@@ -55,43 +55,51 @@
     margin-top: 10px;
 }
 
+/* Pill label button (e.g. "Ankle", "Shimmer") */
+.add-cart-btn-2 {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 40px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font-size: 15px;
+    font-weight: var(--fw-md);
+    text-align: left;
+    cursor: pointer;
+    transition: var(--transition);
+    color: #111;
+}
+.add-cart-btn-2:hover {
+    border-color: var(--main);
+    color: var(--main);
+}
+
 @media screen and (min-width: 1098px) {
-
     .collection-grid {
-        grid-template-columns: repeat(4, 24%);
+        grid-template-columns: repeat(3, 25%);
     }
-
     .collection-img {
         height: 350px;
     }
-
 }
-
 @media screen and (min-width: 767px) and (max-width: 1098px) {
-
     .collection-grid {
-        grid-template-columns: repeat(4, 24%);
+        grid-template-columns: repeat(3, 25%);
     }
-
     .collection-img {
         height: 300px;
     }
-
 }
-
 @media screen and (max-width: 767px) {
-
     .collection-grid {
         grid-template-columns: repeat(2, 48%);
     }
-
     .collection-img {
         height: 300px;
     }
-
 }
 
-/* Collection Button */
+/* Circular pink arrow button */
 .collection-btn {
     display: flex;
     align-items: center;
@@ -106,6 +114,7 @@
     transition-duration: .3s;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
     background-color: var(--main);
+    flex-shrink: 0;
 }
 
 .collection-sign {
@@ -115,16 +124,13 @@
     align-items: center;
     justify-content: center;
 }
-
 .collection-sign svg {
     width: 18px;
 }
-
 .collection-sign svg path {
     fill: var(--secondary);
 }
 
-/* text */
 .collection-text {
     position: absolute;
     right: 0%;
@@ -134,23 +140,20 @@
     font-size: 16px;
     font-weight: var(--fw-md);
     transition-duration: .3s;
+    white-space: nowrap;
 }
 
-/* hover effect on button width */
 .collection-box:hover .collection-btn,
 .collection-btn:hover {
-    width: 200px;
+    width: 180px;
     border-radius: 40px;
     transition-duration: .3s;
 }
-
 .collection-box:hover .collection-sign,
 .collection-btn:hover .collection-sign {
     width: 20%;
     transition-duration: .3s;
 }
-
-/* hover effect button's text */
 .collection-box:hover .collection-text,
 .collection-btn:hover .collection-text {
     opacity: 1;
@@ -158,8 +161,6 @@
     transition-duration: .3s;
     padding-right: 10px;
 }
-
-/* button click effect*/
 .collection-box:hover .collection-btn,
 .collection-btn:active {
     transform: translate(2px, 2px);

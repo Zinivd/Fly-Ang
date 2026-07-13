@@ -24,14 +24,13 @@ export class ReelComponent implements OnChanges, AfterViewInit {
   @Input() reel!: ReelItem;
   @Input() isActive: boolean = false;
   @Output() videoEnded = new EventEmitter<void>();
-
   @ViewChild('reelVideo') reelVideo!: ElementRef<HTMLVideoElement>;
 
   private viewReady = false;
+  isMuted: boolean = true;
 
   ngAfterViewInit(): void {
     this.viewReady = true;
-    // In case isActive was already true before the view was ready
     if (this.isActive) {
       this.play();
     }
@@ -47,7 +46,9 @@ export class ReelComponent implements OnChanges, AfterViewInit {
   play(): void {
     const video = this.reelVideo?.nativeElement;
     if (video) {
+      this.isMuted = true; // every new play starts muted
       video.currentTime = 0;
+      video.muted = true;
       video.play().catch((err) => console.warn('Video play blocked:', err));
     }
   }
@@ -57,6 +58,14 @@ export class ReelComponent implements OnChanges, AfterViewInit {
     if (video) {
       video.pause();
     }
+  }
+
+  toggleMute(event: MouseEvent): void {
+    event.stopPropagation();
+    const video = this.reelVideo?.nativeElement;
+    if (!video) return;
+    this.isMuted = !this.isMuted;
+    video.muted = this.isMuted;
   }
 
   onEnded(): void {

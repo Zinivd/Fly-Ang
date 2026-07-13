@@ -14,14 +14,12 @@ interface SizeStock {
   stock: number;
   price: number;
 }
-
 interface ColorVariant {
   id: number;
   color: { id: number; name: string; code: string };
   gallery_images: { image_url: string; sort_order: number }[];
   size_stocks: SizeStock[];
 }
-
 interface ProductReview {
   id: number;
   title: string;
@@ -52,43 +50,33 @@ export class ProductDetailsComponent implements OnInit {
   ) {}
 
   loading = true;
-
   productId!: number;
-
   category = '';
   productName = '';
   productDescription = '';
   subtitle = '';
   rating = 0;
   reviewCount = 0;
-
   price = 0;
   originalPrice = 0;
   discountPercent = 0;
   savedAmount = 0;
-
   estimatedDelivery = '';
-
   productImages: string[] = [];
-
   highlights = [
     { icon: 'bx bx-cart', text: '100% Original Products' },
     { icon: 'bx bx-handshake', text: 'Easy 7 days returns and exchanges' },
     { icon: 'bx bx-currency-note', text: 'Cash on Delivery' },
   ];
-
   specifications: { label: string; value: any }[] = [];
-
   detailsMainImg = '';
   variants: any[] = [];
-
   colorVariants: ColorVariant[] = [];
   colors: { id: number; name: string; code: string; border?: boolean }[] = [];
   availableSizes: string[] = [];
   selectedVariantId: number | null = null;
   selectedSizeStockId: number | null = null;
   selectedSize = '';
-
   fabrics = [
     { text: 'Machine Wash', img: 'assets/images/Icons/1.png' },
     { text: 'Do Not Tumble Dry', img: 'assets/images/Icons/2.png' },
@@ -104,7 +92,6 @@ export class ProductDetailsComponent implements OnInit {
   isReviewsLoading = true;
   currentSlide = 0;
   slidesPerPage = 3;
-
   showReviewModal = false;
   submittingReview = false;
   reviewForm = {
@@ -116,8 +103,8 @@ export class ProductDetailsComponent implements OnInit {
 
   products: ProductItem[] = [];
   isSimilarLoading = true;
-
   isWishlisted = false;
+
   private wishlistBusy = false;
   private addingToCart = false;
 
@@ -142,12 +129,14 @@ export class ProductDetailsComponent implements OnInit {
         const product = res.data;
         this.category = product.category?.name || '';
         this.productName = product.name;
-        this.productDescription = product.description || '';
+        this.productDescription = this.htmlToPlainText(product.description || '');
         this.subtitle = product.brand;
-        this.price = Number(product.effective_price);
-        this.originalPrice = Number(product.unit_price);
-        this.discountPercent = Number(product.discount);
-        this.savedAmount = this.originalPrice - this.price;
+
+        this.price = this.round2(Number(product.effective_price));
+        this.originalPrice = this.round2(Number(product.unit_price));
+        this.discountPercent = Number(product.discount) || 0;
+        this.savedAmount = this.round2(this.originalPrice - this.price);
+
         this.estimatedDelivery = product.estimate_shipping_days + ' Days';
         this.colorVariants = product.color_variants || [];
         this.colors = this.colorVariants.map((v: any) => ({
@@ -221,9 +210,7 @@ export class ProductDetailsComponent implements OnInit {
     const sortedImages = firstVariant?.gallery_images
       ?.slice()
       .sort((a: any, b: any) => a.sort_order - b.sort_order);
-
     const discount = Number(row.discount) || 0;
-
     return {
       id: row.id,
       title: row.name,
@@ -250,7 +237,6 @@ export class ProductDetailsComponent implements OnInit {
       next: (res) => {
         const data = res?.data ?? res;
         const rows = data?.reviews?.data ?? [];
-
         this.reviews = rows.map((r: any) => ({
           id: r.id,
           title: r.title ?? '',
@@ -259,10 +245,8 @@ export class ProductDetailsComponent implements OnInit {
           userName: r.user?.name ?? 'Customer', // API doesn't return a name field on reviews
           createdAt: r.created_at ?? '',
         }));
-
         this.rating = Number(data?.rating_summary?.average_rating ?? 0);
         this.reviewCount = Number(data?.rating_summary?.total_reviews ?? 0);
-
         this.currentSlide = 0;
         this.isReviewsLoading = false;
       },
@@ -304,7 +288,6 @@ export class ProductDetailsComponent implements OnInit {
       return;
     }
     if (this.submittingReview) return;
-
     this.submittingReview = true;
     this.api
       .createReview<any>({
@@ -386,7 +369,6 @@ export class ProductDetailsComponent implements OnInit {
     }
     if (this.wishlistBusy) return;
     this.wishlistBusy = true;
-
     if (this.isWishlisted) {
       this.api.removeFromWishlist(this.userId, this.productId).subscribe({
         next: () => {
@@ -430,7 +412,6 @@ export class ProductDetailsComponent implements OnInit {
       return;
     }
     if (this.addingToCart) return;
-
     this.addingToCart = true;
     this.api
       .addToCart(this.userId, {
@@ -462,5 +443,38 @@ export class ProductDetailsComponent implements OnInit {
       .subscribe({
         error: (err) => console.error('Failed to record recently viewed:', err),
       });
+  }
+
+  // ---------- Helpers ----------
+
+  /**
+   * Converts the rich-text HTML description coming from the API
+   * (wrapped in <p>, <font>, <span> tags with inline styles) into
+   * clean plain text, preserving paragraph breaks, with no HTML
+   * tags or entities visible.
+   */
+  private htmlToPlainText(html: string): string {
+    if (!html) return '';
+
+    // Turn block-level breaks into real newlines before stripping tags
+    let text = html
+      .replace(/<\/p>/gi, '\n\n')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<[^>]+>/g, '');
+
+    // Decode HTML entities (&nbsp;, &quot;, &amp; etc.)
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    text = textarea.value;
+
+    // Collapse excess blank lines / trailing spaces
+    return text
+      .replace(/[ \t]+\n/g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+  }
+
+  private round2(value: number): number {
+    return Math.round((value + Number.EPSILON) * 100) / 100;
   }
 }

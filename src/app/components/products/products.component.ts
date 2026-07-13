@@ -14,8 +14,7 @@ import { ApiServiceService } from '../../service/api-service.service';
 })
 export class ProductsComponent {
   @Input() product!: ProductItem;
-
-  private addingToCart = false;
+  addingToCart = false;
 
   constructor(
     private api: ApiServiceService,
@@ -24,6 +23,12 @@ export class ProductsComponent {
 
   private get userId(): string | null {
     return localStorage.getItem('userId');
+  }
+
+  get savedAmount(): number {
+    const mrp = Number(this.product?.mrp) || 0;
+    const sp = Number(this.product?.sp) || 0;
+    return Math.max(mrp - sp, 0);
   }
 
   addToCart(event: Event): void {

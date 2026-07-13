@@ -233,4 +233,8 @@ export class AllProductsComponent implements OnInit {
   applyFilters() {
     this.loadProducts();
   }
+
+  isCategoryOpen(name: string): boolean {
+  return this.openSections[name];
+}
 }

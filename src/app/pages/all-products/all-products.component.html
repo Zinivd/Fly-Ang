@@ -1,155 +1,186 @@
 <ng-template #sidebarTpl let-suffix="suffix">
     <!-- Header -->
     <li class="mb-0">
-        <div class="body-head text-center">
-            <h6 class="mb-0 text-dark text-uppercase">Filter By</h6>
+        <div class="body-head">
+            <h6 class="mb-0 text-dark text-uppercase filter-title">Filter By</h6>
         </div>
     </li>
     <hr class="border-0" />
 
-    <!-- Categories -->
-    <div class="filter-header mb-2">
-        <li class="mb-0 collapsed" (click)="toggleSection('category')" [attr.aria-expanded]="openSections['category']">
+    <!-- Sub Category -->
+    <div class="filter-header mb-0">
+        <li class="mb-0 filter-row" (click)="toggleSection('category')" [attr.aria-expanded]="openSections['category']">
             <div class="body-head d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 text-dark">
-                    Categories
-                </h6>
-                <h6 class="mb-0">
-                    <i class="fas" [class.fa-angle-up]="openSections['category']"
-                        [class.fa-angle-right]="!openSections['category']">
-                    </i>
-                </h6>
+                <h6 class="mb-0 text-dark filter-label">Sub Category</h6>
+                <i class="fas fa-chevron-down filter-caret" [class.rotated]="openSections['category']"></i>
             </div>
         </li>
-        <hr>
         <div class="collapse" [class.show]="openSections['category']" [id]="'category-' + suffix">
-            <div class="px-3">
+            <div class="px-3 py-2">
                 <div class="form-check mb-2" *ngFor="let category of categories">
-                    <input type="checkbox" class="form-check-input" [checked]="selectedCategories.includes(category.id)"
+                    <input type="checkbox" class="form-check-input" [id]="'category'+category.id+suffix"
+                        [checked]="selectedCategories.includes(category.id)"
                         (change)="toggleCategory(category.id,$event)">
-                    <label class="form-check-label" [for]="'category'+category.id">
+                    <label class="form-check-label" [for]="'category'+category.id+suffix">
                         {{category.name}}
                     </label>
                 </div>
             </div>
-            <hr>
         </div>
     </div>
 
-    <!-- Price -->
-    <div class="filter-header mb-2">
-        <li class="mb-0 collapsed" (click)="toggleSection('price')" [attr.aria-expanded]="openSections['price']">
+    <!-- Color -->
+    <div class="filter-header mb-0">
+        <li class="mb-0 filter-row" (click)="toggleSection('color')" [attr.aria-expanded]="openSections['color']">
             <div class="body-head d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 text-dark">Price</h6>
-                <h6 class="mb-0">
-                    <i class="fas" [class.fa-angle-up]="openSections['price']"
-                        [class.fa-angle-right]="!openSections['price']"></i>
-                </h6>
+                <h6 class="mb-0 text-dark filter-label">Color</h6>
+                <i class="fas fa-chevron-down filter-caret" [class.rotated]="openSections['color']"></i>
             </div>
         </li>
-        <hr />
+        <div class="collapse" [class.show]="openSections['color']" [id]="'color-' + suffix">
+            <div class="colors py-2">
+                <div class="mb-3 text-center" *ngFor="let item of colors">
+                    <li class="color-box mx-auto" [style.backgroundColor]="item.code"
+                        [class.active]="selectedColors.includes(item.id)"
+                        (click)="toggleColor(item.id,{target:{checked:!selectedColors.includes(item.id)}})">
+                        <span class="tick" *ngIf="selectedColors.includes(item.id)">
+                            <i class="fas fa-check"></i>
+                        </span>
+                    </li>
+                    <span class="color-label">{{item.name}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Size -->
+    <div class="filter-header mb-0">
+        <li class="mb-0 filter-row" (click)="toggleSection('size')" [attr.aria-expanded]="openSections['size']">
+            <div class="body-head d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-dark filter-label">Size</h6>
+                <i class="fas fa-chevron-down filter-caret" [class.rotated]="openSections['size']"></i>
+            </div>
+        </li>
+        <div class="collapse" [class.show]="openSections['size']" [id]="'size-' + suffix">
+            <div class="sizes py-2">
+                <li class="mb-2" *ngFor="let item of sizes">
+                    <button type="button" class="size-btn mx-auto" [class.active]="selectedSizes.includes(item)"
+                        (click)="toggleSize(item,{target:{checked:!selectedSizes.includes(item)}})">
+                        <span>{{ item }}</span>
+                        <span class="tick" *ngIf="selectedSizes.includes(item)">
+                            <i class="fas fa-check"></i>
+                        </span>
+                    </button>
+                </li>
+            </div>
+        </div>
+    </div>
+
+    <!-- Length -->
+    <!-- <div class="filter-header mb-0">
+        <li class="mb-0 filter-row" (click)="toggleSection('length')" [attr.aria-expanded]="openSections['length']">
+            <div class="body-head d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-dark filter-label">Length</h6>
+                <i class="fas fa-chevron-down filter-caret" [class.rotated]="openSections['length']"></i>
+            </div>
+        </li>
+        <div class="collapse" [class.show]="openSections['length']" [id]="'length-' + suffix">
+            <div class="px-3 py-2 text-muted small">No options available</div>
+        </div>
+    </div> -->
+
+    <!-- Fabric -->
+    <!-- <div class="filter-header mb-0">
+        <li class="mb-0 filter-row" (click)="toggleSection('fabric')" [attr.aria-expanded]="openSections['fabric']">
+            <div class="body-head d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-dark filter-label">Fabric</h6>
+                <i class="fas fa-chevron-down filter-caret" [class.rotated]="openSections['fabric']"></i>
+            </div>
+        </li>
+        <div class="collapse" [class.show]="openSections['fabric']" [id]="'fabric-' + suffix">
+            <div class="px-3 py-2 text-muted small">No options available</div>
+        </div>
+    </div> -->
+
+    <!-- Fit -->
+    <!-- <div class="filter-header mb-0">
+        <li class="mb-0 filter-row" (click)="toggleSection('fit')" [attr.aria-expanded]="openSections['fit']">
+            <div class="body-head d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-dark filter-label">Fit</h6>
+                <i class="fas fa-chevron-down filter-caret" [class.rotated]="openSections['fit']"></i>
+            </div>
+        </li>
+        <div class="collapse" [class.show]="openSections['fit']" [id]="'fit-' + suffix">
+            <div class="px-3 py-2 text-muted small">No options available</div>
+        </div>
+    </div> -->
+
+    <!-- Pattern -->
+    <!-- <div class="filter-header mb-0">
+        <li class="mb-0 filter-row" (click)="toggleSection('pattern')" [attr.aria-expanded]="openSections['pattern']">
+            <div class="body-head d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-dark filter-label">Pattern</h6>
+                <i class="fas fa-chevron-down filter-caret" [class.rotated]="openSections['pattern']"></i>
+            </div>
+        </li>
+        <div class="collapse" [class.show]="openSections['pattern']" [id]="'pattern-' + suffix">
+            <div class="px-3 py-2 text-muted small">No options available</div>
+        </div>
+    </div> -->
+
+    <!-- Price -->
+    <div class="filter-header mb-0">
+        <li class="mb-0 filter-row" (click)="toggleSection('price')" [attr.aria-expanded]="openSections['price']">
+            <div class="body-head d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 text-dark filter-label">Price</h6>
+                <i class="fas fa-chevron-down filter-caret" [class.rotated]="openSections['price']"></i>
+            </div>
+        </li>
         <div class="collapse" [class.show]="openSections['price']" [id]="'price-' + suffix">
-            <div class="px-3">
-                <!-- Replaces react-range: two overlapping native range inputs, track gradient
-             driven by trackBackground (same min/max % math as the original renderTrack) -->
+            <div class="px-3 py-2">
                 <div class="dual-range" [style.background]="trackBackground">
                     <input type="range" class="range-thumb" [min]="MIN" [max]="MAX" [step]="STEP" [value]="values[0]"
                         (input)="onMinInput($any($event.target).value)" />
                     <input type="range" class="range-thumb" [min]="MIN" [max]="MAX" [step]="STEP" [value]="values[1]"
                         (input)="onMaxInput($any($event.target).value)" />
                 </div>
-
                 <div class="d-flex align-items-center column-gap-3">
                     <input type="number" class="form-control" [value]="values[0]" readonly />
                     <input type="number" class="form-control" [value]="values[1]" readonly />
                 </div>
             </div>
-            <hr />
         </div>
     </div>
 
-    <!-- Colors -->
-    <div class="filter-header mb-2">
-        <li class="mb-0 collapsed" (click)="toggleSection('color')" [attr.aria-expanded]="openSections['color']">
-            <div class="body-head d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 text-dark">Colors</h6>
-                <h6 class="mb-0">
-                    <i class="fas" [class.fa-angle-up]="openSections['color']"
-                        [class.fa-angle-right]="!openSections['color']"></i>
-                </h6>
-            </div>
-        </li>
-        <hr />
-        <div class="collapse" [class.show]="openSections['color']" [id]="'color-' + suffix">
-            <div class="colors">
-                <div class="mb-3 text-center" *ngFor="let item of colors">
-
-                    <li class="color-box mx-auto" [style.backgroundColor]="item.code"
-                        [class.active]="selectedColors.includes(item.id)"
-                        (click)="toggleColor(item.id,{target:{checked:!selectedColors.includes(item.id)}})">
-                    </li>
-
-                    <span class="color-label">
-                        {{item.name}}
-                    </span>
-
-                </div>
-            </div>
-            <hr />
-        </div>
-    </div>
-
-    <!-- Sizes -->
-    <div class="filter-header mb-2">
-        <li class="mb-0 collapsed" (click)="toggleSection('size')" [attr.aria-expanded]="openSections['size']">
-            <div class="body-head d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 text-dark">Size</h6>
-                <h6 class="mb-0">
-                    <i class="fas" [class.fa-angle-up]="openSections['size']"
-                        [class.fa-angle-right]="!openSections['size']"></i>
-                </h6>
-            </div>
-        </li>
-        <hr />
-        <div class="collapse" [class.show]="openSections['size']" [id]="'size-' + suffix">
-            <div class="sizes">
-                <li class="mb-2" *ngFor="let item of sizes">
-                    <button class="size-btn mx-auto" [class.active]="selectedSizes.includes(item)"
-                        (click)="toggleSize(item,{target:{checked:!selectedSizes.includes(item)}})">
-                        <span>{{ item }}</span>
-                    </button>
-                </li>
-            </div>
-            <hr />
-        </div>
-    </div>
-
-    <div class="px-3 mb-3">
-        <button class="btn btn-outline-secondary w-100 mb-2" (click)="resetFilters()">
+    <div class="px-3 pt-3 pb-2">
+        <button class="btn btn-outline-secondary w-100" (click)="resetFilters()">
             Reset
         </button>
     </div>
 </ng-template>
 
-<!-- Page layout (was AllProducts.jsx) -->
+<!-- Page layout -->
 <div class="filter-products-main">
     <div class="body-head d-flex justify-content-between align-items-center flex-wrap mb-2">
-        <h6 class="d-flex align-items-center column-gap-2 mb-3">
-            <a routerLink="/">Home <i class="fas fa-chevron-right ps-1"></i></a>
+        <h6 class="d-flex align-items-center column-gap-2 mb-3 breadcrumb-row">
+            <a routerLink="/">Home</a> <span class="sep">|</span>
+            <a routerLink="/womens">Womens</a> <span class="sep">|</span>
             <a class="active">{{ categoryName }}</a>
         </h6>
         <h4>{{ categoryName }}</h4>
         <div class="form select-div mb-3">
-            <label for="sort" class="w-100">Sort By : </label>
+            <label for="sort" class="me-2">Sort By : </label>
             <select class="form-select" [(ngModel)]="sortBy" (change)="loadProducts()">
                 <option *ngFor="let opt of sortOptions" [value]="opt.value">{{ opt.label }}</option>
             </select>
         </div>
+        <button class="btn filter-responsive" data-bs-toggle="offcanvas" data-bs-target="#filter-offcanvas">
+            <i class="fas fa-sliders-h"></i> Filter
+        </button>
     </div>
 
     <div class="filter-product-flex">
         <div class="filter-product-left">
-            <!-- was Filter.jsx -->
             <div class="filter-aside">
                 <div class="flex-sidebar">
                     <div class="flex-shrink-0 filter-sidebar">
@@ -158,19 +189,16 @@
                         </ul>
                     </div>
                 </div>
-
                 <div class="offcanvas offcanvas-bottom h-75 offcanvas-filter" tabindex="-1" id="filter-offcanvas"
                     aria-labelledby="offcanvasExampleLabel">
                     <div class="offcanvas-header">
                         <img src="assets/images/Logo-Dark.png" height="40px" alt="" />
-                        <button type="button" class="btn-close bg-white" data-bs-dismiss="offcanvas"
-                            aria-label="Close"></button>
+                        <button type="button" class="btn-close bg-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body p-0">
                         <div class="flex-shrink-0 filter-sidebar">
                             <ul class="list-unstyled mt-2 ps-0">
-                                <ng-container
-                                    *ngTemplateOutlet="sidebarTpl; context: { suffix: 'mobile' }"></ng-container>
+                                <ng-container *ngTemplateOutlet="sidebarTpl; context: { suffix: 'mobile' }"></ng-container>
                             </ul>
                         </div>
                     </div>
@@ -179,19 +207,14 @@
         </div>
 
         <div class="filter-product-right">
-            <div class="loader-wrapper " *ngIf="isLoading">
+            <div class="loader-wrapper" *ngIf="isLoading">
                 <div class="spinner-border text-dark" role="status">
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
-
-            <!-- Products -->
             <div class="filter-product-grid" *ngIf="!isLoading && products.length">
-                <app-products *ngFor="let item of products" [product]="item">
-                </app-products>
+                <app-products *ngFor="let item of products" [product]="item"></app-products>
             </div>
-
-            <!-- No Products -->
             <div class="text-center py-5" *ngIf="!isLoading && products.length === 0">
                 <h5>No Products Found</h5>
             </div>

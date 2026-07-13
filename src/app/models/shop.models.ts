@@ -35,10 +35,10 @@ export interface ProductItem {
 }
 
 export interface CollectionItem {
-  id: number;
+  id: number | string;
   name: string;
-  img: string;
   slug: string;
+  img: string;
 }
 
 export interface ReviewItem {

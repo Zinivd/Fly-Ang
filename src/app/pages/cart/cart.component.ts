@@ -15,10 +15,17 @@ export interface CartItem {
   productSizeStockId: number | null;
   name: string;
   description: string;
+  /** Per-unit price AFTER the product's own discount (flat/percent) — before any coupon. */
   price: number;
+  /** Per-unit original list price, before any discount. */
+  mrp: number;
+  discountType: 'flat' | 'percent' | null;
+  /** Raw discount value from the product: a ₹ amount when flat, a % when percent. */
+  discountValue: number;
   image: string;
   size: string;
   quantity: number;
+  maxStock: number;
   availableSizes: string[];
   colorName: string;
   colorCode: string;
@@ -50,6 +57,11 @@ export class CartComponent implements OnInit {
   appliedCoupon = '';
   couponError = '';
 
+  // Product/discounted prices are treated as PRE-TAX (tax-exclusive).
+  // GST is calculated fresh from taxableAmount and added on top in `total`.
+  // NOTE: if the product page still displays "Inclusive of all taxes" anywhere,
+  // that copy needs to be updated/removed to match this pricing model —
+  // otherwise customers will see conflicting claims about whether tax is included.
   readonly TAX_RATE = 0.18;
   readonly FREE_SHIPPING_THRESHOLD = 999;
   readonly SHIPPING_CHARGE = 49;
@@ -58,6 +70,7 @@ export class CartComponent implements OnInit {
     SAVE20: 20,
     FLAT50: 50,
   };
+  readonly DEFAULT_MAX_QTY = 10;
 
   cartItems: CartItem[] = [];
 
@@ -95,9 +108,7 @@ export class CartComponent implements OnInit {
     const sortedImages = firstVariant?.gallery_images
       ?.slice()
       .sort((a: any, b: any) => a.sort_order - b.sort_order);
-
     const discount = Number(product.discount) || 0;
-
     return {
       id: product.id,
       title: product.name,
@@ -110,6 +121,29 @@ export class CartComponent implements OnInit {
       badge: discount > 0 ? `${discount}% OFF` : '',
       color_variants: product.color_variants || [],
     } as ProductItem;
+  }
+
+  /**
+   * Computes the per-unit discounted price from the product's own
+   * discount_type/discount fields:
+   *   - 'flat'    → subtract the ₹ amount directly
+   *   - 'percent' → subtract that % of the MRP
+   *   - anything else / no discount → MRP unchanged
+   * Never allowed to go below 0.
+   */
+  private calcDiscountedPrice(
+    mrp: number,
+    discountType: 'flat' | 'percent' | null,
+    discountValue: number,
+  ): number {
+    if (!discountType || !discountValue) return mrp;
+    if (discountType === 'flat') {
+      return Math.max(this.round2(mrp - discountValue), 0);
+    }
+    if (discountType === 'percent') {
+      return Math.max(this.round2(mrp - (mrp * discountValue) / 100), 0);
+    }
+    return mrp;
   }
 
   loadCart(): void {
@@ -127,6 +161,14 @@ export class CartComponent implements OnInit {
             ?.slice()
             .sort((a: any, b: any) => a.sort_order - b.sort_order);
 
+          const mrp = this.round2(Number(row.product?.unit_price ?? 0));
+          const discountType = (row.product?.discount_type as 'flat' | 'percent' | null) ?? null;
+          const discountValue = Number(row.product?.discount ?? 0);
+          // Computed explicitly from discount_type/discount rather than trusting
+          // effective_price blindly, so flat vs percent is always handled correctly
+          // and the discount amount can be surfaced in the order summary.
+          const price = this.calcDiscountedPrice(mrp, discountType, discountValue);
+
           return {
             id: row.id,
             productId: row.product?.id ?? row.product_id,
@@ -134,16 +176,18 @@ export class CartComponent implements OnInit {
             productSizeStockId: row.product_size_stock_id ?? null,
             name: row.product?.name ?? '',
             description: row.product?.brand ?? '',
-            price: Number(row.product?.effective_price ?? 0),
+            price,
+            mrp,
+            discountType,
+            discountValue,
             image: sortedImages?.[0]?.image_url ?? 'assets/images/no-image.png',
             size: row.size_stock?.size ?? '',
             quantity: row.quantity ?? 1,
+            // Real stock for this exact size/color, so qty controls can't
+            // let someone order more than what's actually available.
+            maxStock: Number(row.size_stock?.stock ?? this.DEFAULT_MAX_QTY),
             availableSizes: variant?.size_stocks?.map((s: any) => s.size) ?? [
-              'XS',
-              'S',
-              'M',
-              'L',
-              'XL',
+              row.size_stock?.size ?? '',
             ],
             colorName: variant?.color?.name ?? '',
             colorCode: variant?.color?.code ?? '',
@@ -157,45 +201,84 @@ export class CartComponent implements OnInit {
     });
   }
 
-  // Calculations (unchanged)
+  // ---------- Calculations ----------
+
+  /** Sum of every item's original MRP × quantity, BEFORE any discount. */
   get subtotal(): number {
-    return this.cartItems.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0,
+    return this.round2(
+      this.cartItems.reduce((sum, item) => sum + item.mrp * item.quantity, 0),
     );
   }
+
+  /** Total ₹ saved from each product's own flat/percent discount, summed across the cart. */
+  get productDiscountTotal(): number {
+    return this.round2(
+      this.cartItems.reduce((sum, item) => sum + (item.mrp - item.price) * item.quantity, 0),
+    );
+  }
+
   get discountPercent(): number {
     return this.appliedCoupon ? (this.COUPONS[this.appliedCoupon] ?? 0) : 0;
   }
-  get discountAmount(): number {
-    return Math.round((this.subtotal * this.discountPercent) / 100);
+
+  /** Amount left after the product-level discount, before the coupon is applied. */
+  get postProductDiscountAmount(): number {
+    return this.round2(this.subtotal - this.productDiscountTotal);
   }
+
+  /** Extra ₹ saved from the coupon code, applied on top of the already product-discounted amount. */
+  get couponDiscountAmount(): number {
+    return this.round2((this.postProductDiscountAmount * this.discountPercent) / 100);
+  }
+
+  /**
+   * Total discount shown to the customer = product discount (flat/percent set on
+   * the product) + coupon discount. Previously this only reflected the coupon,
+   * so a product with a built-in discount showed "Discount: ₹0.00" even though
+   * money was already being taken off — that was the bug.
+   */
+  get discountAmount(): number {
+    return this.round2(this.productDiscountTotal + this.couponDiscountAmount);
+  }
+
+  /** Amount the customer is actually charged for goods, after both discounts. */
+  get taxableAmount(): number {
+    return this.round2(this.postProductDiscountAmount - this.couponDiscountAmount);
+  }
+
   get shippingCharge(): number {
-    return this.subtotal - this.discountAmount >= this.FREE_SHIPPING_THRESHOLD
+    return this.taxableAmount >= this.FREE_SHIPPING_THRESHOLD || this.cartItems.length === 0
       ? 0
       : this.SHIPPING_CHARGE;
   }
-  get taxableAmount(): number {
-    return this.subtotal - this.discountAmount;
-  }
+
+  /**
+   * GST charged FRESH on top of the discounted (pre-tax) goods amount.
+   * `taxableAmount` is treated as the base price — GST is not baked into
+   * it, so this is a forward calculation (base × rate), and IS added to
+   * `total` below.
+   */
   get taxAmount(): number {
-    return Math.round(this.taxableAmount * this.TAX_RATE);
+    return this.round2(this.taxableAmount * this.TAX_RATE);
   }
+
   get total(): number {
-    return this.taxableAmount + this.shippingCharge + this.taxAmount;
+    // Discounted goods (pre-tax) + fresh GST on top + shipping.
+    return this.round2(this.taxableAmount + this.taxAmount + this.shippingCharge);
   }
+
   get totalItems(): number {
     return this.cartItems.reduce((sum, item) => sum + item.quantity, 0);
   }
+
   get amountForFreeShipping(): number {
-    const remaining =
-      this.FREE_SHIPPING_THRESHOLD - (this.subtotal - this.discountAmount);
+    const remaining = this.round2(this.FREE_SHIPPING_THRESHOLD - this.taxableAmount);
     return remaining > 0 ? remaining : 0;
   }
 
-  // Cart Actions -> now call the API, with optimistic UI + rollback
+  // ---------- Cart Actions (optimistic UI + rollback) ----------
   increaseQty(item: CartItem): void {
-    if (item.quantity >= 10) return;
+    if (item.quantity >= item.maxStock) return;
     const prev = item.quantity;
     item.quantity++;
     this.syncQuantity(item, prev);
@@ -209,10 +292,17 @@ export class CartComponent implements OnInit {
   }
 
   onQtyInput(item: CartItem, event: Event): void {
-    const val = parseInt((event.target as HTMLInputElement).value, 10);
+    const raw = parseInt((event.target as HTMLInputElement).value, 10);
     const prev = item.quantity;
-    item.quantity = !isNaN(val) && val >= 1 && val <= 10 ? val : 1;
-    this.syncQuantity(item, prev);
+    if (isNaN(raw)) {
+      (event.target as HTMLInputElement).value = String(item.quantity);
+      return;
+    }
+    // Clamp into range instead of silently discarding the typed value.
+    const clamped = Math.min(Math.max(raw, 1), item.maxStock);
+    item.quantity = clamped;
+    (event.target as HTMLInputElement).value = String(clamped);
+    if (clamped !== prev) this.syncQuantity(item, prev);
   }
 
   private syncQuantity(item: CartItem, previousQty: number): void {
@@ -235,7 +325,6 @@ export class CartComponent implements OnInit {
       this.appliedCoupon = '';
       this.couponCode = '';
     }
-
     this.api.removeCartItem(this.userId, id).subscribe({
       next: () => this.toastr.success('Removed from cart.'),
       error: () => {
@@ -245,11 +334,12 @@ export class CartComponent implements OnInit {
     });
   }
 
+  /** Line total = post-product-discount unit price × quantity (pre-coupon). */
   itemTotal(item: CartItem): number {
-    return item.price * item.quantity;
+    return this.round2(item.price * item.quantity);
   }
 
-  // Coupon (unchanged)
+  // ---------- Coupon ----------
   applyCoupon(): void {
     const code = this.couponCode.trim().toUpperCase();
     this.couponError = '';
@@ -283,6 +373,9 @@ export class CartComponent implements OnInit {
         name: i.name,
         qty: i.quantity,
         price: i.price,
+        mrp: i.mrp,
+        discountType: i.discountType,
+        discountValue: i.discountValue,
         image: i.image,
         size: i.size,
         productId: i.productId,
@@ -297,5 +390,9 @@ export class CartComponent implements OnInit {
       couponCode: this.appliedCoupon || undefined,
     });
     this.router.navigate(['/checkout']);
+  }
+
+  private round2(value: number): number {
+    return Math.round((value + Number.EPSILON) * 100) / 100;
   }
 }

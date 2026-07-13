@@ -4,21 +4,19 @@
 </div>
 
 <div class="product-details my-4" *ngIf="!loading">
-
     <!-- Breadcrumb -->
-    <div class="body-head mb-4">
+    <div class="body-head mb-3">
         <h6 class="d-flex align-items-center column-gap-2 mb-0">
             <a routerLink="/">
                 Home <i class="fas fa-chevron-right ps-1"></i>
             </a>
-            <a class="active">Jeggings</a>
+            <a class="active">{{ category }}</a>
         </h6>
     </div>
 
-    <!-- Product Content (converted from React ProductContent.jsx, inlined here) -->
+    <!-- Product Content -->
     <div class="product-details-main">
         <div class="product-content">
-
             <!-- Product Content Left -->
             <div class="product-content-left">
                 <div class="product-content-img" *ngFor="let img of productImages">
@@ -28,61 +26,54 @@
 
             <!-- Product Content Right -->
             <div class="product-content-right">
-                <h4 class="mb-2 text-main">{{ category }}</h4>
+                <h4 class="mb-1 text-main">{{ category }}</h4>
                 <div class="d-flex align-items-center justify-content-between flex-wrap">
-                    <h2 class="mb-2">{{ productName }}</h2>
+                    <h2 class="mb-1">{{ productName }}</h2>
                     <div class="d-flex align-items-center column-gap-2 flex-wrap">
-                        <button class="nav-icon-btn mb-2">
+                        <button class="nav-icon-btn mb-1">
                             <i class="bx bx-share"></i>
                         </button>
-                        <button class="nav-icon-btn mb-2" [class.active]="isWishlisted" (click)="toggleWishlist()">
+                        <button class="nav-icon-btn mb-1" [class.active]="isWishlisted" (click)="toggleWishlist()">
                             <i class="bx" [class.bx-heart]="!isWishlisted" [class.bxs-heart]="isWishlisted"></i>
                         </button>
                     </div>
                 </div>
-                <h4 class="mb-3">{{ subtitle }}</h4>
-                <h6 class="mb-3">
+                <h4 class="mb-2">{{ subtitle }}</h4>
+                <h6 class="mb-2">
                     <i class="fas fa-star text-warning"></i> {{ rating | number:'1.1-1' }} ({{ reviewCount }} Reviews)
                 </h6>
+
                 <div class="d-flex align-items-center column-gap-2 flex-wrap">
-                    <h3 class="mb-3">
-                        ₹ {{ price }}
-                        <span class="ms-2 text-decoration-line-through">₹ {{ originalPrice }}</span>
+                    <h3 class="mb-2">
+                        &#8377; {{ price }}
+                        <span *ngIf="discountPercent > 0" class="ms-2 text-decoration-line-through">&#8377; {{ originalPrice }}</span>
                     </h3>
-                    <h5 class="mb-3 text-success">({{ discountPercent }}% OFF | You'll save Rs {{ savedAmount }})</h5>
+                    <h5 *ngIf="discountPercent > 0" class="mb-2 text-success">({{ discountPercent }}% OFF | You'll save Rs {{ savedAmount }})</h5>
                 </div>
                 <h6 class="mb-2">(Inclusive of all taxes)</h6>
                 <hr />
 
-                <!-- Family Colors -->
-                <h5 class="mb-3">Select Color</h5>
-                <div class="colors-div mb-4">
-                    <div class="color-box" *ngFor="let item of colors"
+                <!-- Colors -->
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <h5 class="mb-2">Select Color</h5>
+                </div>
+                <div class="colors-div mb-3">
+                    <div class="color-swatch" *ngFor="let item of colors"
                         [class.active]="selectedVariantId && item.id === selectedVariantId"
-                        [ngStyle]="{ 'background-color': item.code, 'border': item.border ? '1px solid var(--border)' : 'none' }"
                         (click)="selectColor(item.id)">
+                        <span class="color-box"
+                            [ngStyle]="{ 'background-color': item.code, 'border': item.border ? '1px solid var(--border)' : 'none' }">
+                        </span>
+                        <small>{{ item.name }}</small>
                     </div>
                 </div>
-
-                <!-- Shade Colors -->
-                <!-- <h5 class="mb-3">Select Shade</h5>
-                <div class="colors-div mb-4">
-                    <div class="color-box" *ngFor="let item of shadeColors"
-                        [ngStyle]="{ 'background-color': item.code, 'border': item.border ? '1px solid var(--border)' : 'none' }">
-                    </div>
-                </div> -->
                 <hr />
 
                 <!-- Sizes -->
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
-                    <h5 class="mb-3">Select Size</h5>
-                    <!-- <a routerLink="">
-                        <h6 class="mb-3 text-main">
-                            Size Guide <i class="fas fa-chevron-right"></i>
-                        </h6>
-                    </a> -->
+                    <h5 class="mb-2">Select Size</h5>
                 </div>
-                <div class="sizes-div mb-4">
+                <div class="sizes-div mb-3">
                     <button class="size-btn" *ngFor="let size of availableSizes" [class.active]="selectedSize === size"
                         (click)="selectSize(size)">
                         {{ size }}
@@ -91,13 +82,13 @@
                 <hr />
 
                 <!-- Check Delivery -->
-                <h5 class="mb-3">Check Delivery</h5>
-                <div class="d-flex align-items-center justify-content-between gap-2 mb-4">
+                <h5 class="mb-2">Check Delivery</h5>
+                <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
                     <input type="text" name="delivery" id="delivery" class="form-control w-75"
                         placeholder="Enter Pincode" />
                     <button type="button" class="form-btn w-25">Check</button>
                 </div>
-                <h6 class="mb-4">
+                <h6 class="mb-3">
                     <i class="fas fa-truck-fast me-2"></i> Estimated delivery in {{ estimatedDelivery }}
                 </h6>
 
@@ -111,14 +102,13 @@
                 <hr />
 
                 <!-- Highlights -->
-                <div class="d-flex align-items-center column-gap-3 mb-3" *ngFor="let item of highlights">
+                <div class="d-flex align-items-center column-gap-3 mb-2" *ngFor="let item of highlights">
                     <div class="nav-icon-btn rounded-2">
                         <i [class]="item.icon"></i>
                     </div>
                     <h5 class="mb-0 text-secondary">{{ item.text }}</h5>
                 </div>
-
-                <h6 class="mt-4">
+                <h6 class="mt-3">
                     (*Please note The item must be unused, unwashed, and in its original
                     condition with all tags and packaging Fly Birds.)
                 </h6>
@@ -130,70 +120,51 @@
 
     <!-- PRODUCT DESCRIPTION -->
     <div class="product-description-main">
-
-        <!-- Left: Detail Spotlight -->
+        <!-- Left: Detail Spotlight (kept empty / no background until real imagery is available) -->
         <div class="product-description-left">
-            <div class="body-head mb-4">
-                <h4 class="mb-0 text-white">Detail Spotlight</h4>
+            <div class="body-head mb-0">
+                <h4 class="mb-0">Detail Spotlight</h4>
             </div>
-            <!-- <div class="description-img-column">
-                <img [src]="detailsMainImg" alt="Product Detail" class="description-main-img" />
-                <div class="d-block ms-auto">
-                    <div *ngFor="let item of variants; let i = index" class="description-img-div mb-4">
-                        <div class="description-img">
-                            <img [src]="item.img" [alt]="item.text" />
-                        </div>
-                    </div>
-                </div>
-            </div> -->
+            <!-- Intentionally left blank — populate with product imagery when available -->
         </div>
 
         <!-- Right: Description, Specs, Fabric & Care -->
         <div class="product-description-right form">
-
             <!-- Description -->
-            <h5 class="mb-3 text-main">Product Description</h5>
-            <h6 class="mb-0">
-                {{ productDescription }}
-            </h6>
-
+            <h5 class="mb-2 text-main">Product Description</h5>
+            <h6 class="mb-0 description-text">{{ productDescription }}</h6>
             <hr />
 
             <!-- Specifications -->
-            <h5 class="mb-3 text-main">Specifications</h5>
+            <h5 class="mb-2 text-main">Specifications</h5>
             <div class="row">
                 <div *ngFor="let spec of specifications" class="col-md-6 col-lg-4 mb-3">
                     <label>{{ spec.label }}</label>
                     <h6 class="mb-0">{{ spec.value }}</h6>
                 </div>
             </div>
-
             <hr />
 
             <!-- Fabric & Care -->
-            <h5 class="mb-3 text-main">Fabric &amp; Care</h5>
+            <h5 class="mb-2 text-main">Fabric &amp; Care</h5>
             <div class="fabric-grid">
-                <div *ngFor="let item of fabrics" class="fabric-div mb-3">
+                <div *ngFor="let item of fabrics" class="fabric-div mb-2">
                     <div class="fabric-img">
                         <img [src]="item.img" [alt]="item.text" />
                     </div>
                     <h6 class="mb-0 text-center">{{ item.text }}</h6>
                 </div>
             </div>
-
         </div>
     </div>
 
     <!-- REVIEWS -->
-    <!-- REVIEWS -->
     <div class="product-review-main">
         <div class="product-review-div">
-            <div class="body-head mb-4">
+            <div class="body-head mb-3">
                 <h4 class="text-center">Customer Reviews</h4>
             </div>
-
             <div class="review-main">
-
                 <!-- Review Header -->
                 <div class="review-header">
                     <div class="review-header-left">
@@ -216,7 +187,6 @@
                     <button class="slider-arrow left" (click)="prevSlide()" [disabled]="currentSlide === 0">
                         <i class="fas fa-chevron-left"></i>
                     </button>
-
                     <div class="review-slider-track">
                         <div *ngFor="let item of visibleReviews" class="review-swiper-item">
                             <h4 class="mb-2">{{ item.title }}</h4>
@@ -232,7 +202,6 @@
                             <h6>{{ item.createdAt | date:'mediumDate' }}</h6>
                         </div>
                     </div>
-
                     <button class="slider-arrow right" (click)="nextSlide()"
                         [disabled]="currentSlide + slidesPerPage >= reviews.length">
                         <i class="fas fa-chevron-right"></i>
@@ -243,7 +212,6 @@
                     <i class="fas fa-star fa-2x mb-3"></i>
                     <p>No reviews yet. Be the first to share your thoughts!</p>
                 </div>
-
             </div>
         </div>
     </div>
@@ -257,7 +225,6 @@
                     <i class="fas fa-xmark"></i>
                 </button>
             </div>
-
             <div class="mb-3">
                 <label class="mb-2">Your Rating <span>*</span></label>
                 <div class="d-flex column-gap-2">
@@ -267,34 +234,31 @@
                     </i>
                 </div>
             </div>
-
             <div class="mb-3">
                 <label for="review-title">Title <span>*</span></label>
                 <input type="text" class="form-control" id="review-title" placeholder="Summarize your experience"
                     [(ngModel)]="reviewForm.title" name="reviewTitle" />
             </div>
-
             <div class="mb-3">
                 <label for="review-description">Description <span>*</span></label>
                 <textarea class="form-control" id="review-description" rows="4"
                     placeholder="Tell others what you liked or didn't like" [(ngModel)]="reviewForm.description"
                     name="reviewDescription"></textarea>
             </div>
-
             <button type="button" class="login-btn w-100" [disabled]="submittingReview" (click)="submitReview()">
                 {{ submittingReview ? 'Submitting...' : 'Submit Review' }}
             </button>
         </div>
     </div>
 
-    <!-- ── SIMILAR PRODUCTS (reuses existing app-products card) ── -->
-    <div class="product-main mt-5">
+    <!-- SIMILAR PRODUCTS -->
+    <div class="product-main mt-4">
         <div class="text-center py-5" *ngIf="isSimilarLoading">
             <div class="spinner-border text-main"></div>
             <h6 class="mt-3">Loading Similar Products...</h6>
         </div>
         <div class="product-div w-100" *ngIf="!isSimilarLoading && products.length">
-            <div class="body-head mb-4">
+            <div class="body-head mb-3">
                 <h4 class="text-center">Similar Products</h4>
             </div>
             <div class="product-grid">
@@ -302,5 +266,4 @@
             </div>
         </div>
     </div>
-
 </div>
