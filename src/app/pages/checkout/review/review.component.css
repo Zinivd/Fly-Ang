@@ -23,6 +23,7 @@
     border-radius: 5px;
     border: 1px solid var(--border);
     object-fit: cover;
+    
 }
 
 .product-cell h5 {

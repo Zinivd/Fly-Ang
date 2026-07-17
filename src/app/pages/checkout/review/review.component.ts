@@ -72,6 +72,12 @@ export class ReviewComponent implements OnInit {
     });
   }
 
+
+  onImgError(event: Event): void {
+  const img = event.target as HTMLImageElement;
+  img.src = 'assets/images/no-image.png';
+}
+
   // ═══════════════════════════════════════════════════════════════
   // Pulls the correct product image for each order line item.
   //
@@ -127,17 +133,24 @@ export class ReviewComponent implements OnInit {
     return PLACEHOLDER;
   }
 
-  get items(): any[] {
-    return (this.orderDetails?.items || []).map((i: any) => ({
+get items(): any[] {
+  return (this.orderDetails?.items || []).map((i: any) => {
+    const image = this.resolveItemImage(i);
+
+    console.log('Resolved Image:', image);
+    console.log('Item:', i);
+
+    return {
       name: i.product_name ?? '',
       color: i.color ?? '',
       size: i.size ?? '',
       qty: i.quantity ?? 1,
       price: Number(i.price ?? 0),
       total: Number(i.total ?? 0),
-      image: this.resolveItemImage(i),
-    }));
-  }
+      image,
+    };
+  });
+}
 
   get subtotal(): number {
     return Number(this.orderDetails?.subtotal ?? 0);

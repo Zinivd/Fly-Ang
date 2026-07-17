@@ -111,10 +111,30 @@ export class OrdersComponent implements OnInit {
       color: i.color ?? '',
       size: i.size ?? '',
       qty: i.quantity ?? 1,
+      price: Number(i.price ?? 0),
       total: Number(i.total ?? 0),
-      image: 'assets/images/no-image.png',
+      image,
     }));
   }
+
+//   get items(): any[] {
+//   return (this.orderDetails?.items || []).map((i: any) => {
+//     const image = this.resolveItemImage(i);
+
+//     console.log('Resolved Image:', image);
+//     console.log('Item:', i);
+
+//     return {
+//       name: i.product_name ?? '',
+//       color: i.color ?? '',
+//       size: i.size ?? '',
+//       qty: i.quantity ?? 1,
+//       price: Number(i.price ?? 0),
+//       total: Number(i.total ?? 0),
+//       image,
+//     };
+//   });
+// }
   get detailSubtotal(): number {
     return Number(this.selectedOrder?.subtotal ?? 0);
   }
